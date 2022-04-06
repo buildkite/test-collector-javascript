@@ -56,9 +56,9 @@ class JestBuildkiteAnalyticsReporter {
         'id': id,
         'scope': result.ancestorTitles.join(' '),
         'name': result.title,
-        'identifier': id, // TODO: needs to be re-runnable location? maybe file + title
-        'location': id, // TODO: needs to be the line of the test (I don't think Jest provides this),
-        'file_name': testResult.testFilePath, // TODO: not in the testResult object, may need to look elsewhere
+        'identifier': `${testResult.testFilePath} -t "${result.title}"`,
+        'location': `${testResult.testFilePath} -t "${result.title}"`,
+        'file_name': testResult.testFilePath,
         'result': result.status, // TODO: may need to map this from jest-> buildkite status
         'failure_reason': result.failureMessages.join(' '),
         'failure_expanded': [],
