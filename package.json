@@ -1,7 +1,6 @@
 {
   "name": "buildkite-analytics",
   "version": "0.0.1",
-  "main": "jest-buildkite-analytics-reporter.js",
   "dependencies": {
     "axios": "^0.26.1",
     "uuid": "^8.3.2"
