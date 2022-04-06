@@ -60,7 +60,7 @@ class JestBuildkiteAnalyticsReporter {
         'location': `${testResult.testFilePath} -t "${result.title}"`,
         'file_name': testResult.testFilePath,
         'result': result.status, // TODO: may need to map this from jest-> buildkite status
-        'failure_reason': result.failureMessages.join(' '),
+        'failure_reason': this.stripANSIColorCodes(result.failureMessages.join(' ')),
         'failure_expanded': [],
         'history': {
           'section': 'top',
@@ -72,6 +72,8 @@ class JestBuildkiteAnalyticsReporter {
       })
     })
   }
+
+  stripANSIColorCodes(string) { return string.replace(/\u001b[^m]*?m/g,'') }
 }
 
 module.exports = JestBuildkiteAnalyticsReporter
