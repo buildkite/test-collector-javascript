@@ -1,18 +1,31 @@
+const { v4: uuidv4 } = require('uuid')
+const axios = require('axios')
+
+
+const fs = require('fs');
+
+// FIXME: currently used for debugging, please remove :)
+const log = (text) => {
+  fs.appendFile('buildkite-analytics.log', text + "\n", () => {})
+}
 
 class JestBuildkiteAnalyticsReporter {
   constructor(globalConfig, options) {
     this._buildkiteAnalyticsKey = process.env.BUILDKITE_ANALYTICS_KEY
 
-    this._globalConfig = globalConfig;
-    this._options = options;
+    this._globalConfig = globalConfig
+    this._options = options
   }
 
   onRunStart(test) {
-    console.log('start')
+    process.stdout.write('STARTING')
+
+    uuidv4() 
+    log('start')
   }
 
   onRunComplete(test, results) {
-    console.log('complete')
+    log('complete')
     const {
         numFailedTests,
         numPassedTests,
@@ -21,16 +34,16 @@ class JestBuildkiteAnalyticsReporter {
         testResults,
         numTotalTests,
         startTime
-    } = results;
+    } = results
   }
 
   onTestStart(test) {
-    console.log('test start')
+    log('test start')
   }
 
   onTestResult(test, testResult, results) {
-    console.log('test result')
+    log('test result')
   }
 }
 
-module.exports = JestBuildkiteAnalyticsReporter;
+module.exports = JestBuildkiteAnalyticsReporter
