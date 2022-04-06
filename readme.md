@@ -2,8 +2,9 @@
 
 ## Jest
 
-1) Add 'buildkite-analytics' to your npm packages
-2) Configure Jest to use the buildkite test analytics reporter
+1) Setup a project on buildkite analtics and note the key
+2) Add 'buildkite-analytics' to your npm packages
+3) Configure Jest to use the buildkite test analytics reporter
 
 ```.js
   // jest.config.js
@@ -13,9 +14,9 @@
   ]
 ```
 
-3) set the environment variable for your test analytics
+4) set the environment variable for your test analytics
 ```sh
   export BUILDKITE_ANALYTICS_KEY=key-found-on-website
 ```
 
-4) Run your tests
+5) Run your tests
