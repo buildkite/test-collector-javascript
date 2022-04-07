@@ -1,7 +1,7 @@
 const { v4: uuidv4 } = require('uuid')
 const axios = require('axios')
-
 const fs = require('fs')
+const CI = require('./src/ci')
 
 // FIXME: currently used for debugging, please remove :)
 const log = (text) => {
@@ -17,15 +17,12 @@ class JestBuildkiteAnalyticsReporter {
   }
 
   onRunStart(test) {
-    this._run_key = uuidv4()
   }
 
   onRunComplete(test, results) {
     let data = {
       'format': 'json',
-      'run_env': {
-        'key': this._run_key
-      },
+      'run_env': (new CI()).env(),
       "data": this._testResults,
     }
     let config = {
@@ -33,7 +30,6 @@ class JestBuildkiteAnalyticsReporter {
         'Authorization': `Token token="${this._buildkiteAnalyticsKey}"`,
         'Content-Type': 'application/json'
       }
-
     }
 
     axios.post('https://analytics-api.buildkite.com/v1/uploads', data, config)
