@@ -1,4 +1,5 @@
 const { v4: uuidv4 } = require('uuid')
+const { name: collector, version } = require('.././package.json')
 
 class CI {
   // the analytics env are more specific than the automatic ci platform env.
@@ -16,6 +17,8 @@ class CI {
         delete object[key]
       }
     })
+
+    return object
   }
 
   ci_env() {
@@ -40,8 +43,8 @@ class CI {
       "job_id": process.env.BUILDKITE_ANALYTICS_JOB_ID,
       "message": process.env.BUILDKITE_ANANLYTICS_MESSAGE,
       "debug": process.env.BUILDKITE_ANALYTICS_DEBUG_ENABLED,
-      "version": "0.0.1", // TODO: point to a VARIABLE constant
-      "collector": "js-buildkite-analytics", // TODO: tweak this name
+      "version": version,
+      "collector": `js-${collector}`,
     })
   }
 
