@@ -62,7 +62,7 @@ class JestBuildkiteAnalyticsReporter {
         'identifier': `${testPath} -t "${result.title}"`,
         'location': `${testPath} -t "${result.title}"`,
         'file_name': testPath,
-        'result': result.status, // TODO: may need to map this from jest-> buildkite status
+        'result': this.statusToAnalyticsResult(result.status),
         'failure_reason': this.stripANSIColorCodes(result.failureMessages.join(' ')),
         'failure_expanded': [],
         'history': {
@@ -82,6 +82,27 @@ class JestBuildkiteAnalyticsReporter {
     // Based upon https://github.com/facebook/jest/blob/49393d01cdda7dfe75718aa1a6586210fa197c72/packages/jest-reporters/src/relativePath.ts#L11
     const dir = this._globalConfig.cwd || this._globalConfig.rootDir
     return path.relative(dir, testFilePath)
+  }
+  
+  statusToAnalyticsResult(status) {
+    // Jest test statuses:
+    // - passed
+    // - pending
+    // - failed
+    // - todo
+    //
+    // Buildkite Test Analytics execution results:
+    // - passed
+    // - failed
+    // - pending
+    // - skipped
+    // - unknown
+    return {
+      passed: 'passed',
+      pending: 'pending',
+      failed: 'failed',
+      todo: 'skipped'
+    }[status]
   }
 }
 
