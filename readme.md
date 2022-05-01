@@ -1,17 +1,18 @@
-# Buildkite Analytics for JavaScript
+# Buildkite Test Analytics Collector for Javascript
 
 ## Jest
 
-1) Setup a project on buildkite analtics and note the key
+1) Setup a project on [Buildkite Test Analtics](https://buildkite.com/test-analytics) and note the key
 2) Add 'buildkite-analytics' to your npm packages
-3) Configure Jest to use the buildkite test analytics reporter
+3) Configure Jest to use the reporter and enable `testLocationInResults`
 
-```.js
+```js
   // jest.config.js
   reporters: [
     'default',
     'buildkite-analytics/jest-reporter'
-  ]
+  ],
+  testLocationInResults: true
 ```
 
 4) set the environment variable for your test analytics
