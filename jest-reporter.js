@@ -62,9 +62,9 @@ class JestBuildkiteAnalyticsReporter {
         'identifier': `${testPath} -t "${result.title}"`,
         'location': `${testPath} -t "${result.title}"`,
         'file_name': testPath,
-        'result': this.statusToAnalyticsResult(result.status),
-        'failure_reason': this.stripANSIColorCodes(result.failureMessages.join(' ')),
-        'failure_expanded': [],
+        'result': this.analyticsResult(result),
+        'failure_reason': this.analyticsFailureReason(result),
+        // TODO: Add support for 'failure_expanded'
         'history': {
           'section': 'top',
           'start_at': testResult.perfStats.start,
@@ -76,15 +76,13 @@ class JestBuildkiteAnalyticsReporter {
     })
   }
 
-  stripANSIColorCodes(string) { return string.replace(/\u001b[^m]*?m/g,'') }
-
   relativeTestFilePath(testFilePath) {
     // Based upon https://github.com/facebook/jest/blob/49393d01cdda7dfe75718aa1a6586210fa197c72/packages/jest-reporters/src/relativePath.ts#L11
     const dir = this._globalConfig.cwd || this._globalConfig.rootDir
     return path.relative(dir, testFilePath)
   }
-  
-  statusToAnalyticsResult(status) {
+
+  analyticsResult(testResult) {
     // Jest test statuses:
     // - passed
     // - pending
@@ -102,7 +100,14 @@ class JestBuildkiteAnalyticsReporter {
       pending: 'pending',
       failed: 'failed',
       todo: 'skipped'
-    }[status]
+    }[testResult.status]
+  }
+
+  analyticsFailureReason(testResult) {
+    if (testResult.status === 'failed') {
+      // Strip ANSI color codes from messages
+      return result.failureMessages.join(' ').replace(/\u001b[^m]*?m/g,'')
+    }
   }
 }
 
