@@ -1,6 +1,7 @@
 const { v4: uuidv4 } = require('uuid')
 const axios = require('axios')
 const fs = require('fs')
+const path = require('path');
 const CI = require('./src/ci')
 
 // FIXME: currently used for debugging, please remove :)
@@ -50,15 +51,17 @@ class JestBuildkiteAnalyticsReporter {
   }
 
   onTestResult(test, testResult) {
+    const testPath = this.relativeTestFilePath(testResult.testFilePath)
+
     testResult.testResults.forEach((result) => {
       let id = uuidv4()
       this._testResults.push({
         'id': id,
         'scope': result.ancestorTitles.join(' '),
         'name': result.title,
-        'identifier': `${testResult.testFilePath} -t "${result.title}"`,
-        'location': `${testResult.testFilePath} -t "${result.title}"`,
-        'file_name': testResult.testFilePath,
+        'identifier': `${testPath} -t "${result.title}"`,
+        'location': `${testPath} -t "${result.title}"`,
+        'file_name': testPath,
         'result': result.status, // TODO: may need to map this from jest-> buildkite status
         'failure_reason': this.stripANSIColorCodes(result.failureMessages.join(' ')),
         'failure_expanded': [],
@@ -74,6 +77,12 @@ class JestBuildkiteAnalyticsReporter {
   }
 
   stripANSIColorCodes(string) { return string.replace(/\u001b[^m]*?m/g,'') }
+
+  relativeTestFilePath(testFilePath) {
+    // Based upon https://github.com/facebook/jest/blob/49393d01cdda7dfe75718aa1a6586210fa197c72/packages/jest-reporters/src/relativePath.ts#L11
+    const dir = this._globalConfig.cwd || this._globalConfig.rootDir
+    return path.relative(dir, testFilePath)
+  }
 }
 
 module.exports = JestBuildkiteAnalyticsReporter
