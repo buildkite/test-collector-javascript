@@ -4,26 +4,29 @@ const fs = require('fs')
 const path = require('path');
 const CI = require('./src/ci')
 
+const debug = (text) => {
+  if (process.env.BUILDKITE_ANALYTICS_DEBUG === "true") {
+    console.log(text)
+  }
+}
+
 class JestBuildkiteAnalyticsReporter {
   constructor(globalConfig, options) {
     this._buildkiteAnalyticsKey = process.env.BUILDKITE_ANALYTICS_KEY
     this._globalConfig = globalConfig
     this._options = options
     this._testResults = []
-    this.debugEnabled = !!process.env.BUILDKITE_ANALYTICS_DEBUG_ENABLED
-    this.debugFilepath = process.env.BUILDKITE_ANALYTICS_DEBUG_FILEPATH || (process.cwd() + '/buildkite-analytics.log')
-  }
-
-  log(message) {
-    if(this.debugEnabled) {
-      fs.appendFile(this.debugFilepath, message + "\n", () => { })
-    }
   }
 
   onRunStart(test) {
   }
 
   onRunComplete(test, results) {
+    if (!this._buildkiteAnalyticsKey) {
+      console.error('Missing BUILDKITE_ANALYTICS_KEY')
+      return
+    }
+
     let data = {
       'format': 'json',
       'run_env': (new CI()).env(),
@@ -36,17 +39,19 @@ class JestBuildkiteAnalyticsReporter {
       }
     }
 
+    debug(`Posting to Test Analytics: ${JSON.stringify(data)}`)
+
     axios.post('https://analytics-api.buildkite.com/v1/uploads', data, config)
     .then(function (response) {
-      this.log('Analytics successfully uploaded to Buildkite')
-    }.bind(this))
+      debug(`Test Analytics success response: ${JSON.stringify(response.data)}`)
+    })
     .catch(function (error) {
       if (error.response) {
-        this.log(`Error, response: ${error.response.status} ${error.response.statusText} ${JSON.stringify(error.response.data)}`);
+        console.error(`Test Analytics error response: ${error.response.status} ${error.response.statusText} ${JSON.stringify(error.response.data)}`);
       } else {
-        this.log(`Error, ${error.message}`)
+        console.error(`Test Analytics error: ${error.message}`)
       }
-    }.bind(this))
+    })
   }
 
   onTestStart(test) {
