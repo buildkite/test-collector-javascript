@@ -24,6 +24,11 @@ class JestBuildkiteAnalyticsReporter {
   }
 
   onRunComplete(test, results) {
+    if (!this._buildkiteAnalyticsKey) {
+      console.error('Missing BUILDKITE_ANALYTICS_KEY')
+      return
+    }
+
     let data = {
       'format': 'json',
       'run_env': (new CI()).env(),
