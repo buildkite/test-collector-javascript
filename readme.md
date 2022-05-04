@@ -2,7 +2,7 @@
 
 ## Jest
 
-1) Setup a project on [Buildkite Test Analtics](https://buildkite.com/test-analytics) and note the key
+1) Setup a project on [Buildkite Test Analytics](https://buildkite.com/test-analytics) and note the key
 2) Add 'buildkite-analytics' to your npm packages
 3) Configure Jest to use the reporter and enable `testLocationInResults`
 
@@ -17,7 +17,9 @@
 
 4) set the environment variable for your test analytics
 ```sh
-  export BUILDKITE_ANALYTICS_KEY=key-found-on-website
+  export BUILDKITE_ANALYTICS_KEY=xyz
 ```
 
 5) Run your tests
+
+To enable debugging, set `BUILDKITE_ANALYTICS_DEBUG=true`
