@@ -4,17 +4,20 @@ const fs = require('fs')
 const path = require('path');
 const CI = require('./src/ci')
 
-// FIXME: currently used for debugging, please remove :)
-const log = (text) => {
-  fs.appendFile('buildkite-analytics.log', text + "\n", () => {})
-}
-
 class JestBuildkiteAnalyticsReporter {
   constructor(globalConfig, options) {
     this._buildkiteAnalyticsKey = process.env.BUILDKITE_ANALYTICS_KEY
     this._globalConfig = globalConfig
     this._options = options
     this._testResults = []
+    this.debugEnabled = !!process.env.BUILDKITE_ANALYTICS_DEBUG_ENABLED
+    this.debugFilepath = process.env.BUILDKITE_ANALYTICS_DEBUG_FILEPATH || (process.cwd() + '/buildkite-analytics.log')
+  }
+
+  log(message) {
+    if(this.debugEnabled) {
+      fs.appendFile(this.debugFilepath, message + "\n", () => { })
+    }
   }
 
   onRunStart(test) {
@@ -35,16 +38,15 @@ class JestBuildkiteAnalyticsReporter {
 
     axios.post('https://analytics-api.buildkite.com/v1/uploads', data, config)
     .then(function (response) {
-      log('success, yay')
-    })
+      this.log('Analytics successfully uploaded to Buildkite')
+    }.bind(this))
     .catch(function (error) {
       if (error.response) {
-        log(`Error, response: ${error.response.status} ${error.response.statusText} ${JSON.stringify(error.response.data)}`);
+        this.log(`Error, response: ${error.response.status} ${error.response.statusText} ${JSON.stringify(error.response.data)}`);
       } else {
-        log(`Error, ${error.message}`)
+        this.log(`Error, ${error.message}`)
       }
-    })
-
+    }.bind(this))
   }
 
   onTestStart(test) {
