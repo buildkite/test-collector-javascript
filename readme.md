@@ -17,7 +17,7 @@
 
 4) set the environment variable for your test analytics
 ```sh
-  export BUILDKITE_ANALYTICS_KEY=key-found-on-website
+  export BUILDKITE_ANALYTICS_API_TOKEN=xyz
 ```
 
 5) Run your tests

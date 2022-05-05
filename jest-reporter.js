@@ -12,7 +12,7 @@ const debug = (text) => {
 
 class JestBuildkiteAnalyticsReporter {
   constructor(globalConfig, options) {
-    this._buildkiteAnalyticsKey = process.env.BUILDKITE_ANALYTICS_KEY
+    this._buildkiteAnalyticsKey = process.env.BUILDKITE_ANALYTICS_API_TOKEN
     this._globalConfig = globalConfig
     this._options = options
     this._testResults = []
