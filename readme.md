@@ -17,9 +17,9 @@
 
 4) set the environment variable for your test analytics
 ```sh
-  export BUILDKITE_ANALYTICS_KEY=xyz
+  export BUILDKITE_ANALYTICS_API_TOKEN=xyz
 ```
 
 5) Run your tests
 
-To enable debugging, set `BUILDKITE_ANALYTICS_DEBUG=true`
+To enable debugging, set `BUILDKITE_ANALYTICS_DEBUG_ENABLED=true`

@@ -5,14 +5,14 @@ const path = require('path');
 const CI = require('./src/ci')
 
 const debug = (text) => {
-  if (process.env.BUILDKITE_ANALYTICS_DEBUG === "true") {
+  if (process.env.BUILDKITE_ANALYTICS_DEBUG_ENABLED === "true") {
     console.log(text)
   }
 }
 
 class JestBuildkiteAnalyticsReporter {
   constructor(globalConfig, options) {
-    this._buildkiteAnalyticsKey = process.env.BUILDKITE_ANALYTICS_KEY
+    this._buildkiteAnalyticsKey = process.env.BUILDKITE_ANALYTICS_API_TOKEN
     this._globalConfig = globalConfig
     this._options = options
     this._testResults = []
@@ -23,7 +23,7 @@ class JestBuildkiteAnalyticsReporter {
 
   onRunComplete(test, results) {
     if (!this._buildkiteAnalyticsKey) {
-      console.error('Missing BUILDKITE_ANALYTICS_KEY')
+      console.error('Missing BUILDKITE_ANALYTICS_API_TOKEN')
       return
     }
 
