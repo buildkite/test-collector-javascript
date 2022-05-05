@@ -44,7 +44,7 @@ class CI {
       "message": process.env.BUILDKITE_ANALYTICS_MESSAGE,
       "debug": process.env.BUILDKITE_ANALYTICS_DEBUG_ENABLED,
       "version": version,
-      "collector": `js-${collector}`,
+      "collector": `js-${name}`,
     })
   }
 
