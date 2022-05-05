@@ -23,7 +23,7 @@ class JestBuildkiteAnalyticsReporter {
 
   onRunComplete(test, results) {
     if (!this._buildkiteAnalyticsKey) {
-      console.error('Missing BUILDKITE_ANALYTICS_KEY')
+      console.error('Missing BUILDKITE_ANALYTICS_API_TOKEN')
       return
     }
 
