@@ -5,7 +5,7 @@ const path = require('path');
 const CI = require('./src/ci')
 
 const debug = (text) => {
-  if (process.env.BUILDKITE_ANALYTICS_DEBUG === "true") {
+  if (process.env.BUILDKITE_ANALYTICS_DEBUG_ENABLED === "true") {
     console.log(text)
   }
 }

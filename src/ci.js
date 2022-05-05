@@ -2,12 +2,23 @@ const { v4: uuidv4 } = require('uuid')
 const { name, version } = require('.././package.json')
 
 class CI {
+  // the analytics env are more specific than the automatic ci platform env.
+  // If they've been specified we'll assume the user wants to use that value instead.
   env() {
     return({
-      "version": version,
-      "collector": `js-${name}`,      
-      ...this.ci_env()
+      ...this.ci_env(),
+      ...this.analytics_env()
     })
+  }
+
+  _stripUndefinedKeys(object) {
+    Object.keys(object).forEach((key) => {
+      if (object[key] === undefined) {
+        delete object[key]
+      }
+    })
+
+    return object
   }
 
   ci_env() {
@@ -20,6 +31,21 @@ class CI {
     } else {
       return(this.generic())
     }
+  }
+
+  analytics_env() {
+    return this._stripUndefinedKeys({
+      "key": process.env.BUILDKITE_ANALYTICS_KEY,
+      "url": process.env.BUILDKITE_ANALYTICS_URL,
+      "branch": process.env.BUILDKITE_ANALYTICS_BRANCH,
+      "commit_sha": process.env.BUILDKITE_ANALYTICS_SHA,
+      "number": process.env.BUILDKITE_ANALYTICS_NUMBER,
+      "job_id": process.env.BUILDKITE_ANALYTICS_JOB_ID,
+      "message": process.env.BUILDKITE_ANALYTICS_MESSAGE,
+      "debug": process.env.BUILDKITE_ANALYTICS_DEBUG_ENABLED,
+      "version": version,
+      "collector": `js-${collector}`,
+    })
   }
 
   generic() {
