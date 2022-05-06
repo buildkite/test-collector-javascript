@@ -1,4 +1,4 @@
-# Buildkite Test Analytics Collector for Javascript
+# Buildkite Test Analytics Collector for JavaScript
 
 ## Jest
 
