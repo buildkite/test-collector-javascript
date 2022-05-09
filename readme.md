@@ -1,6 +1,10 @@
 # Buildkite Test Analytics Collector for JavaScript
 
-## Jest
+This package collects data about your test suite's performance and reliability, and allows you to see trends and insights about your test suite over time ✨
+
+So far, it supports **Jest**. We hope to add more JavaScript test frameworks soon.
+
+## Usage - Jest
 
 1) Setup a project on [Buildkite Test Analytics](https://buildkite.com/test-analytics) and note the key
 2) Add 'buildkite-analytics' to your npm packages
@@ -24,17 +28,25 @@
 
 To enable debugging, set `BUILDKITE_ANALYTICS_DEBUG_ENABLED=true`
 
-## Jest Collector Roadmap
+### Jest Collector Roadmap
 
-### DONE
+#### DONE
 
 - [x] Baseline metric collection, such as test duration and pass/fail states
 - [x] Error messaging
 
-### TODO
+#### TODO
 
 - [ ] Support for deep-dives into spans via records of time spent in HTTP requests or running SQL queries
 - [ ] Support for annotations
 - [ ] Web socket support
 
 _Pull requests welcome!_
+
+## Contributing
+
+Bug reports and pull requests are welcome on GitHub at https://github.com/buildkite/js-buildkite-analytics.
+
+## License
+
+The package is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
