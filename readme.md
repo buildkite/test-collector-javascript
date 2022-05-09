@@ -23,3 +23,18 @@
 5) Run your tests
 
 To enable debugging, set `BUILDKITE_ANALYTICS_DEBUG_ENABLED=true`
+
+## Jest Collector Roadmap
+
+### DONE
+
+- [x] Baseline metric collection, such as test duration and pass/fail states
+- [x] Error messaging
+
+### TODO
+
+- [ ] Support for deep-dives into spans via records of time spent in HTTP requests or running SQL queries
+- [ ] Support for annotations
+- [ ] Web socket support
+
+_Pull requests welcome!_
