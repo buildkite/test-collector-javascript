@@ -29,14 +29,14 @@ So far, it supports **Jest**. We hope to add more JavaScript test frameworks soo
 
 To enable debugging, set `BUILDKITE_ANALYTICS_DEBUG_ENABLED=true`
 
-### Jest Collector Roadmap
+## JavaScript Collector Roadmap
 
-#### DONE
+### DONE
 
 - [x] Send test pass/fail status on test completion
 - [x] Send failure reason
 
-#### TODO
+### TODO
 
 - [ ] Tests
 - [ ] Sending through `failure_expanded`
