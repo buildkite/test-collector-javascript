@@ -33,14 +33,18 @@ To enable debugging, set `BUILDKITE_ANALYTICS_DEBUG_ENABLED=true`
 
 #### DONE
 
-- [x] Baseline metric collection, such as test duration and pass/fail states
-- [x] Error messaging
+- [x] Send test pass/fail status on test completion
+- [x] Send failure reason
 
 #### TODO
 
-- [ ] Support for deep-dives into spans via records of time spent in HTTP requests or running SQL queries
-- [ ] Support for annotations
-- [ ] Web socket support
+- [ ] Tests
+- [ ] Sending through `failure_expanded`
+- [ ] HTTP tracing
+- [ ] SQL tracing
+- [ ] Annotations
+- [ ] Live stream results via web sockets
+- [ ] Additional test framework support (Cypress , Jasmine, AVA, Mocha, etc)
 
 _Pull requests welcome!_
 
