@@ -1,7 +1,7 @@
 # Buildkite Test Analytics Collector for JavaScript
 
 
-This package collects data about your test suite's performance and reliability, and allows you to see trends and insights about your test suite over time ✨
+This is the official repo for JavaScript-based [Buildkite Test Analytics](https://buildkite.com/test-analytics) collectors ✨
 
 So far, it supports **Jest**. We hope to add more JavaScript test frameworks soon.
 
