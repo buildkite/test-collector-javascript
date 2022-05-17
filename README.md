@@ -63,7 +63,7 @@ npm install
 
 You can run the tests for this library by executing:
 
-```
+```sh
 npm test
 ```
 
