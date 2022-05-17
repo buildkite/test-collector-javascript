@@ -35,10 +35,10 @@ To enable debugging, set `BUILDKITE_ANALYTICS_DEBUG_ENABLED=true`
 
 - [x] Send test pass/fail status on test completion
 - [x] Send failure reason
+- [x] Tests
 
 ### TODO
 
-- [ ] Tests
 - [ ] Sending through `failure_expanded`
 - [ ] HTTP tracing
 - [ ] SQL tracing
@@ -51,6 +51,21 @@ _Pull requests welcome!_
 ## Contributing
 
 Bug reports and pull requests are welcome on GitHub at https://github.com/buildkite/js-buildkite-analytics.
+
+
+### Working on js-buildkite-analytics
+
+After cloning the repository install the dependencies using npm:
+
+```sh
+npm install
+```
+
+You can run the tests for this library by executing:
+
+```sh
+npm test
+```
 
 ## License
 
