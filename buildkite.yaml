@@ -1,0 +1,8 @@
+steps:
+  - label: ":jest: Tests"
+    command:
+      - "npm ci"
+      - "npm test"
+    plugins:
+      - docker#v3.7.0:
+          image: node:latest
