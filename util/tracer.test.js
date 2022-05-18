@@ -29,3 +29,42 @@ describe('Tracer.finalize()', () => {
     expect(tracer.finalize.bind(tracer)).toThrowError(/Stack not empty/)
   })
 })
+
+describe('Tracer.backfill()', () => {
+  test('inserts new spans into the stack', () => {
+    const tracer = new Tracer()
+    tracer.backfill('http', 500, { extra: 'detail' })
+
+    expect(tracer.stack[0].children[0].section).toEqual('http')
+    expect(tracer.stack[0].children[0].detail).toEqual({extra: 'detail'})
+    expect(tracer.stack[0].children[0].duration()).toBeCloseTo(500, 2)
+  })
+})
+
+describe('Tracer.toJSON()', () => {
+  test('returns all of the traces', () => {
+    global.performance = { now: () => 11 }
+
+    const tracer = new Tracer()
+    tracer.backfill('sql', 3, { kind: 'INSERT' })
+    tracer.finalize()
+
+    expect(tracer.toJSON()).toEqual({
+      section: 'top',
+      start_at: 11,
+      end_at: 11,
+      duration: 0,
+      detail: {},
+      children: [
+        {
+          section: 'sql',
+          start_at: 8,
+          end_at: 11,
+          duration: 3,
+          detail: { kind: 'INSERT'},
+          children: []
+        }
+      ]
+    })
+  })
+})

@@ -1,17 +1,31 @@
 class Span {
-  constructor(section) {
+  constructor(section, startAt, endAt, detail = {}) {
     this.section = section
-    this.startAt = performance.now()
+    this.startAt = startAt
+    this.endAt = endAt
+    this.detail = detail
+    this.children = []
   }
 
   duration() {
     return this.endAt - this.startAt
   }
+
+  toJSON() {
+    return {
+      section: this.section,
+      start_at: this.startAt,
+      end_at: this.endAt,
+      duration: this.duration(),
+      detail: this.detail,
+      children: this.children.map((child) => child.toJSON())
+    }
+  }
 }
 
 class Tracer {
   constructor() {
-    this.top = new Span('top')
+    this.top = new Span('top', performance.now())
     this.stack = [this.top]
   }
 
@@ -21,6 +35,19 @@ class Tracer {
     }
 
     this.top.endAt = performance.now()
+  }
+
+  backfill(section, duration, detail) {
+    const newEntry = new Span(section, performance.now() - duration, performance.now(), detail)
+    this.currentSpan().children.push(newEntry)
+  }
+
+  currentSpan() {
+    return this.stack.slice(-1)[0]
+  }
+
+  toJSON() {
+    return this.top.toJSON()
   }
 }
 
