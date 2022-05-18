@@ -21,4 +21,11 @@ describe('Tracer.finalize()', () => {
 
     expect(tracer.stack[0].duration()).toBeDefined()
   })
+
+  test('throws an exception when there are multiple unfinished spans', () => {
+    const tracer = new Tracer()
+    tracer.stack.push({})
+
+    expect(tracer.finalize.bind(tracer)).toThrowError(/Stack not empty/)
+  })
 })

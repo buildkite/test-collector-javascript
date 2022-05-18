@@ -16,6 +16,10 @@ class Tracer {
   }
 
   finalize() {
+    if(this.stack.length != 1) {
+      throw new Error("Stack not empty")
+    }
+
     this.top.endAt = performance.now()
   }
 }
