@@ -3,6 +3,7 @@ const axios = require('axios')
 const fs = require('fs')
 const path = require('path');
 const CI = require('../util/ci')
+const Network = require('../util/network')
 const CHUNK_SIZE = 5000
 
 const debug = (text) => {
@@ -21,9 +22,13 @@ class JestBuildkiteAnalyticsReporter {
   }
 
   onRunStart(test) {
+    this.network = new Network()
+    this.network.setup()
   }
 
   onRunComplete(_test, _results) {
+    this.network.teardown()
+
     if (!this._buildkiteAnalyticsToken) {
       console.error('Missing BUILDKITE_ANALYTICS_TOKEN')
       return
