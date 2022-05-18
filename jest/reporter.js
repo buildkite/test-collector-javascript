@@ -4,6 +4,7 @@ const fs = require('fs')
 const path = require('path');
 const CI = require('../util/ci')
 const Network = require('../util/network')
+const Tracer = require('../util/tracer')
 const CHUNK_SIZE = 5000
 
 const debug = (text) => {
@@ -28,6 +29,7 @@ class JestBuildkiteAnalyticsReporter {
 
   onRunComplete(_test, _results) {
     this.network.teardown()
+    this.tracer.finalize()
 
     if (!this._buildkiteAnalyticsToken) {
       console.error('Missing BUILDKITE_ANALYTICS_TOKEN')
@@ -73,9 +75,12 @@ class JestBuildkiteAnalyticsReporter {
   }
 
   onTestStart(test) {
+    this.tracer = new Tracer()
+    this.network.tracer = this.tracer
   }
 
   onTestResult(test, testResult) {
+    this.tracer.finalize()
     const testPath = this.relativeTestFilePath(testResult.testFilePath);
     const prefixedTestPath = this.prefixTestPath(testPath);
 
@@ -91,13 +96,7 @@ class JestBuildkiteAnalyticsReporter {
         'result': this.analyticsResult(result),
         'failure_reason': this.analyticsFailureReason(result),
         // TODO: Add support for 'failure_expanded'
-        'history': {
-          'section': 'top',
-          'start_at': testResult.perfStats.start,
-          'end_at': testResult.perfStats.end,
-          'duration': result.duration / 1000,
-        }
-
+        'history': this.tracer.history(),
       })
     })
   }

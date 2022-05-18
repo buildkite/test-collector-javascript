@@ -19,7 +19,7 @@ describe('Tracer.finalize()', () => {
     const tracer = new Tracer()
     tracer.finalize()
 
-    expect(tracer.stack[0].duration()).toBeDefined()
+    expect(tracer.stack[0].duration).toBeDefined()
   })
 
   test('throws an exception when there are multiple unfinished spans', () => {
@@ -37,19 +37,19 @@ describe('Tracer.backfill()', () => {
 
     expect(tracer.stack[0].children[0].section).toEqual('http')
     expect(tracer.stack[0].children[0].detail).toEqual({extra: 'detail'})
-    expect(tracer.stack[0].children[0].duration()).toBeCloseTo(500, 2)
+    expect(tracer.stack[0].children[0].duration).toBeCloseTo(0.5, 1)
   })
 })
 
-describe('Tracer.toJSON()', () => {
+describe('Tracer.history()', () => {
   test('returns all of the traces', () => {
-    global.performance = { now: () => 11 }
+    global.performance = { now: () => 11000 }
 
     const tracer = new Tracer()
-    tracer.backfill('sql', 3, { kind: 'INSERT' })
+    tracer.backfill('sql', 3000, { kind: 'INSERT' })
     tracer.finalize()
 
-    expect(tracer.toJSON()).toEqual({
+    expect(tracer.history()).toEqual({
       section: 'top',
       start_at: 11,
       end_at: 11,

@@ -3,8 +3,8 @@ const requestSpy = require('request-spy')
 class Network {
   setup() {
     requestSpy.spy((error, requestData) => {
-      // TODO: add this data to the current scope
-      console.log(requestData)
+      const detail = { method: requestData.method, url: requestData.hostname + requestData.path, lib: 'http' }
+      this.tracer.backfill('http', requestData.requestTime, detail)
     })
   }
 

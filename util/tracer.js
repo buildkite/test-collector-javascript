@@ -7,8 +7,8 @@ class Span {
     this.children = []
   }
 
-  duration() {
-    return this.endAt - this.startAt
+  get duration() {
+    return (this.endAt - this.startAt)
   }
 
   toJSON() {
@@ -16,7 +16,7 @@ class Span {
       section: this.section,
       start_at: this.startAt,
       end_at: this.endAt,
-      duration: this.duration(),
+      duration: this.duration,
       detail: this.detail,
       children: this.children.map((child) => child.toJSON())
     }
@@ -25,7 +25,7 @@ class Span {
 
 class Tracer {
   constructor() {
-    this.top = new Span('top', performance.now())
+    this.top = new Span('top', performance.now() / 1000)
     this.stack = [this.top]
   }
 
@@ -34,11 +34,11 @@ class Tracer {
       throw new Error("Stack not empty")
     }
 
-    this.top.endAt = performance.now()
+    this.top.endAt = (performance.now() / 1000)
   }
 
   backfill(section, duration, detail) {
-    const newEntry = new Span(section, performance.now() - duration, performance.now(), detail)
+    const newEntry = new Span(section, (performance.now() - duration) / 1000, performance.now() / 1000, detail)
     this.currentSpan().children.push(newEntry)
   }
 
@@ -46,7 +46,7 @@ class Tracer {
     return this.stack.slice(-1)[0]
   }
 
-  toJSON() {
+  history() {
     return this.top.toJSON()
   }
 }
