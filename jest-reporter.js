@@ -113,7 +113,7 @@ class JestBuildkiteAnalyticsReporter {
   analyticsFailureReason(testResult) {
     if (testResult.status === 'failed') {
       // Strip ANSI color codes from messages
-      return result.failureMessages.join(' ').replace(/\u001b[^m]*?m/g,'')
+      return testResult.failureMessages.join(' ').replace(/\u001b[^m]*?m/g,'')
     }
   }
 }
