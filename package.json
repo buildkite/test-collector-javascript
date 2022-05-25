@@ -1,5 +1,5 @@
 {
-  "name": "buildkite-analytics",
+  "name": "buildkite-collector",
   "version": "0.0.1",
   "dependencies": {
     "axios": "^0.26.1",
