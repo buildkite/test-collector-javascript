@@ -1,43 +1,61 @@
-# Buildkite Test Analytics Collector for JavaScript
+# Buildkite Collectors for JavaScript
 
+Official JavaScript-based [Buildkite Test Analytics](https://buildkite.com/test-analytics) collectors ✨
 
-This is the official repo for JavaScript-based [Buildkite Test Analytics](https://buildkite.com/test-analytics) collectors ✨
+**Supported test frameworks:** Jest, and more [coming soon](#roadmap).
 
-So far, it supports **Jest**. We hope to add more JavaScript test frameworks soon.
+**Supported CI systems:** Buildkite, GitHub Actions, CircleCI, Jenkins, and others via the `BUILDKITE_ANALYTICS_*` environment variables.
 
-## Usage - Jest
+## Installing
 
-1) Setup a project on [Buildkite Test Analytics](https://buildkite.com/test-analytics) and note the key
-2) Add 'buildkite-analytics' to your npm packages
-3) Configure Jest to use the reporter and enable `testLocationInResults`
+### Jest
 
-```js
-  // jest.config.js
-  reporters: [
-    'default',
-    'buildkite-analytics/jest-reporter'
-  ],
-  testLocationInResults: true
-```
+1) [Create a test suite](https://buildkite.com/docs/test-analytics), and copy the API token that it gives you.
 
-4) set the environment variable for your test analytics
-```sh
-  export BUILDKITE_ANALYTICS_API_TOKEN=xyz
-```
+1) Add the [`buildkite-collector` package](https://www.npmjs.com/package/buildkite-collector):
 
-5) Run your tests
+    ```bash
+    # If you use npm:
+    npm install --dev buildkite-collector
 
-To enable debugging, set `BUILDKITE_ANALYTICS_DEBUG_ENABLED=true`
+    # or, if you use yarn:
+    yarn add --dev buildkite-collector
+    ```
 
-## JavaScript Collector Roadmap
+2) Update your [Jest configuration](https://jestjs.io/docs/configuration):<br>
 
-### DONE
+    ```js
+      // jest.config.js
 
-- [x] Send test pass/fail status on test completion
-- [x] Send failure reason
-- [x] Tests
+      // Send results to Test Analytics
+      reporters: [
+        'default',
+        'buildkite-collector/jest/reporter'
+      ],
 
-### TODO
+      // Enable column + line capture for Test Analytics
+      testLocationInResults: true
+    ```
+
+3) Run your tests locally:<br>
+
+    ```js
+    env BUILDKITE_ANALYTICS_API_TOKEN=xyz npm test
+    ```
+
+4) Add the `BUILDKITE_ANALYTICS_API_TOKEN` secret to your CI, push your changes to a branch, and open a pull request 🎉
+
+    ```bash
+    git checkout -b add-bk-test-analytics
+    git commit -am "Added Test Analytics"
+    git push origin add-bk-test-analytics
+    ```
+
+## Debugging
+
+To enable debugging output, set `BUILDKITE_ANALYTICS_DEBUG_ENABLED=true`
+
+## Roadmap
 
 - [ ] Sending through `failure_expanded`
 - [ ] HTTP tracing
@@ -52,10 +70,9 @@ _Pull requests welcome!_
 
 Bug reports and pull requests are welcome on GitHub at https://github.com/buildkite/js-buildkite-analytics.
 
+### Developing
 
-### Working on js-buildkite-analytics
-
-After cloning the repository install the dependencies using npm:
+After cloning the repository, install the dependencies using npm:
 
 ```sh
 npm install

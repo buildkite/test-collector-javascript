@@ -1,5 +1,5 @@
 const { v4: uuidv4 } = require('uuid')
-const { name, version } = require('.././package.json')
+const { name, version } = require('../../package.json')
 
 class CI {
   // the analytics env are more specific than the automatic ci platform env.
