@@ -1,4 +1,4 @@
-const CI = require('./../src/ci');
+const CI = require('./ci');
 
 describe('CI.env', () => {
   const OLD_ENV = process.env;

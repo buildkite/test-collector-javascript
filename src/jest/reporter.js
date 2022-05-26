@@ -2,7 +2,7 @@ const { v4: uuidv4 } = require('uuid')
 const axios = require('axios')
 const fs = require('fs')
 const path = require('path');
-const CI = require('./src/ci')
+const CI = require('../util/ci')
 
 const debug = (text) => {
   if (process.env.BUILDKITE_ANALYTICS_DEBUG_ENABLED === "true") {
