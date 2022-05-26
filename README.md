@@ -2,11 +2,11 @@
 
 Official JavaScript-based [Buildkite Test Analytics](https://buildkite.com/test-analytics) collectors ✨
 
-**Supported test frameworks:** Jest, and more [coming soon](#roadmap).
+⚒ **Supported test frameworks:** Jest, and [more coming soon](https://github.com/buildkite/collector-js/issues?q=is%3Aissue+is%3Aopen+label%3A%22test+frameworks%22).
 
-**Supported CI systems:** Buildkite, GitHub Actions, CircleCI, Jenkins, and others via the `BUILDKITE_ANALYTICS_*` environment variables.
+📦 **Supported CI systems:** Buildkite, GitHub Actions, CircleCI, Jenkins, and others via the `BUILDKITE_ANALYTICS_*` environment variables.
 
-## Installing
+## 👉 Installing
 
 ### Jest
 
@@ -47,43 +47,38 @@ Official JavaScript-based [Buildkite Test Analytics](https://buildkite.com/test-
 
     ```bash
     git checkout -b add-bk-test-analytics
-    git commit -am "Added Test Analytics"
+    git commit -am "Add Buildkite Test Analytics"
     git push origin add-bk-test-analytics
     ```
 
-## Debugging
+## 🔍 Debugging
 
-To enable debugging output, set `BUILDKITE_ANALYTICS_DEBUG_ENABLED=true`
+To enable debugging output, set the `BUILDKITE_ANALYTICS_DEBUG_ENABLED` environment variable to `true`.
 
-## Roadmap
+## 🔜 Roadmap
 
-- [ ] Sending through `failure_expanded`
-- [ ] HTTP tracing
-- [ ] SQL tracing
-- [ ] Annotations
-- [ ] Live stream results via web sockets
-- [ ] Additional test framework support (Cypress , Jasmine, AVA, Mocha, etc)
+See the [GitHub 'enhancement' issues](https://github.com/buildkite/collector-js/issues?q=is%3Aissue+is%3Aopen+label%3Aenhancement) for planned features. Pull requests are always welcome, and we’ll give you feedback and guidance if you choose to contribute 💚
 
-_Pull requests welcome!_
+## ⚒ Developing
 
-## Contributing
+After cloning the repository, install the dependencies:
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/buildkite/js-buildkite-analytics.
-
-### Developing
-
-After cloning the repository, install the dependencies using npm:
-
-```sh
+```
 npm install
 ```
 
-You can run the tests for this library by executing:
+And run the tests:
 
-```sh
+```
 npm test
 ```
 
-## License
+Useful resources for developing collectors include the [Buildkite Test Analytics docs](https://buildkite.com/docs/test-analytics) and the [RSpec and Minitest collectors](https://github.com/buildkite/rspec-buildkite-analytics).
+
+## 👩‍💻 Contributing
+
+Bug reports and pull requests are welcome on GitHub at https://github.com/buildkite/collector-js
+
+## 📜 License
 
 The package is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
