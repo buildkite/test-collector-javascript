@@ -1,4 +1,4 @@
-const Tracer = require('./../src/tracer');
+const Tracer = require('./tracer');
 
 describe('Tracer()', () => {
   test('creates a top level span', () => {
