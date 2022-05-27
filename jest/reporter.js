@@ -23,10 +23,9 @@ class JestBuildkiteAnalyticsReporter {
   }
 
   onRunStart(test) {
-    this.tracer = new Tracer()
+    global.buildkiteTracer = new Tracer()
     this.network = new Network()
     this.network.setup()
-    this.network.tracer = this.tracer
   }
 
   onRunComplete(_test, _results) {
@@ -76,11 +75,8 @@ class JestBuildkiteAnalyticsReporter {
   }
 
 
-  // NOTE: jest reporters do not seem to have a before test case hook, only a 'onTestStart' hook, which runs before each
-  // test file, but we need to setup a new tracer for each individual test, so we'll use the latter half of this
-  // onTestCaseResult as a 'before each test' hook :)
   onTestCaseResult(test, result) {
-    this.tracer.finalize()
+    global.buildkiteTracer.finalize()
     const testPath = this.relativeTestFilePath(testResult.testFilePath);
     const prefixedTestPath = this.prefixTestPath(testPath);
     const id = uuidv4()
@@ -95,12 +91,8 @@ class JestBuildkiteAnalyticsReporter {
       'result': this.analyticsResult(result),
       'failure_reason': this.analyticsFailureReason(result),
       // TODO: Add support for 'failure_expanded'
-      'history': this.tracer.history(),
+      'history': global.buildkiteTracer.history(),
     })
-
-    // Before each test case
-    this.tracer = new Tracer()
-    this.network.tracer = this.tracer
   }
 
   prefixTestPath(testFilePath) {

@@ -4,7 +4,7 @@ class Network {
   setup() {
     requestSpy.spy((error, requestData) => {
       const detail = { method: requestData.method, url: requestData.hostname + requestData.path, lib: 'http' }
-      this.tracer.backfill('http', requestData.requestTime, detail)
+      global.buildkiteTracer.backfill('http', requestData.requestTime, detail)
     })
   }
 
