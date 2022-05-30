@@ -1,13 +1,13 @@
 {
   "name": "buildkite-collector",
-  "description" :"Buildkite Test Analytics collectors for JavaScript test frameworks",
+  "description": "Buildkite Test Analytics collectors for JavaScript test frameworks",
   "keywords": [
     "javascript",
     "buildkite",
     "buildkite-test-analytics",
     "buildkite-collector"
   ],
-  "version": "0.0.1",
+  "version": "1.0.0",
   "homepage": "https://buildkite.com/test-analytics",
   "bugs": "https://github.com/buildkite/collector-javascript/issues",
   "license": "MIT",
