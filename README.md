@@ -1,10 +1,10 @@
 # Buildkite Collectors for JavaScript
 
-Official JavaScript-based [Buildkite Test Analytics](https://buildkite.com/test-analytics) collectors ✨
+Official [Buildkite Test Analytics](https://buildkite.com/test-analytics) collectors for JavaScript test frameworks ✨
 
 ⚒ **Supported test frameworks:** Jest, and [more coming soon](https://github.com/buildkite/collector-javascript/issues?q=is%3Aissue+is%3Aopen+label%3A%22test+frameworks%22).
 
-📦 **Supported CI systems:** Buildkite, GitHub Actions, CircleCI, Jenkins, and others via the `BUILDKITE_ANALYTICS_*` environment variables.
+📦 **Supported CI systems:** Buildkite, GitHub Actions, CircleCI, and others via the `BUILDKITE_ANALYTICS_*` environment variables.
 
 ## 👉 Installing
 
