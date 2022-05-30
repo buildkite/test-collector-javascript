@@ -1,6 +1,22 @@
 {
   "name": "buildkite-collector",
+  "description" :"Buildkite Test Analytics collectors for JavaScript test frameworks",
+  "keywords": [
+    "javascript",
+    "buildkite",
+    "buildkite-test-analytics",
+    "buildkite-collector"
+  ],
   "version": "0.0.1",
+  "homepage": "https://buildkite.com/test-analytics",
+  "bugs": "https://github.com/buildkite/collector-javascript/issues",
+  "license": "MIT",
+  "files": [
+    "LICENSE.md",
+    "README.md",
+    "jest/",
+    "util/"
+  ],
   "dependencies": {
     "axios": "^0.26.1",
     "uuid": "^8.3.2"
@@ -12,6 +28,12 @@
     "examples/jest"
   ],
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "preversion": "npm test",
+    "postversion": "git push && git push --tags"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/buildkite/collector-javascript.git"
   }
 }
