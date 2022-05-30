@@ -1,0 +1,10 @@
+{
+  "name": "buildkite-collector-jest-example",
+  "scripts": {
+    "test": "jest"
+  },
+  "devDependencies": {
+    "buildkite-collector": "file:../..",
+    "jest": "^28.1.0"
+  }
+}

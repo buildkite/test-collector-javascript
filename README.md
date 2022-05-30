@@ -16,7 +16,7 @@ Official JavaScript-based [Buildkite Test Analytics](https://buildkite.com/test-
 
     ```bash
     # If you use npm:
-    npm install --dev buildkite-collector
+    npm install --save-dev buildkite-collector
 
     # or, if you use yarn:
     yarn add --dev buildkite-collector
