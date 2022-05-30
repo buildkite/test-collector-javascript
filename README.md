@@ -79,6 +79,20 @@ Useful resources for developing collectors include the [Buildkite Test Analytics
 
 Bug reports and pull requests are welcome on GitHub at https://github.com/buildkite/collector-javascript
 
+## 🚀 Releasing
+
+```sh
+# Version bump the code, tag and push
+npm version [major/minor/patch]
+git push && git push --tags
+
+# Publish to the NPM registry
+npm publish
+
+# Create a new GitHub release
+open "https://github.com/buildkite/collector-javascript/releases"
+```
+
 ## 📜 License
 
 The package is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
