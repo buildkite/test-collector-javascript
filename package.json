@@ -29,8 +29,7 @@
   ],
   "scripts": {
     "test": "jest",
-    "preversion": "npm test",
-    "postversion": "git push && git push --tags"
+    "preversion": "npm test"
   },
   "repository": {
     "type": "git",
