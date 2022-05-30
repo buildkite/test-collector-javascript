@@ -11,7 +11,7 @@ describe('examples/jest', () => {
       cwd: path.join(__dirname, "../examples/jest"),
       env: {
         ...process.env,
-        BUILDKITE_ANALYTICS_API_TOKEN: "xyz",
+        BUILDKITE_ANALYTICS_TOKEN: "xyz",
         BUILDKITE_ANALYTICS_DEBUG_ENABLED: "true"
       }
     }

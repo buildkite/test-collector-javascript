@@ -12,7 +12,7 @@ const debug = (text) => {
 
 class JestBuildkiteAnalyticsReporter {
   constructor(globalConfig, options) {
-    this._buildkiteAnalyticsKey = process.env.BUILDKITE_ANALYTICS_API_TOKEN
+    this._buildkiteAnalyticsToken = process.env.BUILDKITE_ANALYTICS_TOKEN
     this._globalConfig = globalConfig
     this._options = options
     this._testResults = []
@@ -22,8 +22,8 @@ class JestBuildkiteAnalyticsReporter {
   }
 
   onRunComplete(test, results) {
-    if (!this._buildkiteAnalyticsKey) {
-      console.error('Missing BUILDKITE_ANALYTICS_API_TOKEN')
+    if (!this._buildkiteAnalyticsToken) {
+      console.error('Missing BUILDKITE_ANALYTICS_TOKEN')
       return
     }
 
@@ -34,7 +34,7 @@ class JestBuildkiteAnalyticsReporter {
     }
     let config = {
       headers: {
-        'Authorization': `Token token="${this._buildkiteAnalyticsKey}"`,
+        'Authorization': `Token token="${this._buildkiteAnalyticsToken}"`,
         'Content-Type': 'application/json'
       }
     }
