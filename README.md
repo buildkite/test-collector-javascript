@@ -2,7 +2,7 @@
 
 Official JavaScript-based [Buildkite Test Analytics](https://buildkite.com/test-analytics) collectors ✨
 
-⚒ **Supported test frameworks:** Jest, and [more coming soon](https://github.com/buildkite/collector-js/issues?q=is%3Aissue+is%3Aopen+label%3A%22test+frameworks%22).
+⚒ **Supported test frameworks:** Jest, and [more coming soon](https://github.com/buildkite/collector-javascript/issues?q=is%3Aissue+is%3Aopen+label%3A%22test+frameworks%22).
 
 📦 **Supported CI systems:** Buildkite, GitHub Actions, CircleCI, Jenkins, and others via the `BUILDKITE_ANALYTICS_*` environment variables.
 
@@ -57,7 +57,7 @@ To enable debugging output, set the `BUILDKITE_ANALYTICS_DEBUG_ENABLED` environm
 
 ## 🔜 Roadmap
 
-See the [GitHub 'enhancement' issues](https://github.com/buildkite/collector-js/issues?q=is%3Aissue+is%3Aopen+label%3Aenhancement) for planned features. Pull requests are always welcome, and we’ll give you feedback and guidance if you choose to contribute 💚
+See the [GitHub 'enhancement' issues](https://github.com/buildkite/collector-javascript/issues?q=is%3Aissue+is%3Aopen+label%3Aenhancement) for planned features. Pull requests are always welcome, and we’ll give you feedback and guidance if you choose to contribute 💚
 
 ## ⚒ Developing
 
@@ -77,7 +77,7 @@ Useful resources for developing collectors include the [Buildkite Test Analytics
 
 ## 👩‍💻 Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/buildkite/collector-js
+Bug reports and pull requests are welcome on GitHub at https://github.com/buildkite/collector-javascript
 
 ## 📜 License
 
