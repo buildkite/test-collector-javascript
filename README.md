@@ -40,10 +40,10 @@ Official JavaScript-based [Buildkite Test Analytics](https://buildkite.com/test-
 3) Run your tests locally:<br>
 
     ```js
-    env BUILDKITE_ANALYTICS_API_TOKEN=xyz npm test
+    env BUILDKITE_ANALYTICS_TOKEN=xyz npm test
     ```
 
-4) Add the `BUILDKITE_ANALYTICS_API_TOKEN` secret to your CI, push your changes to a branch, and open a pull request 🎉
+4) Add the `BUILDKITE_ANALYTICS_TOKEN` secret to your CI, push your changes to a branch, and open a pull request 🎉
 
     ```bash
     git checkout -b add-bk-test-analytics
