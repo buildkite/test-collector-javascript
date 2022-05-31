@@ -2,7 +2,7 @@
 
 Official JavaScript-based [Buildkite Test Analytics](https://buildkite.com/test-analytics) collectors ✨
 
-⚒ **Supported test frameworks:** Jest, and [more coming soon](https://github.com/buildkite/collector-javascript/issues?q=is%3Aissue+is%3Aopen+label%3A%22test+frameworks%22).
+⚒ **Supported test frameworks:** Jest, and [more coming soon](https://github.com/buildkite/test-collector-javascript/issues?q=is%3Aissue+is%3Aopen+label%3A%22test+frameworks%22).
 
 📦 **Supported CI systems:** Buildkite, GitHub Actions, CircleCI, Jenkins, and others via the `BUILDKITE_ANALYTICS_*` environment variables.
 
@@ -12,14 +12,14 @@ Official JavaScript-based [Buildkite Test Analytics](https://buildkite.com/test-
 
 1) [Create a test suite](https://buildkite.com/docs/test-analytics), and copy the API token that it gives you.
 
-1) Add the [`buildkite-collector` package](https://www.npmjs.com/package/buildkite-collector):
+1) Add the [`buildkite-test-collector` package](https://www.npmjs.com/package/buildkite-test-collector):
 
     ```bash
     # If you use npm:
-    npm install --save-dev buildkite-collector
+    npm install --save-dev buildkite-test-collector
 
     # or, if you use yarn:
-    yarn add --dev buildkite-collector
+    yarn add --dev buildkite-test-collector
     ```
 
 2) Update your [Jest configuration](https://jestjs.io/docs/configuration):<br>
@@ -30,7 +30,7 @@ Official JavaScript-based [Buildkite Test Analytics](https://buildkite.com/test-
       // Send results to Test Analytics
       reporters: [
         'default',
-        'buildkite-collector/jest/reporter'
+        'buildkite-test-collector/jest/reporter'
       ],
 
       // Enable column + line capture for Test Analytics
@@ -57,7 +57,7 @@ To enable debugging output, set the `BUILDKITE_ANALYTICS_DEBUG_ENABLED` environm
 
 ## 🔜 Roadmap
 
-See the [GitHub 'enhancement' issues](https://github.com/buildkite/collector-javascript/issues?q=is%3Aissue+is%3Aopen+label%3Aenhancement) for planned features. Pull requests are always welcome, and we’ll give you feedback and guidance if you choose to contribute 💚
+See the [GitHub 'enhancement' issues](https://github.com/buildkite/test-collector-javascript/issues?q=is%3Aissue+is%3Aopen+label%3Aenhancement) for planned features. Pull requests are always welcome, and we’ll give you feedback and guidance if you choose to contribute 💚
 
 ## ⚒ Developing
 
@@ -77,7 +77,7 @@ Useful resources for developing collectors include the [Buildkite Test Analytics
 
 ## 👩‍💻 Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/buildkite/collector-javascript
+Bug reports and pull requests are welcome on GitHub at https://github.com/buildkite/test-collector-javascript
 
 ## 🚀 Releasing
 
@@ -90,7 +90,7 @@ git push && git push --tags
 npm publish
 
 # Create a new GitHub release
-open "https://github.com/buildkite/collector-javascript/releases"
+open "https://github.com/buildkite/test-collector-javascript/releases"
 ```
 
 ## 📜 License
