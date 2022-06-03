@@ -5,6 +5,10 @@ const { exec } = require('child_process');
 const { hasUncaughtExceptionCaptureCallback } = require('process');
 const path = require('path');
 
+// Default Jest async test timeout is 5s
+const TIMEOUT_10_SECONDS_IN_MS = 10000;
+jest.setTimeout(TIMEOUT_10_SECONDS_IN_MS);
+
 describe('examples/jest', () => {
   test('it posts the correct JSON', (done) => {
     const execOpts = {
@@ -16,13 +20,17 @@ describe('examples/jest', () => {
       }
     }
     exec('npm test', execOpts, (error, stdout, stderr) => {
+      if (error) {
+        console.warn('E2e jest test failed, ensure you installed dependencies within examples/jest via `npm i`');
+        done(error);
+      }
       expect(stdout).toMatch(/Posting to Test Analytics: ({.*})/m);
 
       const jsonMatch = stdout.match(/Posting to Test Analytics: ({.*})/m)
       const json = JSON.parse(jsonMatch[1])
 
       // Uncomment to view the JSON
-      // console.log(json)
+      console.log(json)
 
       expect(json).toHaveProperty("format", "json")
 
@@ -46,6 +54,6 @@ describe('examples/jest', () => {
         'Received: 41\n')
 
       done()
-    }, 10000) // 10s timeout
+    }, TIMEOUT_10_SECONDS_IN_MS) // 10s timeout
   })
 })
