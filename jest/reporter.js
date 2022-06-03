@@ -3,6 +3,7 @@ const axios = require('axios')
 const fs = require('fs')
 const path = require('path');
 const CI = require('../util/ci')
+const CHUNK_SIZE = 5000
 
 const debug = (text) => {
   if (process.env.BUILDKITE_ANALYTICS_DEBUG_ENABLED === "true") {
@@ -21,7 +22,18 @@ class JestBuildkiteAnalyticsReporter {
   onRunStart(test) {
   }
 
-  onRunComplete(test, results) {
+  onRunComplete(_test, _results) {
+    if (!this._buildkiteAnalyticsToken) {
+      console.error('Missing BUILDKITE_ANALYTICS_TOKEN')
+      return
+    }
+
+    for (let i=0; i < this._testResults.length; i += CHUNK_SIZE) {
+      this.uploadTestResults(this._testResults.slice(i, i + 5000))
+    }
+  }
+
+  uploadTestResults(results) {
     if (!this._buildkiteAnalyticsToken) {
       console.error('Missing BUILDKITE_ANALYTICS_TOKEN')
       return
@@ -30,7 +42,7 @@ class JestBuildkiteAnalyticsReporter {
     let data = {
       'format': 'json',
       'run_env': (new CI()).env(),
-      "data": this._testResults,
+      "data": results,
     }
     let config = {
       headers: {
