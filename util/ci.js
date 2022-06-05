@@ -43,6 +43,7 @@ class CI {
       "job_id": process.env.BUILDKITE_ANALYTICS_JOB_ID,
       "message": process.env.BUILDKITE_ANALYTICS_MESSAGE,
       "debug": process.env.BUILDKITE_ANALYTICS_DEBUG_ENABLED,
+      "locationPrefix": process.env.BUILDKITE_ANALYTICS_LOCATION_PREFIX,
       "version": version,
       "collector": `js-${name}`,
     })

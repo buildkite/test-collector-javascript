@@ -17,6 +17,7 @@ class JestBuildkiteAnalyticsReporter {
     this._globalConfig = globalConfig
     this._options = options
     this._testResults = []
+    this._testEnv = (new CI()).env();
   }
 
   onRunStart(test) {
@@ -41,7 +42,7 @@ class JestBuildkiteAnalyticsReporter {
 
     let data = {
       'format': 'json',
-      'run_env': (new CI()).env(),
+      'run_env': this._testEnv,
       "data": results,
     }
     let config = {
@@ -70,7 +71,8 @@ class JestBuildkiteAnalyticsReporter {
   }
 
   onTestResult(test, testResult) {
-    const testPath = this.relativeTestFilePath(testResult.testFilePath)
+    const testPath = this.relativeTestFilePath(testResult.testFilePath);
+    const prefixedTestPath = this.prefixTestPath(testPath);
 
     testResult.testResults.forEach((result) => {
       let id = uuidv4()
@@ -79,8 +81,8 @@ class JestBuildkiteAnalyticsReporter {
         'scope': result.ancestorTitles.join(' '),
         'name': result.title,
         'identifier': result.fullName,
-        'location': result.location ? `${testPath}:${result.location.line}` : null,
-        'file_name': testPath,
+        'location': result.location ? `${prefixedTestPath}:${result.location.line}` : null,
+        'file_name': prefixedTestPath,
         'result': this.analyticsResult(result),
         'failure_reason': this.analyticsFailureReason(result),
         // TODO: Add support for 'failure_expanded'
@@ -93,6 +95,11 @@ class JestBuildkiteAnalyticsReporter {
 
       })
     })
+  }
+
+  prefixTestPath(testFilePath) {
+    const prefix = this._testEnv.locationPrefix
+    return prefix ? path.join(prefix, testFilePath) : testFilePath
   }
 
   relativeTestFilePath(testFilePath) {
