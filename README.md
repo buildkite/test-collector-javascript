@@ -65,9 +65,6 @@ After cloning the repository, install the dependencies:
 
 ```
 npm install
-cd examples/jest
-npm install
-cd -
 ```
 
 And run the tests:
