@@ -49,4 +49,11 @@ describe('CI.env', () => {
 
     expect(ci.env().ci).toEqual('buildkite')
   })
+
+  test('sets location_prefix based on BUILDKITE_ANALYTICS_LOCATION_PREFIX', () => {
+    process.env.BUILDKITE_ANALYTICS_LOCATION_PREFIX = 'true'
+    ci = new CI()
+
+    expect(ci.env().location_prefix).toEqual('true')
+  })
 });

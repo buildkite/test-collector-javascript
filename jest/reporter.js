@@ -98,7 +98,7 @@ class JestBuildkiteAnalyticsReporter {
   }
 
   prefixTestPath(testFilePath) {
-    const prefix = this._testEnv.locationPrefix
+    const prefix = this._testEnv.location_prefix
     return prefix ? path.join(prefix, testFilePath) : testFilePath
   }
 
