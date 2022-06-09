@@ -6,16 +6,15 @@ const { hasUncaughtExceptionCaptureCallback } = require('process');
 const path = require('path');
 
 describe('examples/jest', () => {
+  const cwd = path.join(__dirname, "../examples/jest")
+  const env = {
+    ...process.env,
+    BUILDKITE_ANALYTICS_TOKEN: "xyz",
+    BUILDKITE_ANALYTICS_DEBUG_ENABLED: "true"
+  }
+
   test('it posts the correct JSON', (done) => {
-    const execOpts = {
-      cwd: path.join(__dirname, "../examples/jest"),
-      env: {
-        ...process.env,
-        BUILDKITE_ANALYTICS_TOKEN: "xyz",
-        BUILDKITE_ANALYTICS_DEBUG_ENABLED: "true"
-      }
-    }
-    exec('npm test', execOpts, (error, stdout, stderr) => {
+    exec('npm test', { cwd, env }, (error, stdout, stderr) => {
       expect(stdout).toMatch(/Posting to Test Analytics: ({.*})/m);
 
       const jsonMatch = stdout.match(/Posting to Test Analytics: ({.*})/m)
@@ -25,6 +24,12 @@ describe('examples/jest', () => {
       // console.log(json)
 
       expect(json).toHaveProperty("format", "json")
+
+      expect(json).toHaveProperty("run_env.ci")
+      expect(json).toHaveProperty("run_env.debug", 'true')
+      expect(json).toHaveProperty("run_env.key")
+      expect(json).toHaveProperty("run_env.version")
+      expect(json).toHaveProperty("run_env.collector", "js-buildkite-test-collector")
 
       expect(json).toHaveProperty("data[0].scope", '')
       expect(json).toHaveProperty("data[0].name", '1 + 2 to equal 3')
@@ -44,6 +49,25 @@ describe('examples/jest', () => {
         '\n' +
         'Expected: 42\n' +
         'Received: 41\n')
+
+      done()
+    }, 10000) // 10s timeout
+  })
+
+  test('it supports test location prefixes for monorepos', (done) => {
+    exec('npm test', { cwd, env: { ...env, BUILDKITE_ANALYTICS_LOCATION_PREFIX: "some-sub-dir/" } }, (error, stdout, stderr) => {
+      expect(stdout).toMatch(/Posting to Test Analytics: ({.*})/m);
+
+      const jsonMatch = stdout.match(/Posting to Test Analytics: ({.*})/m)
+      const json = JSON.parse(jsonMatch[1])
+
+      // Uncomment to view the JSON
+      // console.log(json)
+
+      expect(json).toHaveProperty("run_env.location_prefix", "some-sub-dir/")
+      
+      expect(json).toHaveProperty("data[0].location", "some-sub-dir/example.test.js:2")
+      expect(json).toHaveProperty("data[1].location", "some-sub-dir/example.test.js:8")
 
       done()
     }, 10000) // 10s timeout
