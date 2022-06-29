@@ -3,6 +3,8 @@ const axios = require('axios')
 const fs = require('fs')
 const path = require('path');
 const CI = require('../util/ci')
+const Network = require('../util/network')
+const Tracer = require('../util/tracer')
 const CHUNK_SIZE = 5000
 
 const debug = (text) => {
@@ -18,9 +20,6 @@ class JestBuildkiteAnalyticsReporter {
     this._options = options
     this._testResults = []
     this._testEnv = (new CI()).env();
-  }
-
-  onRunStart(test) {
   }
 
   onRunComplete(_test, _results) {
@@ -67,34 +66,51 @@ class JestBuildkiteAnalyticsReporter {
     })
   }
 
-  onTestStart(test) {
+  onTestFileStart(test) {
+    console.log('FILE START')
+    let testEnv = test.context.config.globals
+
+    testEnv.tracer = new Tracer()
+    testEnv.network = new Network()
+    testEnv.network.setup(testEnv.tracer)
+    testEnv.results = []
   }
 
-  onTestResult(test, testResult) {
-    const testPath = this.relativeTestFilePath(testResult.testFilePath);
+  onTestCaseResult(test, result) {
+    let testEnv = test.context.config.globals
+    testEnv.tracer.finalize()
+
+    testEnv.results.push({
+      'id': uuidv4(),
+      'scope': result.ancestorTitles.join(' '),
+      'name': result.title,
+      'identifier': result.fullName,
+      'result': this.analyticsResult(result),
+      'failure_reason': this.analyticsFailureReason(result),
+      // TODO: Add support for 'failure_expanded'
+      'history': testEnv.tracer.history(),
+    })
+
+    // Jest does not have a hook for an individual test case starting, so use this as a pseudo before-each hook
+    // We setup a tracer for the next test if there is one
+    testEnv.tracer = new Tracer()
+    testEnv.network = new Network()
+    testEnv.network.setup(testEnv.tracer)
+  }
+
+  onTestFileResult(test, result) {
+    let testEnv = test.context.config.globals
+    // result.testFilePath is only available after the test file has run, otherwise we would push the test result in the 'onTestCaseResult' hook
+    const testPath = this.relativeTestFilePath(result.testFilePath);
     const prefixedTestPath = this.prefixTestPath(testPath);
 
-    testResult.testResults.forEach((result) => {
-      let id = uuidv4()
-      this._testResults.push({
-        'id': id,
-        'scope': result.ancestorTitles.join(' '),
-        'name': result.title,
-        'identifier': result.fullName,
-        'location': result.location ? `${prefixedTestPath}:${result.location.line}` : null,
-        'file_name': prefixedTestPath,
-        'result': this.analyticsResult(result),
-        'failure_reason': this.analyticsFailureReason(result),
-        // TODO: Add support for 'failure_expanded'
-        'history': {
-          'section': 'top',
-          'start_at': testResult.perfStats.start,
-          'end_at': testResult.perfStats.end,
-          'duration': result.duration / 1000,
-        }
-
-      })
-    })
+    this._testResults.push(...testEnv.results.map((testResult) => {
+      return {
+        location: result.location ? `${prefixedTestPath}:${result.location.line}` : null,
+        file_name: result.file_name = prefixedTestPath,
+        ...testResult
+      }
+    }))
   }
 
   prefixTestPath(testFilePath) {

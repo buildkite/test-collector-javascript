@@ -33,6 +33,9 @@ Official [Buildkite Test Analytics](https://buildkite.com/test-analytics) collec
         'buildkite-test-collector/jest/reporter'
       ],
 
+      // Additional setup to measure HTTP request timings
+      preset: 'buildkite-collector/src/jest',
+
       // Enable column + line capture for Test Analytics
       testLocationInResults: true
     ```
