@@ -22,15 +22,7 @@ class JestBuildkiteAnalyticsReporter {
     this._testEnv = (new CI()).env();
   }
 
-  onRunStart(test) {
-    global.buildkiteTracer = new Tracer()
-    this.network = new Network()
-    this.network.setup()
-  }
-
   onRunComplete(_test, _results) {
-    this.network.teardown()
-
     if (!this._buildkiteAnalyticsToken) {
       console.error('Missing BUILDKITE_ANALYTICS_TOKEN')
       return
@@ -74,25 +66,51 @@ class JestBuildkiteAnalyticsReporter {
     })
   }
 
+  onTestFileStart(test) {
+    console.log('FILE START')
+    let testEnv = test.context.config.globals
+
+    testEnv.tracer = new Tracer()
+    testEnv.network = new Network()
+    testEnv.network.setup(testEnv.tracer)
+    testEnv.results = []
+  }
 
   onTestCaseResult(test, result) {
-    global.buildkiteTracer.finalize()
-    const testPath = this.relativeTestFilePath(testResult.testFilePath);
-    const prefixedTestPath = this.prefixTestPath(testPath);
-    const id = uuidv4()
+    let testEnv = test.context.config.globals
+    testEnv.tracer.finalize()
 
-    this._testResults.push({
-      'id': id,
+    testEnv.results.push({
+      'id': uuidv4(),
       'scope': result.ancestorTitles.join(' '),
       'name': result.title,
       'identifier': result.fullName,
-      'location': result.location ? `${prefixedTestPath}:${result.location.line}` : null,
-      'file_name': prefixedTestPath,
       'result': this.analyticsResult(result),
       'failure_reason': this.analyticsFailureReason(result),
       // TODO: Add support for 'failure_expanded'
-      'history': global.buildkiteTracer.history(),
+      'history': testEnv.tracer.history(),
     })
+
+    // Jest does not have a hook for an individual test case starting, so use this as a pseudo before-each hook
+    // We setup a tracer for the next test if there is one
+    testEnv.tracer = new Tracer()
+    testEnv.network = new Network()
+    testEnv.network.setup(testEnv.tracer)
+  }
+
+  onTestFileResult(test, result) {
+    let testEnv = test.context.config.globals
+    // result.testFilePath is only available after the test file has run, otherwise we would push the test result in the 'onTestCaseResult' hook
+    const testPath = this.relativeTestFilePath(result.testFilePath);
+    const prefixedTestPath = this.prefixTestPath(testPath);
+
+    this._testResults.push(...testEnv.results.map((testResult) => {
+      return {
+        location: result.location ? `${prefixedTestPath}:${result.location.line}` : null,
+        file_name: result.file_name = prefixedTestPath,
+        ...testResult
+      }
+    }))
   }
 
   prefixTestPath(testFilePath) {

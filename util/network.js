@@ -1,10 +1,10 @@
 const requestSpy = require('request-spy')
 
 class Network {
-  setup() {
+  setup(tracer) {
     requestSpy.spy((error, requestData) => {
       const detail = { method: requestData.method, url: requestData.hostname + requestData.path, lib: 'http' }
-      global.buildkiteTracer.backfill('http', requestData.requestTime, detail)
+      tracer.backfill('http', requestData.requestTime, detail)
     })
   }
 
