@@ -1,19 +1,10 @@
 const { v4: uuidv4 } = require('uuid')
-const axios = require('axios')
-const fs = require('fs')
 const path = require('path');
 const CI = require('../util/ci')
-const CHUNK_SIZE = 5000
-
-const debug = (text) => {
-  if (process.env.BUILDKITE_ANALYTICS_DEBUG_ENABLED === "true") {
-    console.log(text)
-  }
-}
+const uploadTestResults = require('../util/uploadTestResults')
 
 class JestBuildkiteAnalyticsReporter {
   constructor(globalConfig, options) {
-    this._buildkiteAnalyticsToken = process.env.BUILDKITE_ANALYTICS_TOKEN
     this._globalConfig = globalConfig
     this._options = options
     this._testResults = []
@@ -24,47 +15,7 @@ class JestBuildkiteAnalyticsReporter {
   }
 
   onRunComplete(_test, _results) {
-    if (!this._buildkiteAnalyticsToken) {
-      console.error('Missing BUILDKITE_ANALYTICS_TOKEN')
-      return
-    }
-
-    for (let i=0; i < this._testResults.length; i += CHUNK_SIZE) {
-      this.uploadTestResults(this._testResults.slice(i, i + 5000))
-    }
-  }
-
-  uploadTestResults(results) {
-    if (!this._buildkiteAnalyticsToken) {
-      console.error('Missing BUILDKITE_ANALYTICS_TOKEN')
-      return
-    }
-
-    let data = {
-      'format': 'json',
-      'run_env': this._testEnv,
-      "data": results,
-    }
-    let config = {
-      headers: {
-        'Authorization': `Token token="${this._buildkiteAnalyticsToken}"`,
-        'Content-Type': 'application/json'
-      }
-    }
-
-    debug(`Posting to Test Analytics: ${JSON.stringify(data)}`)
-
-    axios.post('https://analytics-api.buildkite.com/v1/uploads', data, config)
-    .then(function (response) {
-      debug(`Test Analytics success response: ${JSON.stringify(response.data)}`)
-    })
-    .catch(function (error) {
-      if (error.response) {
-        console.error(`Test Analytics error response: ${error.response.status} ${error.response.statusText} ${JSON.stringify(error.response.data)}`);
-      } else {
-        console.error(`Test Analytics error: ${error.message}`)
-      }
-    })
+    uploadTestResults(this._testEnv, this._testResults)
   }
 
   onTestStart(test) {
