@@ -1,3 +1,6 @@
+const { v4: uuidv4 } = require('uuid')
+const CI = require('../util/ci')
+const uploadTestResults = require('../util/uploadTestResults')
 let testLocations = {}
 
 const findLocation = () => {
@@ -24,13 +27,59 @@ const itFactory = (it) => {
 jasmine.getEnv().it = itFactory(jasmine.getEnv().it);
 
 class JasmineBuildkiteAnalyticsReporter {
+  constructor() {
+    this._testResults = []
+    this._testEnv = (new CI()).env();
+  }
+
   specStarted(result) {
-    // console.log('result', result)
+    setSpecProperty('startAt', performance.now() / 1000)
   }
 
   specDone(result) {
     result.location = testLocations[result.id]
-    console.log('result', result)
+    const id = uuidv4()
+    this._testResults.push({
+      'id': id,
+      'name': result.fullName,
+      'identifier': result.fullName,
+      'location': result.location.filename + ':' + result.location.line,
+      'file_name': result.location.filename,
+      'result': this.analyticsResult(result),
+      'failure_reason': (result.failedExpectations[0] || {}).message,
+      'failure_expanded': result.failedExpectations,
+      'history': {
+        'section': 'top',
+        'start_at': result.properties.startAt,
+        'end_at': performance.now() / 1000,
+        'duration': result.duration / 1000,
+      }
+    })
+  }
+
+  suiteDone(result, done) {
+    uploadTestResults(this._testEnv, this._testResults)
+  }
+
+  analyticsResult(testResult) {
+    // Jasmine test statuses:
+    // - passed
+    // - pending
+    // - failed
+    // - disabled
+    //
+    // Buildkite Test Analytics execution results:
+    // - passed
+    // - failed
+    // - pending
+    // - skipped
+    // - unknown
+    return {
+      passed: 'passed',
+      pending: 'pending',
+      failed: 'failed',
+      disabled: 'skipped'
+    }[testResult.status]
   }
 }
 
