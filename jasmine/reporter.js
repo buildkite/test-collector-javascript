@@ -23,8 +23,10 @@ const itFactory = (it) => {
   }
 }
 
-// Ovveride jasmine's it() function to retrieve the spec filename
+// Ovveride jasmine's it(), fit() and xit() functions to retrieve the spec filename
 jasmine.getEnv().it = itFactory(jasmine.getEnv().it);
+jasmine.getEnv().xit = itFactory(jasmine.getEnv().xit);
+jasmine.getEnv().fit = itFactory(jasmine.getEnv().fit);
 
 class JasmineBuildkiteAnalyticsReporter {
   constructor() {
@@ -57,8 +59,8 @@ class JasmineBuildkiteAnalyticsReporter {
     })
   }
 
-  suiteDone(result, done) {
-    uploadTestResults(this._testEnv, this._testResults)
+  jasmineDone(result, done) {
+    return uploadTestResults(this._testEnv, this._testResults, done)
   }
 
   analyticsResult(testResult) {

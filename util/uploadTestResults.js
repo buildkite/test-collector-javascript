@@ -2,7 +2,7 @@ const debug = require('../util/debug')
 const axios = require('axios')
 const CHUNK_SIZE = 5000
 
-const uploadTestResults = (env, results) => {
+const uploadTestResults = (env, results, done) => {
   const buildkiteAnalyticsToken = process.env.BUILDKITE_ANALYTICS_TOKEN
   let data
 
@@ -30,6 +30,7 @@ const uploadTestResults = (env, results) => {
     axios.post('https://analytics-api.buildkite.com/v1/uploads', data, config)
     .then(function (response) {
       debug(`Test Analytics success response: ${JSON.stringify(response.data)}`)
+      if(done !== undefined) { return done() }
     })
     .catch(function (error) {
       if (error.response) {
@@ -37,6 +38,7 @@ const uploadTestResults = (env, results) => {
       } else {
         console.error(`Test Analytics error: ${error.message}`)
       }
+      if(done !== undefined) { return done() }
     })
   }
 }
