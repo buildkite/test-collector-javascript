@@ -3,6 +3,8 @@ const CI = require('../util/ci')
 const uploadTestResults = require('../util/uploadTestResults')
 let testLocations = {}
 
+// Jasmine does not provide the filename when reporting on test cases
+// We can retrieve it by looking at the stack and extracting the last spec file we see.
 const findLocation = () => {
   const fileRegexp = /at.* \({0,1}(.*|\w*):(.*):\d*/
   const trace = (new Error()).stack.split(/\n/)
