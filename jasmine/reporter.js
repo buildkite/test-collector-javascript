@@ -1,6 +1,8 @@
 const { v4: uuidv4 } = require('uuid')
 const CI = require('../util/ci')
 const uploadTestResults = require('../util/uploadTestResults')
+const Paths = require('../util/paths')
+const process = require('node:process')
 let testLocations = {}
 
 // Jasmine does not provide the filename when reporting on test cases
@@ -31,9 +33,11 @@ jasmine.getEnv().xit = itFactory(jasmine.getEnv().xit);
 jasmine.getEnv().fit = itFactory(jasmine.getEnv().fit);
 
 class JasmineBuildkiteAnalyticsReporter {
-  constructor() {
+  constructor(config = { cwd: process.cwd() }) {
+    this.config = config
     this._testResults = []
     this._testEnv = (new CI()).env();
+    this._paths = new Paths(config, this._testEnv.location_prefix)
   }
 
   specStarted(result) {
@@ -42,13 +46,15 @@ class JasmineBuildkiteAnalyticsReporter {
 
   specDone(result) {
     result.location = testLocations[result.id]
+    const prefixedTestPath = this._paths.prefixTestPath(result.location.filename);
+
     const id = uuidv4()
     this._testResults.push({
       'id': id,
-      'name': result.fullName,
+      'name': result.description,
       'identifier': result.fullName,
-      'location': result.location.filename + ':' + result.location.line,
-      'file_name': result.location.filename,
+      'location': result.location ? `${prefixedTestPath}:${result.location.line}` : null,
+      'file_name': prefixedTestPath,
       'result': this.analyticsResult(result),
       'failure_reason': (result.failedExpectations[0] || {}).message,
       'failure_expanded': result.failedExpectations,

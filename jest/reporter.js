@@ -1,7 +1,7 @@
 const { v4: uuidv4 } = require('uuid')
-const path = require('path');
 const CI = require('../util/ci')
 const uploadTestResults = require('../util/uploadTestResults')
+const Paths = require('../util/paths')
 
 class JestBuildkiteAnalyticsReporter {
   constructor(globalConfig, options) {
@@ -9,6 +9,7 @@ class JestBuildkiteAnalyticsReporter {
     this._options = options
     this._testResults = []
     this._testEnv = (new CI()).env();
+    this._paths = new Paths(globalConfig, this._testEnv.location_prefix)
   }
 
   onRunStart(test) {
@@ -22,8 +23,7 @@ class JestBuildkiteAnalyticsReporter {
   }
 
   onTestResult(test, testResult) {
-    const testPath = this.relativeTestFilePath(testResult.testFilePath);
-    const prefixedTestPath = this.prefixTestPath(testPath);
+    const prefixedTestPath = this._paths.prefixTestPath(testResult.testFilePath);
 
     testResult.testResults.forEach((result) => {
       let id = uuidv4()
@@ -48,16 +48,6 @@ class JestBuildkiteAnalyticsReporter {
     })
   }
 
-  prefixTestPath(testFilePath) {
-    const prefix = this._testEnv.location_prefix
-    return prefix ? path.join(prefix, testFilePath) : testFilePath
-  }
-
-  relativeTestFilePath(testFilePath) {
-    // Based upon https://github.com/facebook/jest/blob/49393d01cdda7dfe75718aa1a6586210fa197c72/packages/jest-reporters/src/relativePath.ts#L11
-    const dir = this._globalConfig.cwd || this._globalConfig.rootDir
-    return path.relative(dir, testFilePath)
-  }
 
   analyticsResult(testResult) {
     // Jest test statuses:
