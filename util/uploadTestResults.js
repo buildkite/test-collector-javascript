@@ -22,7 +22,7 @@ const uploadTestResults = (env, results, done) => {
     data = {
       'format': 'json',
       'run_env': env,
-      "data": results.slice(i, i + 5000),
+      "data": results.slice(i, i + CHUNK_SIZE),
     }
 
     debug(`Posting to Test Analytics: ${JSON.stringify(data)}`)

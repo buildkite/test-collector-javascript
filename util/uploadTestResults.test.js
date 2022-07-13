@@ -1,4 +1,5 @@
-const JestBuildkiteAnalyticsReporter = require('./reporter');
+const uploadTestResults = require('./uploadTestResults')
+const CI = require('../util/ci')
 const axios = require('axios');
 const { version } = require('../package.json')
 
@@ -25,8 +26,7 @@ describe('with no token', () => {
   })
 
   it('prints a console message and returns', () => {
-    const reporter = new JestBuildkiteAnalyticsReporter({}, {})
-    reporter.onRunComplete({}, {})
+    uploadTestResults({}, [])
 
     expect(console.error).toBeCalledTimes(1)
     expect(console.error).toHaveBeenLastCalledWith('Missing BUILDKITE_ANALYTICS_TOKEN')
@@ -39,8 +39,7 @@ describe('with empty token', () => {
   })
 
   it('prints a console message and returns', () => {
-    const reporter = new JestBuildkiteAnalyticsReporter({}, {})
-    reporter.onRunComplete({}, {})
+    uploadTestResults({}, [])
 
     expect(console.error).toBeCalledTimes(1)
     expect(console.error).toHaveBeenLastCalledWith('Missing BUILDKITE_ANALYTICS_TOKEN')
@@ -57,9 +56,7 @@ describe('with token "abc"', () => {
     it('posts a result', () => {
       axios.post.mockResolvedValue({ data: "Success" })
 
-      const reporter = new JestBuildkiteAnalyticsReporter({}, {})
-      reporter._testResults = ['result']
-      reporter.onRunComplete({}, {})
+      uploadTestResults(new CI().env(), ['result'])
 
       expect(axios.post.mock.calls[0]).toEqual([
         "https://analytics-api.buildkite.com/v1/uploads",
@@ -85,9 +82,7 @@ describe('with token "abc"', () => {
     it('does a single posts if < 5000', () => {
       axios.post.mockResolvedValue({ data: "Success" });
       
-      const reporter = new JestBuildkiteAnalyticsReporter({}, {})
-      reporter._testResults = Array(4999).fill('result')
-      reporter.onRunComplete({}, {})
+      uploadTestResults({}, Array(4999).fill('result'))
 
       expect(axios.post.mock.calls.length).toBe(1)
     })
@@ -95,9 +90,7 @@ describe('with token "abc"', () => {
     it('posts 5000 results at a time', () => {
       axios.post.mockResolvedValue({ data: "Success" })
       
-      const reporter = new JestBuildkiteAnalyticsReporter({}, {})
-      reporter._testResults = Array(12000).fill('result')
-      reporter.onRunComplete({}, {})
+      uploadTestResults({}, Array(12000).fill('result'))
 
       expect(axios.post.mock.calls.length).toBe(3)
     })
