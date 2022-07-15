@@ -1,0 +1,11 @@
+{
+  "name": "buildkite-test-collector-mocha-example",
+  "scripts": {
+    "test": "mocha --reporter mocha-multi-reporters --reporter-options configFile=config.json"
+  },
+  "devDependencies": {
+    "buildkite-test-collector": "file:../..",
+    "mocha": "^10.0.0",
+    "mocha-multi-reporters": "^1.5.1"
+  }
+}

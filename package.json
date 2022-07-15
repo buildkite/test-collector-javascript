@@ -24,7 +24,8 @@
   },
   "devDependencies": {
     "jasmine": "^4.2.1",
-    "jest": "^28.1.0"
+    "jest": "^28.1.0",
+    "mocha": "^10.0.0"
   },
   "workspaces": [
     "examples/jest",
