@@ -3,6 +3,7 @@ const Paths = require('../util/paths')
 const Mocha = require('mocha')
 const Runnable = require('mocha/lib/runnable')
 const uploadTestResults = require('../util/uploadTestResults')
+const failureExpanded = require('../util/failureExpanded')
 // The getMochaID method retrieves the unique ID for a test
 const getMochaID = require('mocha/lib/utils').getMochaID
 
@@ -45,23 +46,22 @@ class MochaBuildkiteAnalyticsReporter {
   }
 
   testFinished(test, error) {
-    const failureReason = undefined
-    if(error !== undefined) {
-      // FIXME: We need to retreive the simple error message
-      // failureReason = JSON.stringify(error)
-    }
-
+    const failureReason = error !== undefined ? error.toString() : undefined
     const prefixedTestPath = this._paths.prefixTestPath(test.file)
 
     this._testResults.push({
       'id': getMochaID(test),
       'name': test.title,
-      'identifier': test.parent.title.length > 0 ? `${test.parent.title} ${test.title}` : test.title, // FIXME: needs to be recursive, as we could have many parents
+      'scope': this.scope(test),
+      'identifier': [this.scope(test), test.title].join(' ').trim(),
       'file_name': prefixedTestPath,
+      'location': prefixedTestPath,
       'result': this.analyticsResult(test.state),
-      'failure_reason': failureReason
+      'failure_reason': failureReason,
+      'failure_expanded': failureExpanded(error == undefined ? [] : error.multiple),
     })
   }
+
 
   testRunFinished() {
     uploadTestResults(this._testEnv, this._testResults)
@@ -84,6 +84,18 @@ class MochaBuildkiteAnalyticsReporter {
       [STATE_PENDING]: 'pending',
       [STATE_FAILED]: 'failed',
     }[state]
+  }
+
+  scope(test) {
+    let scopeArray = []
+    let currentScope = test.parent
+
+    while(currentScope !== undefined) {
+      scopeArray.push(currentScope.title)
+      currentScope = currentScope.parent
+    }
+
+    return scopeArray.reverse().join(' ').trim()
   }
 }
 
