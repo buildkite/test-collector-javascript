@@ -57,7 +57,7 @@ class JasmineBuildkiteAnalyticsReporter {
       'file_name': prefixedTestPath,
       'result': this.analyticsResult(result),
       'failure_reason': (result.failedExpectations[0] || {}).message,
-      'failure_expanded': result.failedExpectations,
+      'failure_expanded': this.failureExpanded(result),
       'history': {
         'section': 'top',
         'start_at': result.properties.startAt,
@@ -90,6 +90,16 @@ class JasmineBuildkiteAnalyticsReporter {
       failed: 'failed',
       disabled: 'skipped'
     }[testResult.status]
+  }
+
+  failureExpanded(testResult) {
+    return testResult.failedExpectations.map((failure) => {
+      let {stack, ...expanded} = failure
+      let expandedArray = Object.keys(expanded).map((key) => {
+        return `${key}: ${expanded[key]}`
+      })
+      return { stack: stack.split(/\r?\n/), expanded: expandedArray } // change expanded to be an array, it may work like the example!
+    })
   }
 }
 
