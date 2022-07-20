@@ -46,7 +46,7 @@ describe('examples/mocha', () => {
       expect(json).toHaveProperty("data[1].failure_reason")
       expect(json.data[1].failure_reason).toMatch('AssertionError [ERR_ASSERTION]: 41 == 42')
       expect(json).toHaveProperty("data[1].failure_expanded[0].expanded")
-      expect(json).toHaveProperty("data[1].failure_expanded[0].stack")
+      expect(json).toHaveProperty("data[1].failure_expanded[0].backtrace")
 
       done()
     }, 10000) // 10s timeout
