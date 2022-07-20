@@ -98,7 +98,7 @@ class JasmineBuildkiteAnalyticsReporter {
       let expandedArray = Object.keys(expanded).map((key) => {
         return `${key}: ${expanded[key]}`
       })
-      return { stack: stack.split(/\r?\n/), expanded: expandedArray } // change expanded to be an array, it may work like the example!
+      return { backtrace: stack.split(/\r?\n/), expanded: expandedArray } // change expanded to be an array, it may work like the example!
     })
   }
 }
