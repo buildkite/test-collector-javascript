@@ -50,7 +50,7 @@ class MochaBuildkiteAnalyticsReporter {
       'id': test.testAnalyticsId,
       'name': test.title,
       'scope': this.scope(test),
-      'identifier': [this.scope(test), test.title].join(' ').trim(),
+      'identifier': test.fullTitle(),
       'file_name': prefixedTestPath,
       'location': prefixedTestPath,
       'result': this.analyticsResult(test.state),
@@ -89,15 +89,11 @@ class MochaBuildkiteAnalyticsReporter {
   }
 
   scope(test) {
-    let scopeArray = []
-    let currentScope = test.parent
-
-    while(currentScope !== undefined) {
-      scopeArray.push(currentScope.title)
-      currentScope = currentScope.parent
-    }
-
-    return scopeArray.reverse().join(' ').trim()
+    const titlePath = test.titlePath()
+    // titlePath returns an array of the scope + the test title.
+    // as the test title is the last array item, we just remove it
+    // and then join the rest of the array as a space separated string
+    return titlePath.slice(0, titlePath.length - 1).join(' ')
   }
 }
 
