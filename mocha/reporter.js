@@ -1,17 +1,15 @@
+const { v4: uuidv4 } = require('uuid')
 const CI = require('../util/ci')
 const Paths = require('../util/paths')
 const Mocha = require('mocha')
 const Runnable = require('mocha/lib/runnable')
 const uploadTestResults = require('../util/uploadTestResults')
 const failureExpanded = require('../util/failureExpanded')
-// The getMochaID method retrieves the unique ID for a test
-const getMochaID = require('mocha/lib/utils').getMochaID
 
 const {
   EVENT_RUN_END,
   EVENT_TEST_BEGIN,
-  EVENT_TEST_PASS,
-  EVENT_TEST_FAIL,
+  EVENT_TEST_END,
   EVENT_TEST_PENDING,
 } = Mocha.Runner.constants
 
@@ -31,11 +29,8 @@ class MochaBuildkiteAnalyticsReporter {
       .on(EVENT_TEST_BEGIN, (test) => {
         this.testStarted(test)
       })
-      .on(EVENT_TEST_PASS, (test) => {
+      .on(EVENT_TEST_END, (test) => {
         this.testFinished(test)
-      })
-      .on(EVENT_TEST_FAIL, (test, error) => {
-        this.testFinished(test, error)
       })
       .on(EVENT_RUN_END, () => {
         this.testRunFinished()
@@ -43,14 +38,16 @@ class MochaBuildkiteAnalyticsReporter {
   }
 
   testStarted(test) {
+    test.testAnalyticsId = uuidv4()
+    test.startAt = performance.now() / 1000
   }
 
-  testFinished(test, error) {
-    const failureReason = error !== undefined ? error.toString() : undefined
+  testFinished(test) {
+    const failureReason = test.err !== undefined ? test.err.toString() : undefined
     const prefixedTestPath = this._paths.prefixTestPath(test.file)
 
     this._testResults.push({
-      'id': getMochaID(test),
+      'id': test.testAnalyticsId,
       'name': test.title,
       'scope': this.scope(test),
       'identifier': [this.scope(test), test.title].join(' ').trim(),
@@ -58,10 +55,15 @@ class MochaBuildkiteAnalyticsReporter {
       'location': prefixedTestPath,
       'result': this.analyticsResult(test.state),
       'failure_reason': failureReason,
-      'failure_expanded': failureExpanded(error == undefined ? [] : error.multiple),
+      'failure_expanded': failureExpanded(test.err == undefined ? [] : test.err.multiple),
+      'history': {
+        'section': 'top',
+        'start_at': test.startAt,
+        'end_at': performance.now() / 1000,
+        'duration': test.duration / 1000,
+      }
     })
   }
-
 
   testRunFinished() {
     uploadTestResults(this._testEnv, this._testResults)
