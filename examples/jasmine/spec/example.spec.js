@@ -1,6 +1,6 @@
+let axios = require('axios')
 var BuildkiteReporter = require('buildkite-test-collector/jasmine/reporter');
 var buildkiteReporter = new BuildkiteReporter();
-
 jasmine.getEnv().addReporter(buildkiteReporter);
 
 // No scope
@@ -13,4 +13,9 @@ describe('sum', () => {
   it('40 + 1 equal 42', () => {
     expect(40 + 1).toBe(42);
   });
+})
+
+// Test instrumenting a HTTP request
+it('connects to buildkite.com', async () => {
+  const response = await axios.get('https://buildkite.com/')
 })
