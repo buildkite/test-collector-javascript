@@ -2,7 +2,10 @@ const { v4: uuidv4 } = require('uuid')
 const CI = require('../util/ci')
 const uploadTestResults = require('../util/uploadTestResults')
 const Paths = require('../util/paths')
+const Tracer = require('../util/tracer')
+const Network = require('../util/network')
 const process = require('node:process')
+const { traceDeprecation } = require('node:process')
 let testLocations = {}
 
 // Jasmine does not provide the filename when reporting on test cases
@@ -41,10 +44,19 @@ class JasmineBuildkiteAnalyticsReporter {
   }
 
   specStarted(result) {
+    let network = new Network()
+    let tracer = new Tracer()
+    network.setup(tracer)
+
     setSpecProperty('startAt', performance.now() / 1000)
+    setSpecProperty('tracer', tracer)
+    setSpecProperty('network', network)
   }
 
   specDone(result) {
+    result.properties.tracer.finalize()
+    result.properties.network.teardown()
+
     result.location = testLocations[result.id]
     const prefixedTestPath = this._paths.prefixTestPath(result.location.filename);
 
@@ -58,12 +70,7 @@ class JasmineBuildkiteAnalyticsReporter {
       'result': this.analyticsResult(result),
       'failure_reason': (result.failedExpectations[0] || {}).message,
       'failure_expanded': this.failureExpanded(result),
-      'history': {
-        'section': 'top',
-        'start_at': result.properties.startAt,
-        'end_at': performance.now() / 1000,
-        'duration': result.duration / 1000,
-      }
+      'history': result.properties.tracer.history(),
     })
   }
 
