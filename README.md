@@ -51,6 +51,32 @@ Official [Buildkite Test Analytics](https://buildkite.com/test-analytics) collec
       jasmine.getEnv().addReporter(buildkiteReporter);
     ```
 
+    ### Mocha
+
+    [Install mocha-multi-reporters](https://github.com/stanleyhlng/mocha-multi-reporters) in your project:<br>
+
+    ```
+      npm install mocha-multi-reporters --save-dev
+    ```
+
+    and configure it to run your desired reporter and the Buildkite reporter
+
+    ```js
+      // config.json
+      {
+        "reporterEnabled": "spec, buildkite-test-collector/mocha/reporter"
+      }
+    ```
+
+    Now update your test script to use the buildkite reporter via mocha-multi-reporters:
+
+    ```js
+      // package.json
+      "scripts": {
+        "test": "mocha --reporter mocha-multi-reporters --reporter-options configFile=config.json"
+      },
+    ```
+
 4) Run your tests locally:<br>
 
     ```js
