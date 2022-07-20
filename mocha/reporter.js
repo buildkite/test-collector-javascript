@@ -44,7 +44,7 @@ class MochaBuildkiteAnalyticsReporter {
 
   testFinished(test) {
     const failureReason = test.err !== undefined ? test.err.toString() : undefined
-    const prefixedTestPath = this._paths.prefixTestPath(test.file)
+    const prefixedTestPath = this._paths.prefixTestPath(this.getRootParentFile(test))
 
     this._testResults.push({
       'id': test.testAnalyticsId,
@@ -94,6 +94,18 @@ class MochaBuildkiteAnalyticsReporter {
     // as the test title is the last array item, we just remove it
     // and then join the rest of the array as a space separated string
     return titlePath.slice(0, titlePath.length - 1).join(' ')
+  }
+
+  // Recursively find the root parent, and return the parents file
+  // This is required as test.file can be undefined in some tests on cypress
+  getRootParentFile(test) {
+    if (test.file) {
+      return test.file
+    }
+    if (test.parent) {
+      return this.getRootParentFile(test.parent)
+    }
+    return null
   }
 }
 
