@@ -44,8 +44,9 @@ describe('examples/jasmine', () => {
       expect(json).toHaveProperty("data[1].result", "failed")
       expect(json).toHaveProperty("data[1].failure_reason")
       expect(json.data[1].failure_reason).toMatch('Expected 41 to be 42.')
-      expect(json).toHaveProperty("data[1].failure_expanded[0].expanded")
-      expect(json).toHaveProperty("data[1].failure_expanded[0].backtrace")
+      expect(json).toHaveProperty("data[1].failure_expanded[0].expanded[0]", "matcherName: toBe")
+      expect(json).toHaveProperty("data[1].failure_expanded[0].expanded[1]", "message: Expected 41 to be 42.")
+      expect(json).toHaveProperty("data[1].failure_expanded[0].backtrace[0]", "    at <Jasmine>")
 
       done()
     }, 10000) // 10s timeout
