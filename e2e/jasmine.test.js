@@ -37,7 +37,6 @@ describe('examples/jasmine', () => {
       expect(json).toHaveProperty("data[0].file_name", "spec/example.spec.js")
       expect(json).toHaveProperty("data[0].result", 'passed')
 
-      // expect(json).toHaveProperty("data[1].scope", "sum")
       expect(json).toHaveProperty("data[1].name", "40 + 1 equal 42")
       expect(json).toHaveProperty("data[1].identifier", "sum 40 + 1 equal 42")
       expect(json).toHaveProperty("data[1].location", "spec/example.spec.js:13")
