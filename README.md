@@ -41,7 +41,7 @@ Official [Buildkite Test Analytics](https://buildkite.com/test-analytics) collec
 
     ### Jasmine
 
-    [Add the builkite reporter to jasmine](https://jasmine.github.io/setup/nodejs.html#reporters):<br>
+    [Add the buildkite reporter to jasmine](https://jasmine.github.io/setup/nodejs.html#reporters):<br>
 
     ```js
       // SpecHelper.js
