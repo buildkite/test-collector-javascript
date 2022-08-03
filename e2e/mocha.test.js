@@ -1,4 +1,4 @@
-// Does an end-to-end test of the Jest example, using the debug output from the
+// Does an end-to-end test of the Mocha example, using the debug output from the
 // reporter, and verifying the JSON
 
 const { exec } = require('child_process');
