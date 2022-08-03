@@ -8,11 +8,9 @@ Official [Buildkite Test Analytics](https://buildkite.com/test-analytics) collec
 
 ## 👉 Installing
 
-### Jest
-
 1) [Create a test suite](https://buildkite.com/docs/test-analytics), and copy the API token that it gives you.
 
-1) Add the [`buildkite-test-collector` package](https://www.npmjs.com/package/buildkite-test-collector):
+2) Add the [`buildkite-test-collector` package](https://www.npmjs.com/package/buildkite-test-collector):
 
     ```bash
     # If you use npm:
@@ -22,7 +20,11 @@ Official [Buildkite Test Analytics](https://buildkite.com/test-analytics) collec
     yarn add --dev buildkite-test-collector
     ```
 
-2) Update your [Jest configuration](https://jestjs.io/docs/configuration):<br>
+3) Add the buildkite test collector to your testing framework:
+
+    ### Jest
+
+    Update your [Jest configuration](https://jestjs.io/docs/configuration):<br>
 
     ```js
       // jest.config.js
@@ -37,13 +39,25 @@ Official [Buildkite Test Analytics](https://buildkite.com/test-analytics) collec
       testLocationInResults: true
     ```
 
-3) Run your tests locally:<br>
+    ### Jasmine
+
+    [Add the buildkite reporter to jasmine](https://jasmine.github.io/setup/nodejs.html#reporters):<br>
+
+    ```js
+      // SpecHelper.js
+      var BuildkiteReporter = require('buildkite-test-collector/jasmine/reporter');
+      var buildkiteReporter = new BuildkiteReporter();
+
+      jasmine.getEnv().addReporter(buildkiteReporter);
+    ```
+
+4) Run your tests locally:<br>
 
     ```js
     env BUILDKITE_ANALYTICS_TOKEN=xyz npm test
     ```
 
-4) Add the `BUILDKITE_ANALYTICS_TOKEN` secret to your CI, push your changes to a branch, and open a pull request 🎉
+5) Add the `BUILDKITE_ANALYTICS_TOKEN` secret to your CI, push your changes to a branch, and open a pull request 🎉
 
     ```bash
     git checkout -b add-bk-test-analytics

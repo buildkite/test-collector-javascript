@@ -1,0 +1,10 @@
+{
+  "name": "buildkite-test-collector-jasmine-example",
+  "scripts": {
+    "test": "jasmine"
+  },
+  "devDependencies": {
+    "buildkite-test-collector": "file:../..",
+    "jasmine": "^4.2.1"
+  }
+}
