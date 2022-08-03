@@ -1,7 +1,13 @@
-const debug = (text) => {
-  if (process.env.BUILDKITE_ANALYTICS_DEBUG_ENABLED === "true") {
-    console.log(text)
+class Debug {
+  static enabled() {
+    return process.env.BUILDKITE_ANALYTICS_DEBUG_ENABLED === "true"
+  }
+
+  static log(text) {
+    if (this.enabled()) {
+      console.log(text)
+    }
   }
 }
 
-module.exports = debug
+module.exports = Debug

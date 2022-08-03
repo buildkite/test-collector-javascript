@@ -15,10 +15,10 @@ describe('examples/jasmine', () => {
 
   test('it posts the correct JSON', (done) => {
     exec('npm test', { cwd, env }, (error, stdout, stderr) => {
-      expect(stdout).toMatch(/Posting to Test Analytics: ({.*})/m);
+      expect(stdout).toMatch(/.*Test Analytics Sending: ({.*})/m);
 
-      const jsonMatch = stdout.match(/Posting to Test Analytics: ({.*})/m)
-      const json = JSON.parse(jsonMatch[1])
+      const jsonMatch = stdout.match(/.*Test Analytics Sending: ({.*})/m)
+      const json = JSON.parse(jsonMatch[1])["data"]
 
       // Uncomment to view the JSON
       // console.log(json)
@@ -60,10 +60,10 @@ describe('examples/jasmine', () => {
 
   test('it supports test location prefixes for monorepos', (done) => {
     exec('npm test', { cwd, env: { ...env, BUILDKITE_ANALYTICS_LOCATION_PREFIX: "some-sub-dir/" } }, (error, stdout, stderr) => {
-      expect(stdout).toMatch(/Posting to Test Analytics: ({.*})/m);
+      expect(stdout).toMatch(/.*Test Analytics Sending: ({.*})/m);
 
-      const jsonMatch = stdout.match(/Posting to Test Analytics: ({.*})/m)
-      const json = JSON.parse(jsonMatch[1])
+      const jsonMatch = stdout.match(/.*Test Analytics Sending: ({.*})/m)
+      const json = JSON.parse(jsonMatch[1])["data"]
 
       // Uncomment to view the JSON
       // console.log(json)
