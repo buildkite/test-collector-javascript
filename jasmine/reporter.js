@@ -70,7 +70,7 @@ class JasmineBuildkiteAnalyticsReporter {
       'file_name': prefixedTestPath,
       'result': this.analyticsResult(result),
       'failure_reason': (result.failedExpectations[0] || {}).message,
-      'failure_expanded': this.failureExpanded(result),
+      'failure_expanded': failureExpanded(result.failedExpectations),
       'history': result.properties.tracer.history(),
     })
   }
