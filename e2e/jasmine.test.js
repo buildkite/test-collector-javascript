@@ -48,6 +48,12 @@ describe('examples/jasmine', () => {
       expect(json).toHaveProperty("data[1].failure_expanded[0].expanded[1]", "message: Expected 41 to be 42.")
       expect(json).toHaveProperty("data[1].failure_expanded[0].backtrace[0]", "    at <Jasmine>")
 
+      expect(json).toHaveProperty("data[2].history.section", "top")
+      expect(json).toHaveProperty("data[2].history.children[0].section", "http")
+      expect(json).toHaveProperty("data[2].history.children[0].detail.lib", "http")
+      expect(json).toHaveProperty("data[2].history.children[0].detail.method", "GET")
+      expect(json).toHaveProperty("data[2].history.children[0].detail.url", "buildkite.com/")
+
       done()
     }, 10000) // 10s timeout
   })
