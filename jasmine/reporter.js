@@ -1,5 +1,6 @@
 const { v4: uuidv4 } = require('uuid')
 const CI = require('../util/ci')
+const failureExpanded = require('../util/failureExpanded')
 const uploadTestResults = require('../util/uploadTestResults')
 const Paths = require('../util/paths')
 const Tracer = require('../util/tracer')
@@ -69,7 +70,7 @@ class JasmineBuildkiteAnalyticsReporter {
       'file_name': prefixedTestPath,
       'result': this.analyticsResult(result),
       'failure_reason': (result.failedExpectations[0] || {}).message,
-      'failure_expanded': this.failureExpanded(result),
+      'failure_expanded': failureExpanded(result.failedExpectations),
       'history': result.properties.tracer.history(),
     })
   }
@@ -97,16 +98,6 @@ class JasmineBuildkiteAnalyticsReporter {
       failed: 'failed',
       disabled: 'skipped'
     }[testResult.status]
-  }
-
-  failureExpanded(testResult) {
-    return testResult.failedExpectations.map((failure) => {
-      let {stack, ...expanded} = failure
-      let expandedArray = Object.keys(expanded).map((key) => {
-        return `${key}: ${expanded[key]}`
-      })
-      return { backtrace: stack.split(/\r?\n/), expanded: expandedArray } // change expanded to be an array, it may work like the example!
-    })
   }
 }
 

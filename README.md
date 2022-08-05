@@ -2,7 +2,7 @@
 
 Official [Buildkite Test Analytics](https://buildkite.com/test-analytics) collectors for JavaScript test frameworks ✨
 
-⚒ **Supported test frameworks:** Jest, Jasmine, and [more coming soon](https://github.com/buildkite/test-collector-javascript/issues?q=is%3Aissue+is%3Aopen+label%3A%22test+frameworks%22).
+⚒ **Supported test frameworks:** Jest, Jasmine, Mocha, and [more coming soon](https://github.com/buildkite/test-collector-javascript/issues?q=is%3Aissue+is%3Aopen+label%3A%22test+frameworks%22).
 
 📦 **Supported CI systems:** Buildkite, GitHub Actions, CircleCI, and others via the `BUILDKITE_ANALYTICS_*` environment variables.
 
@@ -49,6 +49,32 @@ Official [Buildkite Test Analytics](https://buildkite.com/test-analytics) collec
       var buildkiteReporter = new BuildkiteReporter();
 
       jasmine.getEnv().addReporter(buildkiteReporter);
+    ```
+
+    ### Mocha
+
+    [Install mocha-multi-reporters](https://github.com/stanleyhlng/mocha-multi-reporters) in your project:<br>
+
+    ```
+      npm install mocha-multi-reporters --save-dev
+    ```
+
+    and configure it to run your desired reporter and the Buildkite reporter
+
+    ```js
+      // config.json
+      {
+        "reporterEnabled": "spec, buildkite-test-collector/mocha/reporter"
+      }
+    ```
+
+    Now update your test script to use the buildkite reporter via mocha-multi-reporters:
+
+    ```js
+      // package.json
+      "scripts": {
+        "test": "mocha --reporter mocha-multi-reporters --reporter-options configFile=config.json"
+      },
     ```
 
 4) Run your tests locally:<br>
