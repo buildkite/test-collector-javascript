@@ -49,8 +49,8 @@ describe('examples/mocha', () => {
       expect(json).toHaveProperty("data[1].failure_expanded[0].backtrace")
 
       done()
-    }, 10000) // 10s timeout
-  })
+    })
+  }, 10000) // 10s timeout
 
   test('it supports test location prefixes for monorepos', (done) => {
     exec('npm test', { cwd, env: { ...env, BUILDKITE_ANALYTICS_LOCATION_PREFIX: "some-sub-dir/" } }, (error, stdout, stderr) => {
@@ -68,6 +68,6 @@ describe('examples/mocha', () => {
       expect(json).toHaveProperty("data[1].location", "some-sub-dir/test.js")
 
       done()
-    }, 10000) // 10s timeout
-  })
+    })
+  }, 10000) // 10s timeout
 })
