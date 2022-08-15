@@ -12,7 +12,15 @@ class JestBuildkiteAnalyticsReporter {
     this._paths = new Paths(globalConfig, this._testEnv.location_prefix)
   }
 
-  onRunStart(test) {
+  onRunStart(results, options) {
+    if (this._globalConfig.forceExit) {
+      console.warn(
+        `--forceExit could potentially terminate any ongoing processes that ` +
+        `are attempting to send test executions to Buildkite. ` +
+        `Have you considered using \`--detectOpenHandles\` to detect ` +
+        'async operations that kept running after all tests finished?',
+      );
+    }
   }
 
   onRunComplete(_test, _results) {

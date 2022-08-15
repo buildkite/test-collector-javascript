@@ -13,6 +13,14 @@ describe('examples/jest', () => {
     BUILDKITE_ANALYTICS_DEBUG_ENABLED: "true"
   }
 
+  test('it outputs a warning when --forceExit option is used', (done) => {
+    exec('jest --forceExit', { cwd, env }, (error, stdout, stderr) => {
+      expect(stderr).toMatch(/--forceExit could potentially terminate any ongoing processes that are attempting to send test executions to Buildkite./);
+
+      done()
+    })
+  }, 1000) // 1s timeout
+
   test('it posts the correct JSON', (done) => {
     exec('npm test', { cwd, env }, (error, stdout, stderr) => {
       expect(stdout).toMatch(/.*Test Analytics Sending: ({.*})/m);
