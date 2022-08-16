@@ -13,6 +13,14 @@ describe('examples/jest', () => {
     BUILDKITE_ANALYTICS_DEBUG_ENABLED: "true"
   }
 
+  test('it outputs a warning when --forceExit option is used', (done) => {
+    exec('jest --forceExit', { cwd, env }, (error, stdout, stderr) => {
+      expect(stderr).toMatch(/--forceExit could potentially terminate any ongoing processes that are attempting to send test executions to Buildkite./);
+
+      done()
+    })
+  }, 1000) // 1s timeout
+
   test('it posts the correct JSON', (done) => {
     exec('npm test', { cwd, env }, (error, stdout, stderr) => {
       expect(stdout).toMatch(/.*Test Analytics Sending: ({.*})/m);
@@ -51,8 +59,8 @@ describe('examples/jest', () => {
         'Received: 41\n')
 
       done()
-    }, 10000) // 10s timeout
-  })
+    })
+  }, 10000) // 10s timeout
 
   test('it supports test location prefixes for monorepos', (done) => {
     exec('npm test', { cwd, env: { ...env, BUILDKITE_ANALYTICS_LOCATION_PREFIX: "some-sub-dir/" } }, (error, stdout, stderr) => {
@@ -70,6 +78,6 @@ describe('examples/jest', () => {
       expect(json).toHaveProperty("data[1].location", "some-sub-dir/example.test.js:8")
 
       done()
-    }, 10000) // 10s timeout
-  })
+    })
+  }, 10000) // 10s timeout
 })
