@@ -91,6 +91,10 @@ Official [Buildkite Test Analytics](https://buildkite.com/test-analytics) collec
     git push origin add-bk-test-analytics
     ```
 
+## 📓 Notes
+
+This jest collector uses the [`onRunComplete`](https://jestjs.io/docs/configuration#custom-reporters) hook to report test results to the Buildkite API. This interferes with the [`--forceExit`](https://jestjs.io/docs/cli#--forceexit) CLI option and interrupts the request that sends tests results, meaning that no data will be available for your test suite. It's recommended to use [`--detectOpenHandles`](https://jestjs.io/docs/cli#--detectopenhandles) to find any hanging process and clean them up and remove the use of `--forceExit`.
+
 ## 🔍 Debugging
 
 To enable debugging output, set the `BUILDKITE_ANALYTICS_DEBUG_ENABLED` environment variable to `true`.
