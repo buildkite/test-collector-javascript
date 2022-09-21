@@ -34,6 +34,7 @@ class JestBuildkiteAnalyticsReporter {
     const prefixedTestPath = this._paths.prefixTestPath(testResult.testFilePath);
 
     testResult.testResults.forEach((result) => {
+      if (this._options.failuresOnly && result.status !== 'failed') return
       let id = uuidv4()
       this._testResults.push({
         'id': id,
