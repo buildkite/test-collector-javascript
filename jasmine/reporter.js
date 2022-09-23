@@ -37,8 +37,9 @@ jasmine.getEnv().xit = itFactory(jasmine.getEnv().xit);
 jasmine.getEnv().fit = itFactory(jasmine.getEnv().fit);
 
 class JasmineBuildkiteAnalyticsReporter {
-  constructor(config = { cwd: process.cwd() }) {
+  constructor(config = { cwd: process.cwd() }, options) {
     this.config = config
+    this._options = options
     this._testResults = []
     this._testEnv = (new CI()).env();
     this._paths = new Paths(config, this._testEnv.location_prefix)
@@ -76,7 +77,7 @@ class JasmineBuildkiteAnalyticsReporter {
   }
 
   jasmineDone(result, done) {
-    return uploadTestResults(this._testEnv, this._testResults, done)
+    return uploadTestResults(this._testEnv, this._testResults, this._options, done)
   }
 
   analyticsResult(testResult) {
