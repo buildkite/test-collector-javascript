@@ -13,6 +13,22 @@ describe('examples/mocha', () => {
     BUILDKITE_ANALYTICS_DEBUG_ENABLED: "true"
   }
 
+  describe('when token is defined through reporter options', () => {
+    test('it uses the correct token', (done) => {
+      exec('mocha --reporter mocha-multi-reporters --reporter-options configFile=token-config.json',
+      { cwd, env: { ...env, BUILDKITE_ANALYTICS_TOKEN: undefined } }, (error, stdout, stderr) => {
+        expect(stdout).toMatch(/.*Test Analytics Sending: ({.*})/m);
+
+        const jsonMatch = stdout.match(/.*Test Analytics Sending: ({.*})/m)
+        const json = JSON.parse(jsonMatch[1])["headers"]
+
+        expect(json).toHaveProperty("Authorization", 'Token token="abc"')
+
+        done()
+      })
+    }, 10000)
+  })
+
   test('it posts the correct JSON', (done) => {
     exec('npm test', { cwd, env }, (error, stdout, stderr) => {
       expect(stdout).toMatch(/.*Test Analytics Sending: ({.*})/m);

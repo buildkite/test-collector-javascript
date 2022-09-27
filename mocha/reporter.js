@@ -20,7 +20,8 @@ const {
 } = Runnable.constants
 
 class MochaBuildkiteAnalyticsReporter {
-  constructor(runner) {
+  constructor(runner, options) {
+    this._options = options.reporterOptions
     this._testResults = []
     this._testEnv = (new CI()).env();
     this._paths = new Paths({ cwd: process.cwd() }, this._testEnv.location_prefix)
@@ -66,7 +67,7 @@ class MochaBuildkiteAnalyticsReporter {
   }
 
   testRunFinished() {
-    uploadTestResults(this._testEnv, this._testResults)
+    uploadTestResults(this._testEnv, this._testResults, this._options)
   }
 
   analyticsResult(state) {
