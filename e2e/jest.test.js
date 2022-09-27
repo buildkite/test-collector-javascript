@@ -13,6 +13,22 @@ describe('examples/jest', () => {
     BUILDKITE_ANALYTICS_DEBUG_ENABLED: "true"
   }
 
+  describe('when token is defined through reporter options', () => {
+    test('it uses the correct token', (done) => {
+      exec('jest --config token.config.js', { cwd, env: { ...env, BUILDKITE_ANALYTICS_TOKEN: undefined } }, (error, stdout, stderr) => {
+        expect(stdout).toMatch(/.*Test Analytics Sending: ({.*})/m);
+
+        const jsonMatch = stdout.match(/.*Test Analytics Sending: ({.*})/m)
+        const json = JSON.parse(jsonMatch[1])["headers"]
+
+        expect(json).toHaveProperty("Authorization", 'Token token="abc"')
+
+        done()
+      })
+    }, 10000) // 10s timeout
+
+  })
+
   test('it outputs a warning when --forceExit option is used', (done) => {
     exec('jest --forceExit', { cwd, env }, (error, stdout, stderr) => {
       expect(stderr).toMatch(/--forceExit could potentially terminate any ongoing processes that are attempting to send test executions to Buildkite./);
