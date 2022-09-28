@@ -26,7 +26,21 @@ describe('examples/jest', () => {
         done()
       })
     }, 10000) // 10s timeout
+  })
 
+  describe('when token is defined through BUILDKITE_ANALYTICS_TOKEN', () => {
+    test('it uses the correct token', (done) => {
+      exec('npm test', { cwd, env }, (error, stdout, stderr) => {
+        expect(stdout).toMatch(/.*Test Analytics Sending: ({.*})/m);
+
+        const jsonMatch = stdout.match(/.*Test Analytics Sending: ({.*})/m)
+        const json = JSON.parse(jsonMatch[1])["headers"]
+
+        expect(json).toHaveProperty("Authorization", 'Token token="xyz"')
+
+        done()
+      })
+    }, 10000) // 10s timeout
   })
 
   test('it outputs a warning when --forceExit option is used', (done) => {
