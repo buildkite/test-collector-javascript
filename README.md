@@ -20,7 +20,7 @@ Official [Buildkite Test Analytics](https://buildkite.com/test-analytics) collec
    yarn add --dev buildkite-test-collector
    ```
 
-3. Add the buildkite test collector to your testing framework:
+3. Add the Buildkite test collector to your testing framework:
 
    ### Jest
 
@@ -53,7 +53,7 @@ Official [Buildkite Test Analytics](https://buildkite.com/test-analytics) collec
 
    ### Jasmine
 
-   [Add the buildkite reporter to jasmine](https://jasmine.github.io/setup/nodejs.html#reporters):<br>
+   [Add the Buildkite reporter to Jasmine](https://jasmine.github.io/setup/nodejs.html#reporters):<br>
 
    ```js
    // SpecHelper.js
