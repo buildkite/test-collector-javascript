@@ -21,7 +21,7 @@ const {
 
 class MochaBuildkiteAnalyticsReporter {
   constructor(runner, options) {
-    this._options = options.reporterOptions
+    this._options = { token: process.env[`${options.reporterOptions.token_name}`]}
     this._testResults = []
     this._testEnv = (new CI()).env();
     this._paths = new Paths({ cwd: process.cwd() }, this._testEnv.location_prefix)

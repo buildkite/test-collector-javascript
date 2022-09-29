@@ -1,6 +1,6 @@
 // Does an end-to-end test of the Mocha example, using the debug output from the
 // reporter, and verifying the JSON
-
+require('dotenv').config();
 const { exec } = require('child_process');
 const { hasUncaughtExceptionCaptureCallback } = require('process');
 const path = require('path');
@@ -10,6 +10,7 @@ describe('examples/mocha', () => {
   const env = {
     ...process.env,
     BUILDKITE_ANALYTICS_TOKEN: "xyz",
+    BUILDKITE_ANALYTICS_MOCHA_TOKEN: "abc",
     BUILDKITE_ANALYTICS_DEBUG_ENABLED: "true"
   }
 

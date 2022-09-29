@@ -1,6 +1,6 @@
 {
   "reporterEnabled": "spec, buildkite-test-collector/mocha/reporter",
   "buildkiteTestCollectorMochaReporterReporterOptions": {
-    "token": "abc"
+    "token_name": "BUILDKITE_ANALYTICS_MOCHA_TOKEN"
   }
 }

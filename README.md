@@ -47,7 +47,10 @@ Official [Buildkite Test Analytics](https://buildkite.com/test-analytics) collec
    // Send results to Test Analytics
    reporters: [
      "default",
-     ["buildkite-test-collector/jest/reporter", { token: INSERT_TOKEN_HERE }],
+     [
+       "buildkite-test-collector/jest/reporter",
+       { token: process.env.CUSTOM_ENV_VAR },
+     ],
    ];
    ```
 
@@ -68,7 +71,7 @@ Official [Buildkite Test Analytics](https://buildkite.com/test-analytics) collec
    ```js
    // SpecHelper.js
    var buildkiteReporter = new BuildkiteReporter(undefined, {
-     token: INSERT_TOKEN_HERE,
+     token: process.env.CUSTOM_ENV_VAR,
    });
    ```
 
@@ -100,12 +103,14 @@ Official [Buildkite Test Analytics](https://buildkite.com/test-analytics) collec
 
    If you would like to pass in the API token using a custom environment variable, you can do so using the report options.
 
+   Since the reporter options are passed in as a json file, we ask you to put the environment variable name as a string value in the `config.json`, which will be retrieved using [dotenv](https://github.com/motdotla/dotenv) in the mocha reporter.
+
    ```js
      // config.json
      {
        "reporterEnabled": "spec, buildkite-test-collector/mocha/reporter",
        "buildkiteTestCollectorMochaReporterReporterOptions": {
-         "token": INSERT_TOKEN_HERE
+         "token_name": "CUSTOM_ENV_VAR_NAME"
        }
      }
    ```

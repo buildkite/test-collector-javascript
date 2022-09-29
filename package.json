@@ -19,6 +19,7 @@
   ],
   "dependencies": {
     "axios": "^0.26.1",
+    "dotenv": "^16.0.2",
     "request-spy": "^0.0.10",
     "uuid": "^8.3.2"
   },
