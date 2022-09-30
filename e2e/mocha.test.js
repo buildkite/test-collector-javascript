@@ -1,6 +1,6 @@
 // Does an end-to-end test of the Mocha example, using the debug output from the
 // reporter, and verifying the JSON
-
+require('dotenv').config();
 const { exec } = require('child_process');
 const { hasUncaughtExceptionCaptureCallback } = require('process');
 const path = require('path');
@@ -10,8 +10,41 @@ describe('examples/mocha', () => {
   const env = {
     ...process.env,
     BUILDKITE_ANALYTICS_TOKEN: "xyz",
+    BUILDKITE_ANALYTICS_MOCHA_TOKEN: "abc",
     BUILDKITE_ANALYTICS_DEBUG_ENABLED: "true"
   }
+
+  describe('when token is defined through reporter options', () => {
+    test('it uses the correct token', (done) => {
+      exec('mocha --reporter mocha-multi-reporters --reporter-options configFile=token-config.json',
+      { cwd, env: { ...env, BUILDKITE_ANALYTICS_TOKEN: undefined } }, (error, stdout, stderr) => {
+        expect(stdout).toMatch(/.*Test Analytics Sending: ({.*})/m);
+
+        const jsonMatch = stdout.match(/.*Test Analytics Sending: ({.*})/m)
+        const json = JSON.parse(jsonMatch[1])["headers"]
+
+        expect(json).toHaveProperty("Authorization", 'Token token="abc"')
+
+        done()
+      })
+    }, 10000) // 10s timeout
+  })
+
+  describe('when token is defined through BUILDKITE_ANALYTICS_TOKEN', () => {
+    test('it uses the correct token', (done) => {
+      exec('npm test', { cwd, env }, (error, stdout, stderr) => {
+        expect(stdout).toMatch(/.*Test Analytics Sending: ({.*})/m);
+
+        const jsonMatch = stdout.match(/.*Test Analytics Sending: ({.*})/m)
+        const json = JSON.parse(jsonMatch[1])["headers"]
+
+        expect(json).toHaveProperty("Authorization", 'Token token="xyz"')
+
+        done()
+      })
+    }, 10000) // 10s timeout
+  })
+
 
   test('it posts the correct JSON', (done) => {
     exec('npm test', { cwd, env }, (error, stdout, stderr) => {

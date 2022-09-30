@@ -2,8 +2,8 @@ const Debug = require('../util/debug')
 const axios = require('axios')
 const CHUNK_SIZE = 5000
 
-const uploadTestResults = (env, results, done) => {
-  const buildkiteAnalyticsToken = process.env.BUILDKITE_ANALYTICS_TOKEN
+const uploadTestResults = (env, results, options, done) => {
+  const buildkiteAnalyticsToken = options?.token || process.env.BUILDKITE_ANALYTICS_TOKEN
   let data
 
   if (!buildkiteAnalyticsToken) {

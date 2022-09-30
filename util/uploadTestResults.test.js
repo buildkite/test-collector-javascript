@@ -46,6 +46,38 @@ describe('with empty token', () => {
   })
 })
 
+describe('with token "abc" defined in reporter options', () => {
+  beforeEach(() => {
+    process.env.BUILDKITE_ANALYTICS_KEY = 'key123';
+  })
+
+  it('posts a result', () => {
+    axios.post.mockResolvedValue({ data: "Success" })
+
+    uploadTestResults(new CI().env(), ['result'], { token: 'abc'})
+
+    expect(axios.post.mock.calls[0]).toEqual([
+      "https://analytics-api.buildkite.com/v1/uploads",
+      {
+        "data": [ "result" ],
+        "format": "json",
+        "run_env": {
+          "ci": "generic",
+          "collector": "js-buildkite-test-collector",
+          "key": "key123",
+          "version": version
+        }
+      },
+      {
+        "headers": {
+          "Authorization": "Token token=\"abc\"",
+          "Content-Type": "application/json",
+        }
+      }
+    ])
+  })
+})
+
 describe('with token "abc"', () => {
   beforeEach(() => {
     process.env.BUILDKITE_ANALYTICS_TOKEN = 'abc';
@@ -81,7 +113,7 @@ describe('with token "abc"', () => {
 
     it('does a single posts if < 5000', () => {
       axios.post.mockResolvedValue({ data: "Success" });
-      
+
       uploadTestResults({}, Array(4999).fill('result'))
 
       expect(axios.post.mock.calls.length).toBe(1)
@@ -89,7 +121,7 @@ describe('with token "abc"', () => {
 
     it('posts 5000 results at a time', () => {
       axios.post.mockResolvedValue({ data: "Success" })
-      
+
       uploadTestResults({}, Array(12000).fill('result'))
 
       expect(axios.post.mock.calls.length).toBe(3)
