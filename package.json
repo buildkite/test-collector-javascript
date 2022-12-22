@@ -18,6 +18,7 @@
     "jest/",
     "mocha/",
     "playwright/",
+    "cypress/",
     "util/"
   ],
   "dependencies": {
