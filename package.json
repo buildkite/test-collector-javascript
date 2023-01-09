@@ -39,7 +39,8 @@
     "examples/jest",
     "examples/jasmine",
     "examples/mocha",
-    "examples/playwright"
+    "examples/playwright",
+    "examples/cypress"
   ],
   "scripts": {
     "test": "jest",

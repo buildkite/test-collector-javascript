@@ -8,4 +8,10 @@ describe('<Component />', () => {
     cy.get('#label').should('have.text', 'Label')
     cy.get('#input').should('have.value', 'Hello there')
   })
+
+  it('fails', () => {
+    cy.mount(<Component label="Label" value="Hello there" />)
+    cy.get('#label').should('have.text', 'Label2')
+    cy.get('#input').should('have.value', 'Hello there')
+  })
 })
