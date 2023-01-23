@@ -84,11 +84,14 @@ describe('examples/jest', () => {
       expect(json).toHaveProperty("data[1].file_name", "example.test.js")
       expect(json).toHaveProperty("data[1].result", "failed")
       expect(json).toHaveProperty("data[1].failure_reason")
-      expect(json.data[1].failure_reason).toMatch('Error: expect(received).toBe(expected) // Object.is equality\n' +
-        '\n' +
-        'Expected: 42\n' +
-        'Received: 41\n')
-
+      expect(json.data[1].failure_reason).toEqual('Error: expect(received).toBe(expected) // Object.is equality')
+      
+      expect(json).toHaveProperty("data[1].failure_expanded")
+      expect(json.data[1].failure_expanded).toEqual(expect.arrayContaining([
+        expect.objectContaining({
+          expanded: expect.arrayContaining(["Expected: 42", "Received: 41"])
+        })
+      ]))
       done()
     })
   }, 10000) // 10s timeout
