@@ -5,7 +5,7 @@ steps:
       - "npm test"
     plugins:
       - docker#v3.7.0:
-          image: node:latest
+          image: node:lts
           # Prevent mounting the agent, otherwise BUILDKITE_JOB_ID and
           # BUILDKITE_BUILD_ID are passed through to the container and mess up
           # the CI detection — we want a clean state process.env for testing.
