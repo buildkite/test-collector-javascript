@@ -1,6 +1,8 @@
 const Debug = require('../util/debug')
 const axios = require('axios')
+
 const CHUNK_SIZE = 5000
+const DEFAULT_BUILDKITE_ANALYTICS_URL = 'https://analytics-api.buildkite.com/v1/uploads'
 
 const uploadTestResults = (env, results, options, done) => {
   const buildkiteAnalyticsToken = options?.token || process.env.BUILDKITE_ANALYTICS_TOKEN
@@ -55,7 +57,8 @@ const uploadTestResults = (env, results, options, done) => {
       });
     }
 
-    axios.post('https://analytics-api.buildkite.com/v1/uploads', data, config)
+    const buildkiteAnalyticsUrl = process.env.BUILDKITE_ANALYTICS_URL || DEFAULT_BUILDKITE_ANALYTICS_URL
+    axios.post(buildkiteAnalyticsUrl, data, config)
     .then(function (response) {
       if(done !== undefined) { return done() }
     })
