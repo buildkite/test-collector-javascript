@@ -44,7 +44,7 @@ class JestBuildkiteAnalyticsReporter {
         'file_name': prefixedTestPath,
         'result': this.analyticsResult(result),
         'failure_reason': this.analyticsFailureReason(result),
-        // TODO: Add support for 'failure_expanded'
+        'failure_expanded': this.analyticsFailureExpanded(result),
         'history': {
           'section': 'top',
           'start_at': testResult.perfStats.start,
@@ -78,11 +78,23 @@ class JestBuildkiteAnalyticsReporter {
     }[testResult.status]
   }
 
+  analyticsFailureMessages(testResult) {
+    if (testResult.status !== 'failed') return []
+
+    // Strip ANSI color codes from messages and split each line
+    return testResult.failureMessages.join(' ').replace(/\u001b[^m]*?m/g,'').split("\n")
+  }
+  
   analyticsFailureReason(testResult) {
-    if (testResult.status === 'failed') {
-      // Strip ANSI color codes from messages
-      return testResult.failureMessages.join(' ').replace(/\u001b[^m]*?m/g,'')
-    }
+    return this.analyticsFailureMessages(testResult)[0]
+  }
+
+  analyticsFailureExpanded(testResult) {
+    return [
+      { 
+        expanded: this.analyticsFailureMessages(testResult).splice(1)
+      }
+    ]
   }
 }
 
