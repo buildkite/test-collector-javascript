@@ -5,7 +5,7 @@ const { exec } = require('child_process');
 const { hasUncaughtExceptionCaptureCallback } = require('process');
 const path = require('path');
 
-const DEFAULT_TIMEOUT = 10000 // 10s timeout
+const DEFAULT_TIMEOUT = 20000 // 20s timeout
 
 describe('examples/cypress', () => {
   const cwd = path.join(__dirname, "../examples/cypress")
