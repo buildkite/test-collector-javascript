@@ -42,9 +42,20 @@ describe('Tracer.backfill()', () => {
 })
 
 describe('Tracer.history()', () => {
-  test('returns all of the traces', () => {
-    global.performance = { now: () => 11000 }
+  let originalGlobalPerformance
 
+  beforeEach(() => {
+    originalGlobalPerformance = global.performance
+    global.performance = {now: () => 11000}
+  })
+
+  afterEach(() => {
+    if (originalGlobalPerformance) {
+      global.performance = originalGlobalPerformance
+    }
+  })
+
+  test('returns all of the traces', () => {
     const tracer = new Tracer()
     tracer.backfill('sql', 3000, { kind: 'INSERT' })
     tracer.finalize()
