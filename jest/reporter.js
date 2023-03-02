@@ -39,7 +39,6 @@ class JestBuildkiteAnalyticsReporter {
         'id': id,
         'scope': result.ancestorTitles.join(' '),
         'name': result.title,
-        'identifier': result.fullName,
         'location': result.location ? `${prefixedTestPath}:${result.location.line}` : null,
         'file_name': prefixedTestPath,
         'result': this.analyticsResult(result),
