@@ -51,7 +51,6 @@ class MochaBuildkiteAnalyticsReporter {
       'id': test.testAnalyticsId,
       'name': test.title,
       'scope': this.scope(test),
-      'identifier': test.fullTitle(),
       'file_name': prefixedTestPath,
       'location': prefixedTestPath,
       'result': this.analyticsResult(test.state),
