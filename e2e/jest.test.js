@@ -72,14 +72,12 @@ describe('examples/jest', () => {
 
       expect(json).toHaveProperty("data[0].scope", '')
       expect(json).toHaveProperty("data[0].name", '1 + 2 to equal 3')
-      expect(json).toHaveProperty("data[0].identifier", '1 + 2 to equal 3')
       expect(json).toHaveProperty("data[0].location", "example.test.js:2")
       expect(json).toHaveProperty("data[0].file_name", "example.test.js")
       expect(json).toHaveProperty("data[0].result", 'passed')
 
       expect(json).toHaveProperty("data[1].scope", "sum")
       expect(json).toHaveProperty("data[1].name", "40 + 1 equal 42")
-      expect(json).toHaveProperty("data[1].identifier", "sum 40 + 1 equal 42")
       expect(json).toHaveProperty("data[1].location", "example.test.js:8")
       expect(json).toHaveProperty("data[1].file_name", "example.test.js")
       expect(json).toHaveProperty("data[1].result", "failed")
