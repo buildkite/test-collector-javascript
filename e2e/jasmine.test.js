@@ -64,13 +64,11 @@ describe('examples/jasmine', () => {
       expect(json).toHaveProperty("run_env.collector", "js-buildkite-test-collector")
 
       expect(json).toHaveProperty("data[0].name", '1 + 2 to equal 3')
-      expect(json).toHaveProperty("data[0].identifier", '1 + 2 to equal 3')
       expect(json).toHaveProperty("data[0].location", "spec/example.spec.js:7")
       expect(json).toHaveProperty("data[0].file_name", "spec/example.spec.js")
       expect(json).toHaveProperty("data[0].result", 'passed')
 
       expect(json).toHaveProperty("data[1].name", "40 + 1 equal 42")
-      expect(json).toHaveProperty("data[1].identifier", "sum 40 + 1 equal 42")
       expect(json).toHaveProperty("data[1].location", "spec/example.spec.js:13")
       expect(json).toHaveProperty("data[1].file_name", "spec/example.spec.js")
       expect(json).toHaveProperty("data[1].result", "failed")

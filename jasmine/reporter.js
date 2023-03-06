@@ -66,7 +66,6 @@ class JasmineBuildkiteAnalyticsReporter {
     this._testResults.push({
       'id': id,
       'name': result.description,
-      'identifier': result.fullName,
       'location': result.location ? `${prefixedTestPath}:${result.location.line}` : null,
       'file_name': prefixedTestPath,
       'result': this.analyticsResult(result),
