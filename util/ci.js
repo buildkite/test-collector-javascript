@@ -40,6 +40,7 @@ class CI {
       "branch": process.env.BUILDKITE_ANALYTICS_BRANCH,
       "commit_sha": process.env.BUILDKITE_ANALYTICS_SHA,
       "number": process.env.BUILDKITE_ANALYTICS_NUMBER,
+      "build_id": process.env.BUILDKITE_BUILD_ID,
       "job_id": process.env.BUILDKITE_ANALYTICS_JOB_ID,
       "message": process.env.BUILDKITE_ANALYTICS_MESSAGE,
       "debug": process.env.BUILDKITE_ANALYTICS_DEBUG_ENABLED,
@@ -66,6 +67,7 @@ class CI {
       "number": process.env.BUILDKITE_BUILD_NUMBER,
       "job_id": process.env.BUILDKITE_JOB_ID,
       "message": process.env.BUILDKITE_MESSAGE,
+      "build_id": process.env.BUILDKITE_BUILD_ID
     })
   }
 
@@ -77,17 +79,19 @@ class CI {
       "branch": process.env.GITHUB_REF,
       "commit_sha": process.env.GITHUB_SHA,
       "number": process.env.GITHUB_RUN_NUMBER,
+      "build_id": `${process.env.GITHUB_ID}-${process.env.GITHUB_RUN_ATTEMPT}`
     })
   }
 
   circleci() {
     return({
       "ci": "circleci",
-      "key": `${process.env.CIRCLE_WORKFLOW_ID}-${process.env.CIRCLE_BUILD_NUM}`,
+      "key": process.env.CIRCLE_WORKFLOW_ID,
       "url": process.env.CIRCLE_BUILD_URL,
       "branch": process.env.CIRCLE_BRANCH,
       "commit_sha": process.env.CIRCLE_SHA1,
-      "number": process.env.CIRCLE_BUILD_NUM,
+      "number": process.env.CIRCLE_WORKFLOW_ID,
+      "build_id": process.env.CIRCLE_WORKFLOW_ID
     })
   }
 }
