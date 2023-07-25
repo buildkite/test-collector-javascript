@@ -10,3 +10,7 @@ steps:
           # BUILDKITE_BUILD_ID are passed through to the container and mess up
           # the CI detection — we want a clean state process.env for testing.
           mount-buildkite-agent: false
+      - test-collector#v1.10.0:
+          files:
+            - "junit.xml"
+          format: "junit"
