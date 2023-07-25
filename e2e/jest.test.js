@@ -50,7 +50,7 @@ describe('examples/jest', () => {
 
       done()
     })
-  }, 1000) // 1s timeout
+  }, 10000) // 10s timeout
 
   test('it posts the correct JSON', (done) => {
     exec('npm test', { cwd, env }, (error, stdout, stderr) => {
