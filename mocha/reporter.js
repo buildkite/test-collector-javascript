@@ -55,7 +55,7 @@ class MochaBuildkiteAnalyticsReporter {
       'location': prefixedTestPath,
       'result': this.analyticsResult(test.state),
       'failure_reason': failureReason,
-      'failure_expanded': failureExpanded(test.err == undefined ? [] : test.err.multiple),
+      'failure_expanded': failureExpanded(test.err == undefined ? [] : (test.err.multiple || [test.err])),
       'history': {
         'section': 'top',
         'start_at': test.startAt,
