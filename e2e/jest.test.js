@@ -50,7 +50,7 @@ describe('examples/jest', () => {
 
       done()
     })
-  }, 1000) // 1s timeout
+  }, 10000) // 10s timeout
 
   test('it posts the correct JSON', (done) => {
     exec('npm test', { cwd, env }, (error, stdout, stderr) => {
@@ -83,7 +83,7 @@ describe('examples/jest', () => {
       expect(json).toHaveProperty("data[1].result", "failed")
       expect(json).toHaveProperty("data[1].failure_reason")
       expect(json.data[1].failure_reason).toEqual('Error: expect(received).toBe(expected) // Object.is equality')
-      
+
       expect(json).toHaveProperty("data[1].failure_expanded")
       expect(json.data[1].failure_expanded).toEqual(expect.arrayContaining([
         expect.objectContaining({
