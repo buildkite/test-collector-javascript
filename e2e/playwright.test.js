@@ -10,7 +10,7 @@ const runPlaywright = (args, env) => {
   const cwd = path.join(__dirname, "../examples/playwright");
 
   return new Promise((resolve) => {
-    const command = `npx playwright test ${args.join(' ')}`
+    const command = `npm test -- ${args.join(' ')}`
     exec(command, { cwd, env: { ...env, JEST_WORKER_ID: undefined } }, (error, stdout) => {
       resolve(stdout)
     })
