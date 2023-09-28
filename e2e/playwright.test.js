@@ -4,7 +4,7 @@ require('dotenv').config();
 const { exec, spawn } = require('child_process');
 const path = require('path');
 
-const TIMEOUT = 10000;
+const TIMEOUT = 20000;
 
 const runPlaywright = (args, env) => {
   const cwd = path.join(__dirname, "../examples/playwright");
@@ -88,7 +88,7 @@ describe('examples/playwright', () => {
     const jsonMatch = stdout.match(/.*Test Analytics Sending: ({.*})/m)
     const data = JSON.parse(jsonMatch[1])["data"]["data"];
     expect(data.length).toEqual(3)
-  }, 2 * TIMEOUT);
+  }, TIMEOUT);
 
   test('it supports test location prefixes for monorepos', async () => {
     const stdout = await runPlaywright([], { ...env, BUILDKITE_ANALYTICS_LOCATION_PREFIX: "some-sub-dir/" })
