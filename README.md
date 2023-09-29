@@ -2,7 +2,7 @@
 
 Official [Buildkite Test Analytics](https://buildkite.com/test-analytics) collectors for JavaScript test frameworks ✨
 
-⚒ **Supported test frameworks:** Jest, Jasmine, Mocha, and [more coming soon](https://github.com/buildkite/test-collector-javascript/issues?q=is%3Aissue+is%3Aopen+label%3A%22test+frameworks%22).
+⚒ **Supported test frameworks:** Jest, Jasmine, Mocha, Playwright and [more coming soon](https://github.com/buildkite/test-collector-javascript/issues?q=is%3Aissue+is%3Aopen+label%3A%22test+frameworks%22).
 
 📦 **Supported CI systems:** Buildkite, GitHub Actions, CircleCI, and others via the `BUILDKITE_ANALYTICS_*` environment variables.
 
@@ -12,148 +12,148 @@ Official [Buildkite Test Analytics](https://buildkite.com/test-analytics) collec
 
 2. Add the [`buildkite-test-collector` package](https://www.npmjs.com/package/buildkite-test-collector):
 
-   ```bash
-   # If you use npm:
-   npm install --save-dev buildkite-test-collector
+    ```bash
+    # If you use npm:
+    npm install --save-dev buildkite-test-collector
 
-   # or, if you use yarn:
-   yarn add --dev buildkite-test-collector
-   ```
+    # or, if you use yarn:
+    yarn add --dev buildkite-test-collector
+    ```
 
 3. Add the Buildkite test collector to your testing framework:
 
-   ### Jest
+    ### Jest
 
-   Update your [Jest configuration](https://jestjs.io/docs/configuration):<br>
+    Update your [Jest configuration](https://jestjs.io/docs/configuration):<br>
 
-   ```js
-     // jest.config.js
+    ```js
+    // jest.config.js
 
-     // Send results to Test Analytics
-     reporters: [
-       'default',
-       'buildkite-test-collector/jest/reporter'
-     ],
+    // Send results to Test Analytics
+    reporters: [
+      'default',
+      'buildkite-test-collector/jest/reporter'
+    ],
 
-     // Enable column + line capture for Test Analytics
-     testLocationInResults: true
-   ```
+    // Enable column + line capture for Test Analytics
+    testLocationInResults: true
+    ```
 
-   If you would like to pass in the API token using a custom environment variable, you can do so using the report options.
+    If you would like to pass in the API token using a custom environment variable, you can do so using the report options.
 
-   ```js
-   // jest.config.js
+    ```js
+    // jest.config.js
 
-   // Send results to Test Analytics
-   reporters: [
-     "default",
-     [
-       "buildkite-test-collector/jest/reporter",
-       { token: process.env.CUSTOM_ENV_VAR },
-     ],
-   ];
-   ```
+    // Send results to Test Analytics
+    reporters: [
+      "default",
+      [
+        "buildkite-test-collector/jest/reporter",
+        { token: process.env.CUSTOM_ENV_VAR },
+      ],
+    ];
+    ```
 
-   ### Jasmine
+    ### Jasmine
 
-   [Add the Buildkite reporter to Jasmine](https://jasmine.github.io/setup/nodejs.html#reporters):<br>
+    [Add the Buildkite reporter to Jasmine](https://jasmine.github.io/setup/nodejs.html#reporters):<br>
 
-   ```js
-   // SpecHelper.js
-   var BuildkiteReporter = require("buildkite-test-collector/jasmine/reporter");
-   var buildkiteReporter = new BuildkiteReporter();
+    ```js
+    // SpecHelper.js
+    var BuildkiteReporter = require("buildkite-test-collector/jasmine/reporter");
+    var buildkiteReporter = new BuildkiteReporter();
 
-   jasmine.getEnv().addReporter(buildkiteReporter);
-   ```
+    jasmine.getEnv().addReporter(buildkiteReporter);
+    ```
 
-   If you would like to pass in the API token using a custom environment variable, you can do so using the report options.
+    If you would like to pass in the API token using a custom environment variable, you can do so using the report options.
 
-   ```js
-   // SpecHelper.js
-   var buildkiteReporter = new BuildkiteReporter(undefined, {
-     token: process.env.CUSTOM_ENV_VAR,
-   });
-   ```
+    ```js
+    // SpecHelper.js
+    var buildkiteReporter = new BuildkiteReporter(undefined, {
+      token: process.env.CUSTOM_ENV_VAR,
+    });
+    ```
 
-   ### Mocha
+    ### Mocha
 
-   [Install mocha-multi-reporters](https://github.com/stanleyhlng/mocha-multi-reporters) in your project:<br>
+    [Install mocha-multi-reporters](https://github.com/stanleyhlng/mocha-multi-reporters) in your project:<br>
 
-   ```
-     npm install mocha-multi-reporters --save-dev
-   ```
+    ```
+    npm install mocha-multi-reporters --save-dev
+    ```
 
-   and configure it to run your desired reporter and the Buildkite reporter
+    and configure it to run your desired reporter and the Buildkite reporter
 
-   ```js
-     // config.json
-     {
-       "reporterEnabled": "spec, buildkite-test-collector/mocha/reporter"
-     }
-   ```
+    ```js
+    // config.json
+    {
+      "reporterEnabled": "spec, buildkite-test-collector/mocha/reporter"
+    }
+    ```
 
-   Now update your test script to use the buildkite reporter via mocha-multi-reporters:
+    Now update your test script to use the buildkite reporter via mocha-multi-reporters:
 
-   ```js
-     // package.json
-     "scripts": {
-       "test": "mocha --reporter mocha-multi-reporters --reporter-options configFile=config.json"
-     },
-   ```
+    ```js
+      // package.json
+      "scripts": {
+        "test": "mocha --reporter mocha-multi-reporters --reporter-options configFile=config.json"
+      },
+    ```
 
-   If you would like to pass in the API token using a custom environment variable, you can do so using the report options.
+    If you would like to pass in the API token using a custom environment variable, you can do so using the report options.
 
-   Since the reporter options are passed in as a json file, we ask you to put the environment variable name as a string value in the `config.json`, which will be retrieved using [dotenv](https://github.com/motdotla/dotenv) in the mocha reporter.
+    Since the reporter options are passed in as a json file, we ask you to put the environment variable name as a string value in the `config.json`, which will be retrieved using [dotenv](https://github.com/motdotla/dotenv) in the mocha reporter.
 
-   ```js
-     // config.json
-     {
-       "reporterEnabled": "spec, buildkite-test-collector/mocha/reporter",
-       "buildkiteTestCollectorMochaReporterReporterOptions": {
-         "token_name": "CUSTOM_ENV_VAR_NAME"
-       }
-     }
-   ```
+    ```js
+    // config.json
+    {
+      "reporterEnabled": "spec, buildkite-test-collector/mocha/reporter",
+      "buildkiteTestCollectorMochaReporterReporterOptions": {
+        "token_name": "CUSTOM_ENV_VAR_NAME"
+      }
+    }
+    ```
 
-   ### Playwright
+    ### Playwright
 
-   Update your [Playwright configuration](https://playwright.dev/docs/test-configuration):<br>
+    Update your [Playwright configuration](https://playwright.dev/docs/test-configuration):<br>
 
-   ```js
-   // playwright.config.js
+    ```js
+    // playwright.config.js
 
-   // Send results to Test Analytics
-     reporter: [
-       ['line'],
-       ['buildkite-test-collector/playwright/reporter']
-     ],
-   ```
+    // Send results to Test Analytics
+    reporter: [
+      ['line'],
+      ['buildkite-test-collector/playwright/reporter']
+    ],
+    ```
 
-   If you would like to pass in the API token using a custom environment variable, you can do so using the report options.
+    If you would like to pass in the API token using a custom environment variable, you can do so using the report options.
 
-   ```js
-   // jest.config.js
+    ```js
+    // jest.config.js
 
-   // Send results to Test Analytics
-     reporter: [
-       ['line'],
-       ['buildkite-test-collector/playwright/reporter', { token: process.env.CUSTOM_ENV_VAR },]
-     ],
-   ```
+    // Send results to Test Analytics
+    reporter: [
+      ['line'],
+      ['buildkite-test-collector/playwright/reporter', { token: process.env.CUSTOM_ENV_VAR },]
+    ],
+    ```
 
 4. Run your tests locally:<br>
 
-   ```js
-   env BUILDKITE_ANALYTICS_TOKEN=xyz npm test
-   ```
+  ```js
+  env BUILDKITE_ANALYTICS_TOKEN=xyz npm test
+  ```
 
 5. Add the `BUILDKITE_ANALYTICS_TOKEN` secret to your CI, push your changes to a branch, and open a pull request 🎉
 
-   ```bash
-   git checkout -b add-bk-test-analytics
-   git commit -am "Add Buildkite Test Analytics"
-   git push origin add-bk-test-analytics
-   ```
+  ```bash
+  git checkout -b add-bk-test-analytics
+  git commit -am "Add Buildkite Test Analytics"
+  git push origin add-bk-test-analytics
+  ```
 
 ## 📓 Notes
 
