@@ -115,6 +115,32 @@ Official [Buildkite Test Analytics](https://buildkite.com/test-analytics) collec
      }
    ```
 
+   ### Playwright
+
+   Update your [Playwright configuration](https://playwright.dev/docs/test-configuration):<br>
+
+   ```js
+   // playwright.config.js
+
+   // Send results to Test Analytics
+     reporter: [
+       ['line'],
+       ['buildkite-test-collector/playwright/reporter']
+     ],
+   ```
+
+   If you would like to pass in the API token using a custom environment variable, you can do so using the report options.
+
+   ```js
+   // jest.config.js
+
+   // Send results to Test Analytics
+     reporter: [
+       ['line'],
+       ['buildkite-test-collector/playwright/reporter', { token: process.env.CUSTOM_ENV_VAR },]
+     ],
+   ```
+
 4. Run your tests locally:<br>
 
    ```js
