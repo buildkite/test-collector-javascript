@@ -1,5 +1,7 @@
+const stripAnsi = require('strip-ansi');
 const CI = require('../util/ci')
 const uploadTestResults = require('../util/uploadTestResults')
+const Paths = require('../util/paths')
 
 /**
  * JSDoc Imports
@@ -19,18 +21,20 @@ const uploadTestResults = require('../util/uploadTestResults')
  */
 class PlaywrightBuildkiteAnalyticsReporter {
 
-  constructor() {
-    this._testResults = []
+  constructor(options) {
+    this._testResults = [];
     this._testEnv = (new CI()).env();
+    this._options = options;
+    this._paths = new Paths({ cwd: process.cwd() }, this._testEnv.location_prefix);
   }
-  
-  onBegin() {}
+
+  onBegin() { }
 
   onEnd() {
-    uploadTestResults(this._testEnv, this._testResults)
+    uploadTestResults(this._testEnv, this._testResults, this._options);
   }
 
-  onTestBegin() {}
+  onTestBegin() { }
 
   /**
    *
@@ -38,25 +42,28 @@ class PlaywrightBuildkiteAnalyticsReporter {
    * @param {TestResult} testResult
    */
   onTestEnd(test, testResult) {
+    const scope = test.titlePath().join(' ');
+    const fileName = this._paths.prefixTestPath(test.location.file);
+    const location = [fileName, test.location.line, test.location.column].join(':');
+
     this._testResults.push({
       'id': test.id,
-      'scope': test.titlePath.join(' '),
       'name': test.title,
-      'location': test.location,
-      'file_name': test.location,
+      'scope': scope,
+      'location': location,
+      'file_name': fileName,
       'result': this.analyticsResult(testResult.status),
-      'failure_reason': testResult.error,
-      'failure_expanded': testResult.errors,
+      'failure_reason': this.analyticsFailureReason(testResult),
+      'failure_expanded': this.analyticsFailureExpanded(testResult),
       'history': {
         'section': 'top',
-        'start_at': testResult.startTime,
+        'start_at': testResult.startTime.getTime(),
         'duration': testResult.duration / 1000,
       }
-    })
+    });
   }
 
-
-  analyticsResult(testResult) {
+  analyticsResult(status) {
     // Playwright test statuses:
     // - failed
     // - interrupted
@@ -76,7 +83,40 @@ class PlaywrightBuildkiteAnalyticsReporter {
       passed: 'passed',
       skipped: 'skipped',
       timedOut: 'failed',
-    }[testResult.status]
+    }[status]
+  }
+
+  /**
+   *
+   * @param {TestResult} testResult
+   */
+  analyticsFailureMessages(testResult) {
+    if (testResult.error == undefined) return [];
+
+    const stack = stripAnsi(testResult.error.stack).split("\n");
+    const snippet = stripAnsi(testResult.error.snippet).split("\n");
+
+    return stack.concat(snippet);
+  }
+
+  /**
+   *
+   * @param {TestResult} testResult
+   */
+  analyticsFailureReason(testResult) {
+    return this.analyticsFailureMessages(testResult)[0];
+  }
+
+  /**
+   *
+   * @param {TestResult} testResult
+   */
+  analyticsFailureExpanded(testResult) {
+    return [
+      {
+        expanded: this.analyticsFailureMessages(testResult).splice(1)
+      }
+    ];
   }
 }
 
