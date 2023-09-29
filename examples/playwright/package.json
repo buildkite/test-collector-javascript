@@ -1,0 +1,8 @@
+{
+  "name": "buildkite-test-collector-playwright-example",
+  "devDependencies": {
+    "@playwright/test": "^1.38.1",
+    "buildkite-test-collector": "file:../.."
+  },
+  "scripts": {}
+}
