@@ -45,6 +45,12 @@ describe('examples/mocha', () => {
     }, 10000) // 10s timeout
   })
 
+  test('it exits with exit code 1', (done) => {
+    exec('npm test', { cwd, env }, (error, stdout, stderr) => {
+      expect(error.code).toBe(1);
+      done()
+    })
+  });
 
   test('it posts the correct JSON', (done) => {
     exec('npm test', { cwd, env }, (error, stdout, stderr) => {
@@ -78,10 +84,20 @@ describe('examples/mocha', () => {
       expect(json.data[1].failure_reason).toMatch('AssertionError [ERR_ASSERTION]: 41 == 42')
       expect(json).toHaveProperty("data[1].failure_expanded[0].expanded")
       expect(json).toHaveProperty("data[1].failure_expanded[0].backtrace")
+      expect(stdout).toMatch(/^Test Analytics .* response/m)
 
       done()
     })
   }, 10000) // 10s timeout
+
+  describe('when --exit option is enabled', () => {
+    test('it sends the JSON to Buildkite Test Analytics', (done) => {
+      exec('npm test -- --exit', { cwd, env }, (error, stdout, stderr) => {
+        expect(stdout).toMatch(/^Test Analytics .* response/m)
+        done()
+      })
+    })
+  })
 
   test('it supports test location prefixes for monorepos', (done) => {
     exec('npm test', { cwd, env: { ...env, BUILDKITE_ANALYTICS_LOCATION_PREFIX: "some-sub-dir/" } }, (error, stdout, stderr) => {
