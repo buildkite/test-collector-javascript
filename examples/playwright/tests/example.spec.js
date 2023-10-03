@@ -6,9 +6,10 @@ test('has title', async ({ page }) => {
   await expect(page).toHaveTitle(/Buildkite/);
 });
 
-test('says hello', async ({ page }) => {
+test('says hello', async ({ page }, { retry }) => {
   await page.goto('/');
 
-  const h1 = await page.locator('h1');
+  // Trigger flaky test to assert --retries behaviour
+  const h1 = await page.locator(retry == 0 ? 'h2' : 'h1');
   await expect(h1).toHaveText('Hello, World!');
 });

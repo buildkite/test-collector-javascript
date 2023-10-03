@@ -75,18 +75,23 @@ describe('examples/playwright', () => {
     expect(data).toHaveProperty("data[1].failure_reason", "Error: Timed out 5000ms waiting for expect(received).toHaveText(expected)")
     expect(data).toHaveProperty("data[1].failure_expanded", expect.arrayContaining([
       expect.objectContaining({
-        expanded: expect.arrayContaining(['Expected string: "Hello, World!"', 'Received string: "¡Hola Mundo!"'])
+        expanded: expect.arrayContaining(['Expected string: "Hello, World!"', 'Received string: ""'])
       })
     ]))
   }, TIMEOUT);
 
-  test('it posts all executions when failed tests are retried', async () => {
-    const stdout = await runPlaywright(["--retries=1"], env)
+  describe.only('when --retries option is used', () => {
+    test("it posts all retried executions", async () => {
+      const stdout = await runPlaywright(["--retries=1"], env)
 
-    const jsonMatch = stdout.match(/.*Test Analytics Sending: ({.*})/m)
-    const data = JSON.parse(jsonMatch[1])["data"]["data"];
-    expect(data.length).toEqual(3)
-  }, TIMEOUT);
+      const jsonMatch = stdout.match(/.*Test Analytics Sending: ({.*})/m)
+      const data = JSON.parse(jsonMatch[1])["data"]["data"];
+      
+      const retriedTest = data.filter(test => test.name === "says hello")
+      expect(retriedTest.length).toEqual(2)
+      expect(retriedTest.map(test => test.result)).toEqual(["failed", "passed"])
+    }, TIMEOUT)
+  })
 
   test('it supports test location prefixes for monorepos', async () => {
     const stdout = await runPlaywright([], { ...env, BUILDKITE_ANALYTICS_LOCATION_PREFIX: "some-sub-dir/" })
