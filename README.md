@@ -54,7 +54,7 @@ Official [Buildkite Test Analytics](https://buildkite.com/test-analytics) collec
    ];
    ```
 
-   📓 The Jest collector uses the [`onRunComplete`](https://jestjs.io/docs/configuration#custom-reporters) hook to report test results to the Buildkite API. This interferes with the [`--forceExit`](https://jestjs.io/docs/cli#--forceexit) CLI option and interrupts the request that sends tests results, meaning that no data will be available for your test suite. It's recommended to use [`--detectOpenHandles`](https://jestjs.io/docs/cli#--detectopenhandles) to find any hanging process and clean them up and remove the use of `--forceExit`.
+   ⚠️ The Jest collector uses the [`onRunComplete`](https://jestjs.io/docs/configuration#custom-reporters) hook to report test results to the Buildkite API. This interferes with the [`--forceExit`](https://jestjs.io/docs/cli#--forceexit) CLI option and interrupts the request that sends tests results, meaning that no data will be available for your test suite. It's recommended to use [`--detectOpenHandles`](https://jestjs.io/docs/cli#--detectopenhandles) to find any hanging process and clean them up and remove the use of `--forceExit`.
 
    ### Jasmine
 
@@ -117,7 +117,7 @@ Official [Buildkite Test Analytics](https://buildkite.com/test-analytics) collec
      }
    ```
 
-   📓 The Mocha collector uses the [`EVENT_RUN_END`](https://mochajs.org/api/tutorial-custom-reporter.html) to report test results to Buildkite API. This interferes with the [`--exit`](https://mochajs.org/#-exit) CLI option and interrupts the request that sends test results, meaning that not data will be available for your test suite. It is recommended to find any hanging process and clean them up and remove the use of `--exit`.
+   ⚠️ The Mocha collector uses the [`EVENT_RUN_END`](https://mochajs.org/api/tutorial-custom-reporter.html) to report test results to Buildkite API. This interferes with the [`--exit`](https://mochajs.org/#-exit) CLI option and interrupts the request that sends test results, meaning that not data will be available for your test suite. It is recommended to find any hanging process and clean them up and remove the use of `--exit`.
 
 4. Run your tests locally:<br>
 
