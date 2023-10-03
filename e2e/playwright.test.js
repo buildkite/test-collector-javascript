@@ -17,6 +17,13 @@ const runPlaywright = (args, env) => {
   })
 }
 
+const expectOutputToHaveToken = (stdout, expectation) => {
+  const jsonMatch = stdout.match(/.*Test Analytics Sending: ({.*})/m)
+  const headers = JSON.parse(jsonMatch[1])["headers"]
+
+  expect(headers).toHaveProperty("Authorization", `Token token="${expectation}"`)
+}
+
 describe('examples/playwright', () => {
   const env = {
     ...process.env,
@@ -28,11 +35,7 @@ describe('examples/playwright', () => {
     test('it uses the correct token', async () => {
       const stdout = await runPlaywright(["--config", "token.config.js"], { ...env, BUILDKITE_ANALYTICS_PLAYWRIGHT_TOKEN: 'abc' })
 
-      expect(stdout).toMatch(/.*Test Analytics Sending: ({.*})/m);
-      const jsonMatch = stdout.match(/.*Test Analytics Sending: ({.*})/m)
-      const headers = JSON.parse(jsonMatch[1])["headers"]
-
-      expect(headers).toHaveProperty("Authorization", 'Token token="abc"')
+      expectOutputToHaveToken(stdout, 'abc')
     }, TIMEOUT)
   });
 
@@ -40,18 +43,13 @@ describe('examples/playwright', () => {
     test('it uses the correct token', async () => {
       const stdout = await runPlaywright([], env)
 
-      expect(stdout).toMatch(/.*Test Analytics Sending: ({.*})/m);
-      const jsonMatch = stdout.match(/.*Test Analytics Sending: ({.*})/m)
-      const headers = JSON.parse(jsonMatch[1])["headers"]
-
-      expect(headers).toHaveProperty("Authorization", 'Token token="xyz"')
+      expectOutputToHaveToken(stdout, 'xyz')
     }, TIMEOUT)
   });
 
   test('it posts the correct JSON', async () => {
     const stdout = await runPlaywright([], env)
 
-    expect(stdout).toMatch(/.*Test Analytics Sending: ({.*})/m);
     const jsonMatch = stdout.match(/.*Test Analytics Sending: ({.*})/m)
     const data = JSON.parse(jsonMatch[1])["data"]
 
@@ -93,7 +91,6 @@ describe('examples/playwright', () => {
   test('it supports test location prefixes for monorepos', async () => {
     const stdout = await runPlaywright([], { ...env, BUILDKITE_ANALYTICS_LOCATION_PREFIX: "some-sub-dir/" })
 
-    expect(stdout).toMatch(/.*Test Analytics Sending: ({.*})/m);
     const jsonMatch = stdout.match(/.*Test Analytics Sending: ({.*})/m)
     const data = JSON.parse(jsonMatch[1])["data"]
 
