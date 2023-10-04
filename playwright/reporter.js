@@ -17,7 +17,7 @@ const Paths = require('../util/paths')
 /**
  * A playwright reporter that uploads test results to Buildkite Test Analytics
  *
- * @typedef {Reporter}
+ * @implements {import('@playwright/test/reporter').Reporter}
  */
 class PlaywrightBuildkiteAnalyticsReporter {
 
@@ -31,7 +31,9 @@ class PlaywrightBuildkiteAnalyticsReporter {
   onBegin() { }
 
   onEnd() {
-    uploadTestResults(this._testEnv, this._testResults, this._options);
+    return new Promise(resolve => {
+      uploadTestResults(this._testEnv, this._testResults, this._options, resolve);
+    })
   }
 
   onTestBegin() { }

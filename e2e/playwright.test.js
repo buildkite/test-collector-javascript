@@ -78,9 +78,10 @@ describe('examples/playwright', () => {
         expanded: expect.arrayContaining(['Expected string: "Hello, World!"', 'Received string: ""'])
       })
     ]))
+    expect(stdout).toMatch(/^Test Analytics .* response/m)
   }, TIMEOUT);
 
-  describe.only('when --retries option is used', () => {
+  describe('when --retries option is used', () => {
     test("it posts all retried executions", async () => {
       const stdout = await runPlaywright(["--retries=1"], env)
 
@@ -90,6 +91,7 @@ describe('examples/playwright', () => {
       const retriedTest = data.filter(test => test.name === "says hello")
       expect(retriedTest.length).toEqual(2)
       expect(retriedTest.map(test => test.result)).toEqual(["failed", "passed"])
+      expect(stdout).toMatch(/^Test Analytics .* response/m)
     }, TIMEOUT)
   })
 
