@@ -7,10 +7,8 @@ const uploadTestResults = require('../util/uploadTestResults')
 const failureExpanded = require('../util/failureExpanded')
 
 const {
-  EVENT_RUN_END,
   EVENT_TEST_BEGIN,
   EVENT_TEST_END,
-  EVENT_TEST_PENDING,
 } = Mocha.Runner.constants
 
 const {
@@ -32,9 +30,6 @@ class MochaBuildkiteAnalyticsReporter {
       })
       .on(EVENT_TEST_END, (test) => {
         this.testFinished(test)
-      })
-      .on(EVENT_RUN_END, () => {
-        this.testRunFinished()
       })
   }
 
@@ -65,8 +60,13 @@ class MochaBuildkiteAnalyticsReporter {
     })
   }
 
-  testRunFinished() {
-    uploadTestResults(this._testEnv, this._testResults, this._options)
+  // This function will be called when Mocha has finished running all tests.
+  // It behaves similarly to runner.on(EVENT_RUN_END, ...).
+  // The difference is that runner.on(EVENT_RUN_END, ...) will exit the process immediately when `--exit` option is used.
+  // On the other hand, done() can be used to wait for an async process and programatically exit the process, even when `--exit` option is used.
+  // ref: https://github.com/mochajs/mocha/pull/1218
+  done(_failures, exit) {
+    uploadTestResults(this._testEnv, this._testResults, this._options, exit)
   }
 
   analyticsResult(state) {
