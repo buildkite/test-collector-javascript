@@ -2,6 +2,7 @@ steps:
   - label: ":jest: Tests"
     command:
       - "npm ci"
+      - "npx playwright install --with-deps chromium"
       - "npm test"
     plugins:
       - docker#v3.7.0:
