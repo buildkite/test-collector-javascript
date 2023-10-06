@@ -7,7 +7,7 @@
     "buildkite-test-analytics",
     "buildkite-test-collector"
   ],
-  "version": "1.6.0",
+  "version": "1.6.1",
   "homepage": "https://buildkite.com/test-analytics",
   "bugs": "https://github.com/buildkite/test-collector-javascript/issues",
   "license": "MIT",
@@ -17,6 +17,7 @@
     "jasmine/",
     "jest/",
     "mocha/",
+    "playwright/",
     "util/"
   ],
   "dependencies": {
