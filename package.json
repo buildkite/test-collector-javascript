@@ -24,7 +24,7 @@
     "axios": "^0.26.1",
     "dotenv": "^16.0.2",
     "request-spy": "^0.0.10",
-    "strip-ansi": "^7.1.0",
+    "strip-ansi": "^6.0.0",
     "uuid": "^8.3.2"
   },
   "devDependencies": {

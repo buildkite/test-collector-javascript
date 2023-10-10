@@ -1,4 +1,4 @@
-import stripAnsi from 'strip-ansi';
+const stripAnsi = require('strip-ansi');
 const CI = require('../util/ci')
 const uploadTestResults = require('../util/uploadTestResults')
 const Paths = require('../util/paths')
