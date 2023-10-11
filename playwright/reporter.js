@@ -92,21 +92,12 @@ class PlaywrightBuildkiteAnalyticsReporter {
    *
    * @param {TestResult} testResult
    */
-  analyticsFailureMessages(testResult) {
-    if (testResult.error == undefined) return [];
-
-    const stack = stripAnsi(testResult.error.stack).split("\n");
-    const snippet = stripAnsi(testResult.error.snippet).split("\n");
-
-    return stack.concat(snippet);
-  }
-
-  /**
-   *
-   * @param {TestResult} testResult
-   */
   analyticsFailureReason(testResult) {
-    return this.analyticsFailureMessages(testResult)[0];
+    if (testResult.error == undefined) return "";
+
+    const reason = stripAnsi(testResult.error.message).split("\n")[0];
+
+    return reason;
   }
 
   /**
@@ -114,9 +105,24 @@ class PlaywrightBuildkiteAnalyticsReporter {
    * @param {TestResult} testResult
    */
   analyticsFailureExpanded(testResult) {
+    let expandedErrors = [];
+
+    if (testResult.errors) {
+      for (const error of testResult.errors) {
+        if (error.stack) {
+          const stack = stripAnsi(error.stack).split("\n");
+          const snippet = stripAnsi(error.snippet)?.split("\n") || [];
+          expandedErrors = expandedErrors.concat(stack, snippet);
+        } else if (error.message) {
+          const message = stripAnsi(error.message).split("\n");
+          expandedErrors = expandedErrors.concat(message);
+        }
+      }
+    }
+
     return [
       {
-        expanded: this.analyticsFailureMessages(testResult).splice(1)
+        expanded: expandedErrors
       }
     ];
   }
