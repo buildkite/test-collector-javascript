@@ -7,7 +7,7 @@
     "buildkite-test-analytics",
     "buildkite-test-collector"
   ],
-  "version": "1.6.1",
+  "version": "1.6.2",
   "homepage": "https://buildkite.com/test-analytics",
   "bugs": "https://github.com/buildkite/test-collector-javascript/issues",
   "license": "MIT",
@@ -24,6 +24,7 @@
     "axios": "^0.26.1",
     "dotenv": "^16.0.2",
     "request-spy": "^0.0.10",
+    "strip-ansi": "^6.0.0",
     "uuid": "^8.3.2"
   },
   "devDependencies": {
