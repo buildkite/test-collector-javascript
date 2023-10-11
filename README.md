@@ -149,7 +149,7 @@ Official [Buildkite Test Analytics](https://buildkite.com/test-analytics) collec
     // cypress.config.js
 
     // Send results to Test Analytics
-   reporter: "test-collector-javascript/cypress/reporter,
+   reporter: "buildkite-test-collector/cypress/reporter",
    ```
 
    If you would like to pass in the API token using a custom environment variable, you can do so using the reporterOptions.
