@@ -95,6 +95,48 @@ describe('examples/playwright', () => {
     }, TIMEOUT)
   })
 
+  describe('when --timeout is exceeded', () => {
+    test("it posts the failures", async () => {
+      const stdout = await runPlaywright(["--timeout=1"], env)
+
+      const jsonMatch = stdout.match(/.*Test Analytics Sending: ({.*})/m)
+      const data = JSON.parse(jsonMatch[1])["data"];
+
+      expect(data).toHaveProperty("format", "json")
+
+      expect(data).toHaveProperty("run_env.ci")
+      expect(data).toHaveProperty("run_env.debug", 'true')
+      expect(data).toHaveProperty("run_env.key")
+      expect(data).toHaveProperty("run_env.version")
+      expect(data).toHaveProperty("run_env.collector", "js-buildkite-test-collector")
+
+      expect(data).toHaveProperty("data[0].scope", ' chromium example.spec.js has title')
+      expect(data).toHaveProperty("data[0].name", 'has title')
+      expect(data).toHaveProperty("data[0].location", "tests/example.spec.js:3:1")
+      expect(data).toHaveProperty("data[0].file_name", "tests/example.spec.js")
+      expect(data).toHaveProperty("data[0].result", 'failed')
+      expect(data).toHaveProperty("data[1].failure_reason", "Test timeout of 1ms exceeded.")
+      expect(data).toHaveProperty("data[1].failure_expanded", expect.arrayContaining([
+        expect.objectContaining({
+          expanded: expect.arrayContaining(["Test timeout of 1ms exceeded."])
+        })
+      ]))
+
+      expect(data).toHaveProperty("data[1].scope", " chromium example.spec.js says hello")
+      expect(data).toHaveProperty("data[1].name", "says hello")
+      expect(data).toHaveProperty("data[1].location", "tests/example.spec.js:9:1")
+      expect(data).toHaveProperty("data[1].file_name", "tests/example.spec.js")
+      expect(data).toHaveProperty("data[1].result", "failed")
+      expect(data).toHaveProperty("data[1].failure_reason", "Test timeout of 1ms exceeded.")
+      expect(data).toHaveProperty("data[1].failure_expanded", expect.arrayContaining([
+        expect.objectContaining({
+          expanded: expect.arrayContaining(["Test timeout of 1ms exceeded."])
+        })
+      ]))
+      expect(stdout).toMatch(/^Test Analytics .* response/m)
+    }, TIMEOUT)
+  })
+
   test('it supports test location prefixes for monorepos', async () => {
     const stdout = await runPlaywright([], { ...env, BUILDKITE_ANALYTICS_LOCATION_PREFIX: "some-sub-dir/" })
 
