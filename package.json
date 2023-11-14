@@ -21,7 +21,7 @@
     "util/"
   ],
   "dependencies": {
-    "axios": "^0.26.1",
+    "axios": "^1.0.0",
     "dotenv": "^16.0.2",
     "request-spy": "^0.0.10",
     "strip-ansi": "^6.0.0",
