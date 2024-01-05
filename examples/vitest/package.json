@@ -1,0 +1,10 @@
+{
+  "name": "buildkite-test-collector-vitest-example",
+  "devDependencies": {
+    "buildkite-test-collector": "file:../..",
+    "vitest": "^1.1.2"
+  },
+  "scripts": {
+    "test": "vitest run"
+  }
+}
