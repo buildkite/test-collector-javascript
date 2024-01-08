@@ -20,6 +20,16 @@ afterAll(() => {
   process.env = OLD_ENV;
 });
 
+const ensureDoneBeingCalledOnce = (upload) => {
+  it('calls done once', async () => {
+    const mockDone = jest.fn()
+
+    await upload(mockDone)
+
+    expect(mockDone.mock.calls.length).toBe(1)
+  })
+};
+
 describe('with no token', () => {
   beforeEach(() => {
     delete process.env.BUILDKITE_ANALYTICS_TOKEN
@@ -31,6 +41,10 @@ describe('with no token', () => {
     expect(console.error).toBeCalledTimes(1)
     expect(console.error).toHaveBeenLastCalledWith('Missing BUILDKITE_ANALYTICS_TOKEN')
   })
+
+  ensureDoneBeingCalledOnce(mockDone => {
+    uploadTestResults({}, [], {}, mockDone)
+  });
 })
 
 describe('with empty token', () => {
@@ -44,6 +58,10 @@ describe('with empty token', () => {
     expect(console.error).toBeCalledTimes(1)
     expect(console.error).toHaveBeenLastCalledWith('Missing BUILDKITE_ANALYTICS_TOKEN')
   })
+
+  ensureDoneBeingCalledOnce(mockDone => {
+    uploadTestResults({}, [], {}, mockDone)
+  });
 })
 
 describe('with token "abc" defined in reporter options', () => {
@@ -54,12 +72,12 @@ describe('with token "abc" defined in reporter options', () => {
   it('posts a result', () => {
     axios.post.mockResolvedValue({ data: "Success" })
 
-    uploadTestResults(new CI().env(), ['result'], { token: 'abc'})
+    uploadTestResults(new CI().env(), ['result'], { token: 'abc' })
 
     expect(axios.post.mock.calls[0]).toEqual([
       "https://analytics-api.buildkite.com/v1/uploads",
       {
-        "data": [ "result" ],
+        "data": ["result"],
         "format": "json",
         "run_env": {
           "ci": "generic",
@@ -76,6 +94,10 @@ describe('with token "abc" defined in reporter options', () => {
       }
     ])
   })
+
+  ensureDoneBeingCalledOnce(async mockDone => {
+    await uploadTestResults(new CI().env(), ['result'], { token: 'abc' }, mockDone)
+  });
 })
 
 describe('with token "abc"', () => {
@@ -93,7 +115,7 @@ describe('with token "abc"', () => {
       expect(axios.post.mock.calls[0]).toEqual([
         "https://analytics-api.buildkite.com/v1/uploads",
         {
-          "data": [ "result" ],
+          "data": ["result"],
           "format": "json",
           "run_env": {
             "ci": "generic",
@@ -126,5 +148,21 @@ describe('with token "abc"', () => {
 
       expect(axios.post.mock.calls.length).toBe(3)
     })
+
+    ensureDoneBeingCalledOnce(async mockDone => {
+      await uploadTestResults({}, Array(12000).fill('result'), {}, mockDone)
+    });
+  })
+
+  describe('with no results', () => {
+    it('does not post', () => {
+      uploadTestResults({}, [])
+
+      expect(axios.post.mock.calls.length).toBe(0)
+    })
+
+    ensureDoneBeingCalledOnce(async mockDone => {
+      await uploadTestResults({}, [], {}, mockDone)
+    });
   })
 })
