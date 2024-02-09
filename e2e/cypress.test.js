@@ -83,6 +83,7 @@ describe('examples/cypress', () => {
       expect(json).toHaveProperty("data[1].failure_expanded[0].expanded")
       expect(json).toHaveProperty("data[1].failure_expanded[0].backtrace")
 
+      expect(stdout).toMatch(/^Test Analytics .* response/m)
       done()
     })
   }, DEFAULT_TIMEOUT)
