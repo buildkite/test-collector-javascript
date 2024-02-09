@@ -1,14 +1,12 @@
 steps:
   - label: ":jest: Tests"
     command:
-      # Install cypress dependencies. See https://docs.cypress.io/guides/getting-started/installing-cypress
-      - "apt-get install -y libgtk2.0-0 libgtk-3-0 libgbm-dev libnotify-dev libnss3 libxss1 libasound2 libxtst6 xauth xvfb"
       - "npm ci"
       - "npx playwright install --with-deps chromium"
       - "npm test"
     plugins:
       - docker#v3.7.0:
-          image: node:lts
+          image: cypress/base:20.11.0
           # Prevent mounting the agent, otherwise BUILDKITE_JOB_ID and
           # BUILDKITE_BUILD_ID are passed through to the container and mess up
           # the CI detection — we want a clean state process.env for testing.
