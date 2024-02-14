@@ -141,6 +141,28 @@ Official [Buildkite Test Analytics](https://buildkite.com/test-analytics) collec
     ],
     ```
 
+   ### Cypress
+
+   Update your [Cypress configuration](https://docs.cypress.io/guides/references/configuration):<br>
+
+   ```js
+    // cypress.config.js
+
+    // Send results to Test Analytics
+   reporter: "buildkite-test-collector/cypress/reporter",
+   ```
+
+   If you would like to pass in the API token using a custom environment variable, you can do so using the reporterOptions.
+
+   ```js
+   // cypress.config.js
+
+   // Send results to Test Analytics
+   reporterOptions: {
+    token_name: "CUSTOM_ENV_VAR_NAME"
+   }
+   ```
+
 4. Run your tests locally:<br>
 
     ```js
