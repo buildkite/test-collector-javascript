@@ -112,4 +112,23 @@ describe('examples/jest', () => {
       done()
     })
   }, 10000) // 10s timeout
+
+  describe('when failuresOnly is true in reporter options', () => {
+    test('skips uploads for successful tests', (done) => {
+      exec('jest --config failuresOnly.config.js', { cwd, env }, (error, stdout, stderr) => {
+        expect(stdout).toMatch(/.*Test Analytics Sending: ({.*})/m);
+
+        const jsonMatch = stdout.match(/.*Test Analytics Sending: ({.*})/m)
+        const json = JSON.parse(jsonMatch[1])["data"]
+
+        // Uncomment to view the JSON
+        // console.log(json)
+
+        expect(json.data.length).toBe(1)
+        expect(json.data[0].result).toBe("failed")
+
+        done()
+      })
+    }, 10000) // 10s timeout
+  })
 })
