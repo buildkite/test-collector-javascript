@@ -23,8 +23,8 @@ class JestBuildkiteAnalyticsReporter {
     }
   }
 
-  onRunComplete(_test, _results, _options) {
-    uploadTestResults(this._testEnv, this._testResults, this._options)
+  async onRunComplete(_test, _results, _options) {
+    await uploadTestResults(this._testEnv, this._testResults, this._options)
   }
 
   onTestStart(test) {
