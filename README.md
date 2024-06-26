@@ -34,10 +34,9 @@ Official [Buildkite Test Analytics](https://buildkite.com/test-analytics) collec
       'default',
       'buildkite-test-collector/jest/reporter'
     ],
-
-    // Enable column + line capture for Test Analytics
-    testLocationInResults: true
     ```
+
+    Ensure that you run Jest with the `--testLocationInResults` flag so that column + line information is captured for Test Analytics
 
     If you would like to pass in the API token using a custom environment variable, you can do so using the report options.
 
