@@ -1,9 +1,11 @@
 // Does an end-to-end test of the Jest example, using the debug output from the
 // reporter, and verifying the JSON
 require('dotenv').config();
+const fs = require('fs');
+const path = require('path');
+
 const { exec } = require('child_process');
 const { hasUncaughtExceptionCaptureCallback } = require('process');
-const path = require('path');
 
 describe('examples/jest', () => {
   const cwd = path.join(__dirname, "../examples/jest")
@@ -43,6 +45,23 @@ describe('examples/jest', () => {
       })
     }, 10000) // 10s timeout
   })
+
+  describe('when output is set', () => {
+    const location = `test-result-${Date.now()}.json`
+    test('it writes the output to the correct file', (done) => {
+      exec('npm test',
+        { cwd, env: { ...env, RESULT_PATH: location } }, (error, stdout, stderr) => {
+          const resultPath = path.resolve(cwd, location)
+
+          expect(fs.existsSync(resultPath)).toEqual(true)
+
+          fs.unlinkSync(resultPath)
+
+          done()
+        }
+      )
+    })
+  });
 
   test('it outputs a warning when --forceExit option is used', (done) => {
     exec('jest --forceExit', { cwd, env }, (error, stdout, stderr) => {

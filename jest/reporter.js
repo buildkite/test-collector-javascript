@@ -2,6 +2,7 @@ const { v4: uuidv4 } = require('uuid')
 const CI = require('../util/ci')
 const uploadTestResults = require('../util/uploadTestResults')
 const Paths = require('../util/paths')
+const saveResult = require('../util/saveResult')
 
 class JestBuildkiteAnalyticsReporter {
   constructor(globalConfig, options) {
@@ -24,6 +25,9 @@ class JestBuildkiteAnalyticsReporter {
   }
 
   onRunComplete(_test, _results, _options) {
+    if (this._options.output) {
+      saveResult(this._testResults, this._options.output)
+    }
     return uploadTestResults(this._testEnv, this._testResults, this._options)
   }
 
@@ -81,16 +85,16 @@ class JestBuildkiteAnalyticsReporter {
     if (testResult.status !== 'failed') return []
 
     // Strip ANSI color codes from messages and split each line
-    return testResult.failureMessages.join(' ').replace(/\u001b[^m]*?m/g,'').split("\n")
+    return testResult.failureMessages.join(' ').replace(/\u001b[^m]*?m/g, '').split("\n")
   }
-  
+
   analyticsFailureReason(testResult) {
     return this.analyticsFailureMessages(testResult)[0]
   }
 
   analyticsFailureExpanded(testResult) {
     return [
-      { 
+      {
         expanded: this.analyticsFailureMessages(testResult).splice(1)
       }
     ]
