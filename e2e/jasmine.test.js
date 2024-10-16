@@ -51,7 +51,6 @@ describe('examples/jasmine', () => {
     const location = `test-result-${Date.now()}.json`
     test('it writes the output to the correct file', (done) => {
       exec('npm test spec/example.spec.js', { cwd, env: { ...env, RESULT_PATH: location } }, (error, stdout, stderr) => {
-        console.log(stdout)
         const resultPath = path.resolve(cwd, location)
 
         expect(fs.existsSync(resultPath)).toEqual(true)
