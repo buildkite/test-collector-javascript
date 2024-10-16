@@ -5,6 +5,7 @@ const uploadTestResults = require('../util/uploadTestResults')
 const Paths = require('../util/paths')
 const Tracer = require('../util/tracer')
 const Network = require('../util/network')
+const saveResult = require('../util/saveResult')
 const process = require('node:process')
 const { traceDeprecation } = require('node:process')
 let testLocations = {}
@@ -20,7 +21,6 @@ const findLocation = () => {
     filename: locationArray[1],
     line: locationArray[2]
   }
-  return (location.match(fileRegexp) || [])[1]
 }
 
 const itFactory = (it) => {
@@ -76,6 +76,9 @@ class JasmineBuildkiteAnalyticsReporter {
   }
 
   jasmineDone(result, done) {
+    if (this._options.output) {
+      saveResult(this._testResults, this._options.output)
+    }
     return uploadTestResults(this._testEnv, this._testResults, this._options, done)
   }
 
