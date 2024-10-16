@@ -1,0 +1,6 @@
+{
+  "reporterEnabled": "spec, buildkite-test-collector/mocha/reporter",
+  "buildkiteTestCollectorMochaReporterReporterOptions": {
+    "output": "test-result.json"
+  }
+}

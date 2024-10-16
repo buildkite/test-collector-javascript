@@ -1,9 +1,11 @@
 // Does an end-to-end test of the Mocha example, using the debug output from the
 // reporter, and verifying the JSON
 require('dotenv').config();
+const fs = require('fs');
+const path = require('path');
+
 const { exec } = require('child_process');
 const { hasUncaughtExceptionCaptureCallback } = require('process');
-const path = require('path');
 
 const DEFAULT_TIMEOUT = 20000 // 20s timeout
 
@@ -44,6 +46,23 @@ describe('examples/cypress', () => {
 
         done()
       })
+    }, DEFAULT_TIMEOUT)
+  })
+
+  describe('when output is set', () => {
+    const location = `test-result-${Date.now()}.json`
+    test('it writes the output to the correct file', (done) => {
+      exec('npm test',
+        { cwd, env: { ...env, RESULT_PATH: location } }, (error, stdout, stderr) => {
+          const resultPath = path.resolve(cwd, location)
+
+          expect(fs.existsSync(resultPath)).toEqual(true)
+
+          fs.unlinkSync(resultPath)
+
+          done()
+        }
+      )
     }, DEFAULT_TIMEOUT)
   })
 

@@ -1,9 +1,11 @@
 // Does an end-to-end test of the Mocha example, using the debug output from the
 // reporter, and verifying the JSON
 require('dotenv').config();
+const fs = require('fs');
+const path = require('path');
+
 const { exec } = require('child_process');
 const { hasUncaughtExceptionCaptureCallback } = require('process');
-const path = require('path');
 
 describe('examples/mocha', () => {
   const cwd = path.join(__dirname, "../examples/mocha")
@@ -17,16 +19,16 @@ describe('examples/mocha', () => {
   describe('when token is defined through reporter options', () => {
     test('it uses the correct token', (done) => {
       exec('mocha --reporter mocha-multi-reporters --reporter-options configFile=token-config.json',
-      { cwd, env: { ...env, BUILDKITE_ANALYTICS_TOKEN: undefined } }, (error, stdout, stderr) => {
-        expect(stdout).toMatch(/.*Test Analytics Sending: ({.*})/m);
+        { cwd, env: { ...env, BUILDKITE_ANALYTICS_TOKEN: undefined } }, (error, stdout, stderr) => {
+          expect(stdout).toMatch(/.*Test Analytics Sending: ({.*})/m);
 
-        const jsonMatch = stdout.match(/.*Test Analytics Sending: ({.*})/m)
-        const json = JSON.parse(jsonMatch[1])["headers"]
+          const jsonMatch = stdout.match(/.*Test Analytics Sending: ({.*})/m)
+          const json = JSON.parse(jsonMatch[1])["headers"]
 
-        expect(json).toHaveProperty("Authorization", 'Token token="abc"')
+          expect(json).toHaveProperty("Authorization", 'Token token="abc"')
 
-        done()
-      })
+          done()
+        })
     }, 10000) // 10s timeout
   })
 
@@ -44,6 +46,22 @@ describe('examples/mocha', () => {
       })
     }, 10000) // 10s timeout
   })
+
+  describe('when output is set', () => {
+    test('it writes the output to the correct file', (done) => {
+      exec('mocha --reporter mocha-multi-reporters --reporter-options configFile=output-config.json',
+        { cwd, env }, (error, stdout, stderr) => {
+          const resultPath = path.resolve(cwd, 'test-result.json')
+
+          expect(fs.existsSync(resultPath)).toEqual(true)
+
+          fs.unlinkSync(resultPath)
+
+          done()
+        }
+      )
+    })
+  });
 
   test('it exits with exit code 1', (done) => {
     exec('npm test', { cwd, env }, (error, stdout, stderr) => {

@@ -5,6 +5,7 @@ const Mocha = require('mocha')
 const Runnable = require('mocha/lib/runnable')
 const uploadTestResults = require('../util/uploadTestResults')
 const failureExpanded = require('../util/failureExpanded')
+const saveResult = require('../util/saveResult')
 
 const {
   EVENT_TEST_BEGIN,
@@ -19,10 +20,11 @@ const {
 
 class MochaBuildkiteAnalyticsReporter {
   constructor(runner, options) {
-    this._options = { token: process.env[`${options.reporterOptions.token_name}`]}
+    this._options = { token: process.env[`${options.reporterOptions.token_name}`] }
     this._testResults = []
     this._testEnv = (new CI()).env();
     this._paths = new Paths({ cwd: process.cwd() }, this._testEnv.location_prefix)
+    this._outputPath = options.reporterOptions.output
 
     runner
       .on(EVENT_TEST_BEGIN, (test) => {
@@ -67,6 +69,9 @@ class MochaBuildkiteAnalyticsReporter {
   // ref: https://github.com/mochajs/mocha/pull/1218
   done(_failures, exit) {
     uploadTestResults(this._testEnv, this._testResults, this._options, exit)
+    if (this._outputPath) {
+      saveResult(this._testResults, this._outputPath)
+    }
   }
 
   analyticsResult(state) {
