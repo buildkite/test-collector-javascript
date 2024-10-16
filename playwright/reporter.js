@@ -1,7 +1,8 @@
 const stripAnsi = require('strip-ansi');
 const CI = require('../util/ci')
-const uploadTestResults = require('../util/uploadTestResults')
 const Paths = require('../util/paths')
+const saveResult = require('../util/saveResult')
+const uploadTestResults = require('../util/uploadTestResults')
 
 /**
  * JSDoc Imports
@@ -32,6 +33,9 @@ class PlaywrightBuildkiteAnalyticsReporter {
 
   onEnd() {
     return new Promise(resolve => {
+      if (this._options.output) {
+        saveResult(this._testResults, this._options.output)
+      }
       uploadTestResults(this._testEnv, this._testResults, this._options, resolve);
     })
   }

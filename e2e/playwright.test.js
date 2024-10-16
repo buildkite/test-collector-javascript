@@ -1,14 +1,15 @@
 // Does an end-to-end test of the Playwright example, using the debug output from the
 // reporter, and verifying the JSON
 require('dotenv').config();
-const { exec, spawn } = require('child_process');
+const fs = require('fs');
 const path = require('path');
+
+const { exec, spawn } = require('child_process');
 
 const TIMEOUT = 20000;
 
+const cwd = path.join(__dirname, "../examples/playwright");
 const runPlaywright = (args, env) => {
-  const cwd = path.join(__dirname, "../examples/playwright");
-
   return new Promise((resolve) => {
     const command = `npm test -- ${args.join(' ')}`
     exec(command, { cwd, env: { ...env, JEST_WORKER_ID: undefined } }, (error, stdout) => {
@@ -87,7 +88,7 @@ describe('examples/playwright', () => {
 
       const jsonMatch = stdout.match(/.*Test Analytics Sending: ({.*})/m)
       const data = JSON.parse(jsonMatch[1])["data"]["data"];
-      
+
       const retriedTest = data.filter(test => test.name === "says hello")
       expect(retriedTest.length).toEqual(2)
       expect(retriedTest.map(test => test.result)).toEqual(["failed", "passed"])
@@ -148,4 +149,16 @@ describe('examples/playwright', () => {
     expect(data).toHaveProperty("data[0].location", "some-sub-dir/tests/example.spec.js:3:1")
     expect(data).toHaveProperty("data[1].location", "some-sub-dir/tests/example.spec.js:9:1")
   }, TIMEOUT);
+
+  describe('when output is set', () => {
+    const location = `test-result-${Date.now()}.json`
+    test('it writes the output to the correct file', async () => {
+      await runPlaywright([], { ...env, RESULT_PATH: location })
+      const resultPath = path.resolve(cwd, location)
+
+      expect(fs.existsSync(resultPath)).toEqual(true)
+
+      fs.unlinkSync(resultPath)
+    }, TIMEOUT)
+  });
 });

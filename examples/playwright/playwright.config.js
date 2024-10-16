@@ -5,7 +5,10 @@ const { defineConfig, devices } = require('@playwright/test');
  */
 module.exports = defineConfig({
   testDir: './tests',
-  reporter: [['line'], ['buildkite-test-collector/playwright/reporter']],
+  reporter: [
+    ['line'],
+    ['buildkite-test-collector/playwright/reporter', { output: process.env.RESULT_PATH }]
+  ],
   webServer: {
     command: 'npm start',
     url: 'http://127.0.0.1:8080',
