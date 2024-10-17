@@ -47,7 +47,6 @@ describe('examples/cypress', () => {
     }, DEFAULT_TIMEOUT)
   })
 
-
   test('it posts the correct JSON', (done) => {
     exec('npm test', { cwd, env }, (error, stdout, stderr) => {
       expect(stdout).toMatch(/.*Test Analytics Sending: ({.*})/m);
@@ -106,4 +105,14 @@ describe('examples/cypress', () => {
       done()
     })
   }, DEFAULT_TIMEOUT)
+
+  describe('when test is pass but upload fails', () => {
+    test('it should not throw an error', (done) => {
+      exec('npm test -- --spec cypress/component/passed.cy.js', { cwd, env }, (error, stdout, stderr) => {
+        expect(error).toBeNull()
+
+        done()
+      })
+    }, DEFAULT_TIMEOUT)
+  })
 })

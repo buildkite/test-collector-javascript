@@ -112,4 +112,14 @@ describe('examples/jest', () => {
       done()
     })
   }, 10000) // 10s timeout
+
+  describe('when test is pass but upload fails', () => {
+    test('it should not throw an error', (done) => {
+      exec('npm test passed.test.js', { cwd, env }, (error, stdout, stderr) => {
+        expect(error).toBeNull()
+
+        done()
+      })
+    })
+  })
 })

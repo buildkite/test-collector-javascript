@@ -64,7 +64,7 @@ const uploadTestResults = (env, results, options, done) => {
     requests.push(axios.post(buildkiteAnalyticsUrl, data, config))
   }
 
-  return Promise.all(requests)
+  return Promise.allSettled(requests)
     .finally(function (responses) {
       if (done !== undefined) { return done() }
     })

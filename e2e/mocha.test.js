@@ -17,16 +17,16 @@ describe('examples/mocha', () => {
   describe('when token is defined through reporter options', () => {
     test('it uses the correct token', (done) => {
       exec('mocha --reporter mocha-multi-reporters --reporter-options configFile=token-config.json',
-      { cwd, env: { ...env, BUILDKITE_ANALYTICS_TOKEN: undefined } }, (error, stdout, stderr) => {
-        expect(stdout).toMatch(/.*Test Analytics Sending: ({.*})/m);
+        { cwd, env: { ...env, BUILDKITE_ANALYTICS_TOKEN: undefined } }, (error, stdout, stderr) => {
+          expect(stdout).toMatch(/.*Test Analytics Sending: ({.*})/m);
 
-        const jsonMatch = stdout.match(/.*Test Analytics Sending: ({.*})/m)
-        const json = JSON.parse(jsonMatch[1])["headers"]
+          const jsonMatch = stdout.match(/.*Test Analytics Sending: ({.*})/m)
+          const json = JSON.parse(jsonMatch[1])["headers"]
 
-        expect(json).toHaveProperty("Authorization", 'Token token="abc"')
+          expect(json).toHaveProperty("Authorization", 'Token token="abc"')
 
-        done()
-      })
+          done()
+        })
     }, 10000) // 10s timeout
   })
 
@@ -117,4 +117,14 @@ describe('examples/mocha', () => {
       done()
     })
   }, 10000) // 10s timeout
+
+  describe('when test is pass but upload fails', () => {
+    test('it should not throw an error', (done) => {
+      exec('npm test passed.test.js', { cwd, env }, (error, stdout, stderr) => {
+        expect(error).toBeNull()
+
+        done()
+      })
+    })
+  })
 })

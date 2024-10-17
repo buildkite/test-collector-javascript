@@ -9,5 +9,5 @@ it('1 + 2 to equal 3', () => {
 describe('sum', () => {
   it('40 + 1 equal 42', () => {
     assert.equal(40 + 1, 42);
-  });  
+  });
 })

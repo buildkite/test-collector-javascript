@@ -106,4 +106,14 @@ describe('examples/jasmine', () => {
       done()
     })
   }, 10000) // 10s timeout
+
+  describe('when test is pass but upload fails', () => {
+    test('it should not throw an error', done => {
+      exec("npm test spec/passed.spec.js", { cwd, env }, (error, stdout) => {
+        expect(error).toBeNull()
+
+        done()
+      })
+    })
+  })
 })

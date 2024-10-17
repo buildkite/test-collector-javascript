@@ -6,8 +6,8 @@ const path = require('path');
 
 const TIMEOUT = 20000;
 
+const cwd = path.join(__dirname, "../examples/playwright");
 const runPlaywright = (args, env) => {
-  const cwd = path.join(__dirname, "../examples/playwright");
 
   return new Promise((resolve) => {
     const command = `npm test -- ${args.join(' ')}`
@@ -87,7 +87,7 @@ describe('examples/playwright', () => {
 
       const jsonMatch = stdout.match(/.*Test Analytics Sending: ({.*})/m)
       const data = JSON.parse(jsonMatch[1])["data"]["data"];
-      
+
       const retriedTest = data.filter(test => test.name === "says hello")
       expect(retriedTest.length).toEqual(2)
       expect(retriedTest.map(test => test.result)).toEqual(["failed", "passed"])
@@ -148,4 +148,14 @@ describe('examples/playwright', () => {
     expect(data).toHaveProperty("data[0].location", "some-sub-dir/tests/example.spec.js:3:1")
     expect(data).toHaveProperty("data[1].location", "some-sub-dir/tests/example.spec.js:9:1")
   }, TIMEOUT);
+
+  describe('when test is pass but upload fails', () => {
+    test('it should not throw an error', done => {
+      exec("npm test example.spec.js:3", { cwd, env: { ...env, JEST_WORKER_ID: undefined } }, (error, stdout) => {
+        expect(error).toBeNull()
+
+        done()
+      })
+    }, TIMEOUT)
+  })
 });
