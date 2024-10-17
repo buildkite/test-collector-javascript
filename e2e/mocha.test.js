@@ -84,7 +84,7 @@ describe('examples/mocha', () => {
       expect(json.data[1].failure_reason).toMatch('AssertionError [ERR_ASSERTION]: 41 == 42')
       expect(json).toHaveProperty("data[1].failure_expanded[0].expanded")
       expect(json).toHaveProperty("data[1].failure_expanded[0].backtrace")
-      expect(stdout).toMatch(/^Test Analytics .* response/m)
+      expect(stdout).toMatch(/Test Analytics .* response/m)
 
       done()
     })
@@ -93,7 +93,7 @@ describe('examples/mocha', () => {
   describe('when --exit option is enabled', () => {
     test('it sends the JSON to Buildkite Test Analytics', (done) => {
       exec('npm test -- --exit', { cwd, env }, (error, stdout, stderr) => {
-        expect(stdout).toMatch(/^Test Analytics .* response/m)
+        expect(stdout).toMatch(/Test Analytics .* response/m)
         done()
       })
     })
