@@ -108,6 +108,11 @@ describe('examples/jasmine', () => {
   }, 10000) // 10s timeout
 
   describe('when test is pass but upload fails', () => {
+    beforeAll(() => {
+      // This will cause the upload to fail
+      env.BUILDKITE_ANALYTICS_BASE_URL = "http://"
+    })
+
     test('it should not throw an error', done => {
       exec("npm test spec/passed.spec.js", { cwd, env }, (error, stdout) => {
         expect(error).toBeNull()

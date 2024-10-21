@@ -150,6 +150,10 @@ describe('examples/playwright', () => {
   }, TIMEOUT);
 
   describe('when test is pass but upload fails', () => {
+    beforeAll(() => {
+      // This will cause the upload to fail
+      env.BUILDKITE_ANALYTICS_BASE_URL = "http://"
+    })
     test('it should not throw an error', done => {
       exec("npm test example.spec.js:3", { cwd, env: { ...env, JEST_WORKER_ID: undefined } }, (error, stdout) => {
         expect(error).toBeNull()
