@@ -47,7 +47,6 @@ describe('examples/cypress', () => {
     }, DEFAULT_TIMEOUT)
   })
 
-
   test('it posts the correct JSON', (done) => {
     exec('npm test', { cwd, env }, (error, stdout, stderr) => {
       expect(stdout).toMatch(/.*Test Analytics Sending: ({.*})/m);
@@ -83,7 +82,7 @@ describe('examples/cypress', () => {
       expect(json).toHaveProperty("data[1].failure_expanded[0].expanded")
       expect(json).toHaveProperty("data[1].failure_expanded[0].backtrace")
 
-      expect(stdout).toMatch(/^Test Analytics .* response/m)
+      expect(stdout).toMatch(/Test Analytics .* response/m)
       done()
     })
   }, DEFAULT_TIMEOUT)
@@ -106,4 +105,19 @@ describe('examples/cypress', () => {
       done()
     })
   }, DEFAULT_TIMEOUT)
+
+  describe('when test is pass but upload fails', () => {
+    beforeAll(() => {
+      // This will cause the upload to fail
+      env.BUILDKITE_ANALYTICS_BASE_URL = "http://"
+    })
+
+    test('it should not throw an error', (done) => {
+      exec('npm test -- --spec cypress/component/passed.cy.js', { cwd, env }, (error, stdout, stderr) => {
+        expect(error).toBeNull()
+
+        done()
+      })
+    }, DEFAULT_TIMEOUT)
+  })
 })

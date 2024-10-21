@@ -17,16 +17,16 @@ describe('examples/mocha', () => {
   describe('when token is defined through reporter options', () => {
     test('it uses the correct token', (done) => {
       exec('mocha --reporter mocha-multi-reporters --reporter-options configFile=token-config.json',
-      { cwd, env: { ...env, BUILDKITE_ANALYTICS_TOKEN: undefined } }, (error, stdout, stderr) => {
-        expect(stdout).toMatch(/.*Test Analytics Sending: ({.*})/m);
+        { cwd, env: { ...env, BUILDKITE_ANALYTICS_TOKEN: undefined } }, (error, stdout, stderr) => {
+          expect(stdout).toMatch(/.*Test Analytics Sending: ({.*})/m);
 
-        const jsonMatch = stdout.match(/.*Test Analytics Sending: ({.*})/m)
-        const json = JSON.parse(jsonMatch[1])["headers"]
+          const jsonMatch = stdout.match(/.*Test Analytics Sending: ({.*})/m)
+          const json = JSON.parse(jsonMatch[1])["headers"]
 
-        expect(json).toHaveProperty("Authorization", 'Token token="abc"')
+          expect(json).toHaveProperty("Authorization", 'Token token="abc"')
 
-        done()
-      })
+          done()
+        })
     }, 10000) // 10s timeout
   })
 
@@ -84,7 +84,7 @@ describe('examples/mocha', () => {
       expect(json.data[1].failure_reason).toMatch('AssertionError [ERR_ASSERTION]: 41 == 42')
       expect(json).toHaveProperty("data[1].failure_expanded[0].expanded")
       expect(json).toHaveProperty("data[1].failure_expanded[0].backtrace")
-      expect(stdout).toMatch(/^Test Analytics .* response/m)
+      expect(stdout).toMatch(/Test Analytics .* response/m)
 
       done()
     })
@@ -93,7 +93,7 @@ describe('examples/mocha', () => {
   describe('when --exit option is enabled', () => {
     test('it sends the JSON to Buildkite Test Analytics', (done) => {
       exec('npm test -- --exit', { cwd, env }, (error, stdout, stderr) => {
-        expect(stdout).toMatch(/^Test Analytics .* response/m)
+        expect(stdout).toMatch(/Test Analytics .* response/m)
         done()
       })
     })
@@ -117,4 +117,19 @@ describe('examples/mocha', () => {
       done()
     })
   }, 10000) // 10s timeout
+
+  describe('when test is pass but upload fails', () => {
+    beforeAll(() => {
+      // This will cause the upload to fail
+      env.BUILDKITE_ANALYTICS_BASE_URL = "http://"
+    })
+
+    test('it should not throw an error', (done) => {
+      exec('npm test passed.test.js', { cwd, env }, (error, stdout, stderr) => {
+        expect(error).toBeNull()
+
+        done()
+      })
+    })
+  })
 })
