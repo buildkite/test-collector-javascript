@@ -5,7 +5,7 @@
     "buildkite-test-collector": "file:../.."
   },
   "scripts": {
-    "start": "npx http-server -p 8080",
+    "start": "npx http-server -p 18080",
     "test": "npx playwright test"
   },
   "dependencies": {
