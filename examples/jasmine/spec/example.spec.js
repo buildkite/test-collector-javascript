@@ -1,6 +1,6 @@
 let axios = require('axios')
 var BuildkiteReporter = require('buildkite-test-collector/jasmine/reporter');
-var buildkiteReporter = new BuildkiteReporter();
+var buildkiteReporter = new BuildkiteReporter(undefined, { tags: { hello: "jasmine" }});
 jasmine.getEnv().addReporter(buildkiteReporter);
 
 // No scope

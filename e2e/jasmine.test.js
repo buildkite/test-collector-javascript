@@ -63,6 +63,8 @@ describe('examples/jasmine', () => {
       expect(json).toHaveProperty("run_env.version")
       expect(json).toHaveProperty("run_env.collector", "js-buildkite-test-collector")
 
+      expect(json).toHaveProperty("tags", { "hello": "jasmine" }) // examples/jasmine/spec/example.spec.js
+
       expect(json).toHaveProperty("data[0].name", '1 + 2 to equal 3')
       expect(json).toHaveProperty("data[0].location", "spec/example.spec.js:7")
       expect(json).toHaveProperty("data[0].file_name", "spec/example.spec.js")

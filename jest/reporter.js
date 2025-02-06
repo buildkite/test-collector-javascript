@@ -9,6 +9,7 @@ class JestBuildkiteAnalyticsReporter {
     this._options = options
     this._testResults = []
     this._testEnv = (new CI()).env();
+    this._tags = options?.tags;
     this._paths = new Paths(globalConfig, this._testEnv.location_prefix)
   }
 
@@ -24,7 +25,7 @@ class JestBuildkiteAnalyticsReporter {
   }
 
   onRunComplete(_test, _results, _options) {
-    return uploadTestResults(this._testEnv, this._testResults, this._options)
+    return uploadTestResults(this._testEnv, this._tags, this._testResults, this._options)
   }
 
   onTestStart(test) {

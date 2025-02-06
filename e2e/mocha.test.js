@@ -70,6 +70,8 @@ describe('examples/mocha', () => {
       expect(json).toHaveProperty("run_env.version")
       expect(json).toHaveProperty("run_env.collector", "js-buildkite-test-collector")
 
+      expect(json).toHaveProperty("tags", {"hello": "mocha"}) // examples/mocha/config.json
+
       expect(json).toHaveProperty("data[0].name", '1 + 2 to equal 3')
       expect(json).toHaveProperty("data[0].location", "test.js") // Mocha does not report test line numbers, otherwise we'd see it here
       expect(json).toHaveProperty("data[0].file_name", "test.js")

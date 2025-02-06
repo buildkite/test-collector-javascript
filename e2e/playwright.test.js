@@ -61,6 +61,8 @@ describe('examples/playwright', () => {
     expect(data).toHaveProperty("run_env.version")
     expect(data).toHaveProperty("run_env.collector", "js-buildkite-test-collector")
 
+    expect(data).toHaveProperty("tags", { "hello": "playwright" }) // examples/playwright/playwright.config.js
+
     expect(data).toHaveProperty("data[0].scope", ' chromium example.spec.js has title')
     expect(data).toHaveProperty("data[0].name", 'has title')
     expect(data).toHaveProperty("data[0].location", "tests/example.spec.js:3:1")

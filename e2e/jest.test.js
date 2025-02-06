@@ -70,6 +70,8 @@ describe('examples/jest', () => {
       expect(json).toHaveProperty("run_env.version")
       expect(json).toHaveProperty("run_env.collector", "js-buildkite-test-collector")
 
+      expect(json).toHaveProperty("tags", { "hello": "jest" }) // examples/jest/jest.config.js
+
       expect(json).toHaveProperty("data[0].scope", '')
       expect(json).toHaveProperty("data[0].name", '1 + 2 to equal 3')
       expect(json).toHaveProperty("data[0].location", "example.test.js:2")
@@ -121,7 +123,7 @@ describe('examples/jest', () => {
 
     test('it should not throw an error', (done) => {
       exec('npm test passed.test.js', { cwd, env }, (error, stdout, stderr) => {
-        console.log(stdout)
+        //console.log(stdout)
         expect(error).toBeNull()
 
         done()

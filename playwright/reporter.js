@@ -24,6 +24,7 @@ class PlaywrightBuildkiteAnalyticsReporter {
   constructor(options) {
     this._testResults = [];
     this._testEnv = (new CI()).env();
+    this._tags = options?.tags;
     this._options = options;
     this._paths = new Paths({ cwd: process.cwd() }, this._testEnv.location_prefix);
   }
@@ -32,7 +33,7 @@ class PlaywrightBuildkiteAnalyticsReporter {
 
   onEnd() {
     return new Promise(resolve => {
-      uploadTestResults(this._testEnv, this._testResults, this._options, resolve);
+      uploadTestResults(this._testEnv, this._tags, this._testResults, this._options, resolve);
     })
   }
 

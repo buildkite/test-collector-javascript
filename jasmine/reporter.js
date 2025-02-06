@@ -42,6 +42,7 @@ class JasmineBuildkiteAnalyticsReporter {
     this._options = options
     this._testResults = []
     this._testEnv = (new CI()).env();
+    this._tags = options?.tags;
     this._paths = new Paths(config, this._testEnv.location_prefix)
   }
 
@@ -76,7 +77,7 @@ class JasmineBuildkiteAnalyticsReporter {
   }
 
   jasmineDone(result, done) {
-    return uploadTestResults(this._testEnv, this._testResults, this._options, done)
+    return uploadTestResults(this._testEnv, this._tags, this._testResults, this._options, done)
   }
 
   analyticsResult(testResult) {
