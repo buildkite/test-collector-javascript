@@ -65,6 +65,8 @@ describe('examples/cypress', () => {
       expect(json).toHaveProperty("run_env.version")
       expect(json).toHaveProperty("run_env.collector", "js-buildkite-test-collector")
 
+      expect(json).toHaveProperty("tags", { "hello": "cypress" }) // examples/cypress/cypress.config.js
+
       expect(json).toHaveProperty("data[0].name", 'renders')
       expect(json).toHaveProperty("data[0].identifier", '<Component /> renders')
       expect(json).toHaveProperty("data[0].location", "cypress/component/Component.cy.jsx") // Cypress does not report test line numbers, otherwise we'd see it here

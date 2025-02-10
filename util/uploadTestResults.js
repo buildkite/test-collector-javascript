@@ -4,7 +4,7 @@ const axios = require('axios')
 const CHUNK_SIZE = 5000
 const DEFAULT_BUILDKITE_ANALYTICS_BASE_URL = 'https://analytics-api.buildkite.com/v1/uploads'
 
-const uploadTestResults = (env, results, options, done) => {
+const uploadTestResults = (env, tags, results, options, done) => {
   const buildkiteAnalyticsToken = options?.token || process.env.BUILDKITE_ANALYTICS_TOKEN
   const buildkiteAnalyticsUrl = options?.url || process.env.BUILDKITE_ANALYTICS_BASE_URL || DEFAULT_BUILDKITE_ANALYTICS_BASE_URL
 
@@ -58,6 +58,7 @@ const uploadTestResults = (env, results, options, done) => {
     const data = {
       'format': 'json',
       'run_env': env,
+      'tags': tags || {},
       "data": results.slice(i, i + CHUNK_SIZE),
     }
 

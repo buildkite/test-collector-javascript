@@ -22,6 +22,7 @@ class MochaBuildkiteAnalyticsReporter {
     this._options = { token: process.env[`${options.reporterOptions.token_name}`]}
     this._testResults = []
     this._testEnv = (new CI()).env();
+    this._tags = options.reporterOptions.tags;
     this._paths = new Paths({ cwd: process.cwd() }, this._testEnv.location_prefix)
 
     runner
@@ -66,7 +67,7 @@ class MochaBuildkiteAnalyticsReporter {
   // On the other hand, done() can be used to wait for an async process and programatically exit the process, even when `--exit` option is used.
   // ref: https://github.com/mochajs/mocha/pull/1218
   done(_failures, exit) {
-    uploadTestResults(this._testEnv, this._testResults, this._options, exit)
+    uploadTestResults(this._testEnv, this._tags, this._testResults, this._options, exit)
   }
 
   analyticsResult(state) {

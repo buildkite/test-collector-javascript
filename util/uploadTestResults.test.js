@@ -36,14 +36,14 @@ describe('with no token', () => {
   })
 
   it('prints a console message and returns', () => {
-    uploadTestResults({}, [])
+    uploadTestResults({}, {}, [])
 
     expect(console.error).toBeCalledTimes(1)
     expect(console.error).toHaveBeenLastCalledWith('Missing BUILDKITE_ANALYTICS_TOKEN')
   })
 
   ensureDoneBeingCalledOnce(mockDone => {
-    uploadTestResults({}, [], {}, mockDone)
+    uploadTestResults({}, {}, [], {}, mockDone)
   });
 })
 
@@ -53,14 +53,14 @@ describe('with empty token', () => {
   })
 
   it('prints a console message and returns', () => {
-    uploadTestResults({}, [])
+    uploadTestResults({}, {}, [])
 
     expect(console.error).toBeCalledTimes(1)
     expect(console.error).toHaveBeenLastCalledWith('Missing BUILDKITE_ANALYTICS_TOKEN')
   })
 
   ensureDoneBeingCalledOnce(mockDone => {
-    uploadTestResults({}, [], {}, mockDone)
+    uploadTestResults({}, {}, [], {}, mockDone)
   });
 })
 
@@ -72,7 +72,7 @@ describe('with token "abc" defined in reporter options', () => {
   it('posts a result', () => {
     axios.post.mockResolvedValue({ data: "Success" })
 
-    uploadTestResults(new CI().env(), ['result'], { token: 'abc' })
+    uploadTestResults(new CI().env(), {}, ['result'], { token: 'abc' })
 
     expect(axios.post.mock.calls[0]).toEqual([
       "https://analytics-api.buildkite.com/v1/uploads",
@@ -84,7 +84,8 @@ describe('with token "abc" defined in reporter options', () => {
           "collector": "js-buildkite-test-collector",
           "key": "key123",
           "version": version
-        }
+        },
+        "tags": {}
       },
       {
         "headers": {
@@ -96,7 +97,7 @@ describe('with token "abc" defined in reporter options', () => {
   })
 
   ensureDoneBeingCalledOnce(async mockDone => {
-    await uploadTestResults(new CI().env(), ['result'], { token: 'abc' }, mockDone)
+    await uploadTestResults(new CI().env(), {}, ['result'], { token: 'abc' }, mockDone)
   });
 })
 
@@ -106,11 +107,21 @@ describe('with token "abc"', () => {
     process.env.BUILDKITE_ANALYTICS_KEY = 'key123';
   })
 
+  describe('with tags', () => {
+    it('posts tags', () => {
+      axios.post.mockResolvedValue({ data: "Success" })
+
+      uploadTestResults(new CI().env(), {"hello": "world"}, ['result'])
+
+      expect(axios.post.mock.calls[0][1].tags).toEqual({"hello": "world"});
+    });
+  });
+
   describe('result chunking', () => {
     it('posts a result', () => {
       axios.post.mockResolvedValue({ data: "Success" })
 
-      uploadTestResults(new CI().env(), ['result'])
+      uploadTestResults(new CI().env(), {}, ['result'])
 
       expect(axios.post.mock.calls[0]).toEqual([
         "https://analytics-api.buildkite.com/v1/uploads",
@@ -122,7 +133,8 @@ describe('with token "abc"', () => {
             "collector": "js-buildkite-test-collector",
             "key": "key123",
             "version": version
-          }
+          },
+          "tags": {}
         },
         {
           "headers": {
@@ -136,7 +148,7 @@ describe('with token "abc"', () => {
     it('does a single posts if < 5000', () => {
       axios.post.mockResolvedValue({ data: "Success" });
 
-      uploadTestResults({}, Array(4999).fill('result'))
+      uploadTestResults({}, {}, Array(4999).fill('result'))
 
       expect(axios.post.mock.calls.length).toBe(1)
     })
@@ -144,25 +156,25 @@ describe('with token "abc"', () => {
     it('posts 5000 results at a time', () => {
       axios.post.mockResolvedValue({ data: "Success" })
 
-      uploadTestResults({}, Array(12000).fill('result'))
+      uploadTestResults({}, {}, Array(12000).fill('result'))
 
       expect(axios.post.mock.calls.length).toBe(3)
     })
 
     ensureDoneBeingCalledOnce(async mockDone => {
-      await uploadTestResults({}, Array(12000).fill('result'), {}, mockDone)
+      await uploadTestResults({}, {}, Array(12000).fill('result'), {}, mockDone)
     });
   })
 
   describe('with no results', () => {
     it('does not post', () => {
-      uploadTestResults({}, [])
+      uploadTestResults({}, {}, [])
 
       expect(axios.post.mock.calls.length).toBe(0)
     })
 
     ensureDoneBeingCalledOnce(async mockDone => {
-      await uploadTestResults({}, [], {}, mockDone)
+      await uploadTestResults({}, {}, [], {}, mockDone)
     });
   })
 })

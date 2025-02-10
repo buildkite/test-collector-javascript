@@ -4,6 +4,7 @@ module.exports = defineConfig({
   reporter: "../../cypress/reporter",
   reporterOptions: {
     token_name: "BUILDKITE_ANALYTICS_TOKEN",
+    tags: { "hello": "cypress" },
   },
   component: {
     devServer: {
