@@ -213,8 +213,14 @@ Bug reports and pull requests are welcome on GitHub at https://github.com/buildk
 
 ```sh
 # Version bump the code, tag and push
-npm version [major/minor/patch]
-git push && git push --tags
+git switch --create prepare-v1-2-3
+npm version --no-git-tag-version v1.2.3
+git push
+
+# Open a pull request, get it merged
+git switch main
+git tag v1.2.3
+git push --tags
 
 # Publish to the NPM registry
 npm publish
