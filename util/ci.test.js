@@ -56,4 +56,17 @@ describe('CI.env', () => {
 
     expect(ci.env().location_prefix).toEqual('true')
   })
+
+  test('generic CI env', () => {
+    const envKeys = Object.keys(process.env)
+    expect(envKeys).not.toContain('BUILDKITE_BUILD_ID')
+    expect(envKeys).not.toContain('GITHUB_RUN_NUMBER')
+    expect(envKeys).not.toContain('CIRCLE_BUILD_NUM')
+
+    const env = new CI().env()
+    expect(env.ci).toEqual("generic")
+    expect(env.collector).toEqual("js-buildkite-test-collector")
+    expect(env).toHaveProperty("version")
+    expect(env.key).toMatch(/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[0-9a-f]{4}-[0-9a-f]{12}$/) // UUIDv4
+  })
 });
