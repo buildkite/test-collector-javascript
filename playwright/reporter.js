@@ -15,11 +15,11 @@ const Paths = require('../util/paths')
  */
 
 /**
- * A playwright reporter that uploads test results to Buildkite Test Analytics
+ * A playwright reporter that uploads test results to Buildkite Test Engine
  *
  * @implements {import('@playwright/test/reporter').Reporter}
  */
-class PlaywrightBuildkiteAnalyticsReporter {
+class PlaywrightBuildkiteTestEngineReporter {
 
   constructor(options) {
     this._testResults = [];
@@ -55,9 +55,9 @@ class PlaywrightBuildkiteAnalyticsReporter {
       'scope': scope,
       'location': location,
       'file_name': fileName,
-      'result': this.analyticsResult(testResult.status),
-      'failure_reason': this.analyticsFailureReason(testResult),
-      'failure_expanded': this.analyticsFailureExpanded(testResult),
+      'result': this.testEngineResult(testResult.status),
+      'failure_reason': this.testEngineFailureReason(testResult),
+      'failure_expanded': this.testEngineFailureExpanded(testResult),
       'history': {
         'section': 'top',
         'start_at': testResult.startTime.getTime(),
@@ -66,7 +66,7 @@ class PlaywrightBuildkiteAnalyticsReporter {
     });
   }
 
-  analyticsResult(status) {
+  testEngineResult(status) {
     // Playwright test statuses:
     // - failed
     // - interrupted
@@ -74,7 +74,7 @@ class PlaywrightBuildkiteAnalyticsReporter {
     // - skipped
     // - timedOut
     //
-    // Buildkite Test Analytics execution results:
+    // Buildkite Test Engine execution results:
     // - failed
     // - passed
     // - pending
@@ -93,7 +93,7 @@ class PlaywrightBuildkiteAnalyticsReporter {
    *
    * @param {TestResult} testResult
    */
-  analyticsFailureReason(testResult) {
+  testEngineFailureReason(testResult) {
     if (testResult.error == undefined) return "";
 
     const reason = stripAnsi(testResult.error.message).split("\n")[0];
@@ -105,7 +105,7 @@ class PlaywrightBuildkiteAnalyticsReporter {
    *
    * @param {TestResult} testResult
    */
-  analyticsFailureExpanded(testResult) {
+  testEngineFailureExpanded(testResult) {
     let expandedErrors = [];
 
     if (testResult.errors) {
@@ -129,4 +129,4 @@ class PlaywrightBuildkiteAnalyticsReporter {
   }
 }
 
-module.exports = PlaywrightBuildkiteAnalyticsReporter
+module.exports = PlaywrightBuildkiteTestEngineReporter

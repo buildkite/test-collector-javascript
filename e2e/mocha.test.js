@@ -18,9 +18,9 @@ describe('examples/mocha', () => {
     test('it uses the correct token', (done) => {
       exec('mocha --reporter mocha-multi-reporters --reporter-options configFile=token-config.json',
         { cwd, env: { ...env, BUILDKITE_ANALYTICS_TOKEN: undefined } }, (error, stdout, stderr) => {
-          expect(stdout).toMatch(/.*Test Analytics Sending: ({.*})/m);
+          expect(stdout).toMatch(/.*Test Engine Sending: ({.*})/m);
 
-          const jsonMatch = stdout.match(/.*Test Analytics Sending: ({.*})/m)
+          const jsonMatch = stdout.match(/.*Test Engine Sending: ({.*})/m)
           const json = JSON.parse(jsonMatch[1])["headers"]
 
           expect(json).toHaveProperty("Authorization", 'Token token="abc"')
@@ -33,9 +33,9 @@ describe('examples/mocha', () => {
   describe('when token is defined through BUILDKITE_ANALYTICS_TOKEN', () => {
     test('it uses the correct token', (done) => {
       exec('npm test', { cwd, env }, (error, stdout, stderr) => {
-        expect(stdout).toMatch(/.*Test Analytics Sending: ({.*})/m);
+        expect(stdout).toMatch(/.*Test Engine Sending: ({.*})/m);
 
-        const jsonMatch = stdout.match(/.*Test Analytics Sending: ({.*})/m)
+        const jsonMatch = stdout.match(/.*Test Engine Sending: ({.*})/m)
         const json = JSON.parse(jsonMatch[1])["headers"]
 
         expect(json).toHaveProperty("Authorization", 'Token token="xyz"')
@@ -54,9 +54,9 @@ describe('examples/mocha', () => {
 
   test('it posts the correct JSON', (done) => {
     exec('npm test', { cwd, env }, (error, stdout, stderr) => {
-      expect(stdout).toMatch(/.*Test Analytics Sending: ({.*})/m);
+      expect(stdout).toMatch(/.*Test Engine Sending: ({.*})/m);
 
-      const jsonMatch = stdout.match(/.*Test Analytics Sending: ({.*})/m)
+      const jsonMatch = stdout.match(/.*Test Engine Sending: ({.*})/m)
       const json = JSON.parse(jsonMatch[1])["data"]
 
       // Uncomment to view the JSON
@@ -86,16 +86,16 @@ describe('examples/mocha', () => {
       expect(json.data[1].failure_reason).toMatch('AssertionError [ERR_ASSERTION]: 41 == 42')
       expect(json).toHaveProperty("data[1].failure_expanded[0].expanded")
       expect(json).toHaveProperty("data[1].failure_expanded[0].backtrace")
-      expect(stdout).toMatch(/Test Analytics .* response/m)
+      expect(stdout).toMatch(/Test Engine .* response/m)
 
       done()
     })
   }, 10000) // 10s timeout
 
   describe('when --exit option is enabled', () => {
-    test('it sends the JSON to Buildkite Test Analytics', (done) => {
+    test('it sends the JSON to Buildkite Test Engine', (done) => {
       exec('npm test -- --exit', { cwd, env }, (error, stdout, stderr) => {
-        expect(stdout).toMatch(/Test Analytics .* response/m)
+        expect(stdout).toMatch(/Test Engine .* response/m)
         done()
       })
     })
@@ -103,9 +103,9 @@ describe('examples/mocha', () => {
 
   test('it supports test location prefixes for monorepos', (done) => {
     exec('npm test', { cwd, env: { ...env, BUILDKITE_ANALYTICS_LOCATION_PREFIX: "some-sub-dir/" } }, (error, stdout, stderr) => {
-      expect(stdout).toMatch(/.*Test Analytics Sending: ({.*})/m);
+      expect(stdout).toMatch(/.*Test Engine Sending: ({.*})/m);
 
-      const jsonMatch = stdout.match(/.*Test Analytics Sending: ({.*})/m)
+      const jsonMatch = stdout.match(/.*Test Engine Sending: ({.*})/m)
       const json = JSON.parse(jsonMatch[1])["data"]
 
       // Uncomment to view the JSON

@@ -17,7 +17,7 @@ const {
   STATE_FAILED,
 } = Runnable.constants
 
-class MochaBuildkiteAnalyticsReporter {
+class MochaBuildkiteTestEngineReporter {
   constructor(runner, options) {
     this._options = { token: process.env[`${options.reporterOptions.token_name}`]}
     this._testResults = []
@@ -35,7 +35,7 @@ class MochaBuildkiteAnalyticsReporter {
   }
 
   testStarted(test) {
-    test.testAnalyticsId = uuidv4()
+    test.testEngineId = uuidv4()
     test.startAt = performance.now() / 1000
   }
 
@@ -44,12 +44,12 @@ class MochaBuildkiteAnalyticsReporter {
     const prefixedTestPath = this._paths.prefixTestPath(this.getRootParentFile(test))
 
     this._testResults.push({
-      'id': test.testAnalyticsId,
+      'id': test.testEngineId,
       'name': test.title,
       'scope': this.scope(test),
       'file_name': prefixedTestPath,
       'location': prefixedTestPath,
-      'result': this.analyticsResult(test.state),
+      'result': this.testEngineResult(test.state),
       'failure_reason': failureReason,
       'failure_expanded': failureExpanded(test.err == undefined ? [] : (test.err.multiple || [test.err])),
       'history': {
@@ -70,13 +70,13 @@ class MochaBuildkiteAnalyticsReporter {
     uploadTestResults(this._testEnv, this._tags, this._testResults, this._options, exit)
   }
 
-  analyticsResult(state) {
+  testEngineResult(state) {
     // Mocha test statuses:
     // - passed
     // - failed
     // - pending
     //
-    // Buildkite Test Analytics execution results:
+    // Buildkite Test Engine execution results:
     // - passed
     // - failed
     // - pending
@@ -110,4 +110,4 @@ class MochaBuildkiteAnalyticsReporter {
   }
 }
 
-module.exports = MochaBuildkiteAnalyticsReporter
+module.exports = MochaBuildkiteTestEngineReporter
