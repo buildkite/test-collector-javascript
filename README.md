@@ -1,6 +1,6 @@
 # Buildkite Collectors for JavaScript
 
-Official [Buildkite Test Analytics](https://buildkite.com/test-analytics) collectors for JavaScript test frameworks ✨
+Official [Buildkite Test Engine](https://buildkite.com/platform/test-engine) collectors for JavaScript test frameworks ✨
 
 ⚒ **Supported test frameworks:** Jest, Jasmine, Mocha, Cypress, Playwright, and [more coming soon](https://github.com/buildkite/test-collector-javascript/issues?q=is%3Aissue+is%3Aopen+label%3A%22test+frameworks%22).
 
@@ -8,7 +8,7 @@ Official [Buildkite Test Analytics](https://buildkite.com/test-analytics) collec
 
 ## 👉 Installing
 
-1. [Create a test suite](https://buildkite.com/docs/test-analytics), and copy the API token that it gives you.
+1. [Create a test suite](https://buildkite.com/docs/test-engine), and copy the API token that it gives you.
 
 2. Add the [`buildkite-test-collector` package](https://www.npmjs.com/package/buildkite-test-collector):
 
@@ -29,13 +29,13 @@ Official [Buildkite Test Analytics](https://buildkite.com/test-analytics) collec
     ```js
     // jest.config.js
 
-    // Send results to Test Analytics
+    // Send results to Test Engine
     reporters: [
       'default',
       'buildkite-test-collector/jest/reporter'
     ],
 
-    // Enable column + line capture for Test Analytics
+    // Enable column + line capture for Test Engine
     testLocationInResults: true
     ```
 
@@ -44,7 +44,7 @@ Official [Buildkite Test Analytics](https://buildkite.com/test-analytics) collec
     ```js
     // jest.config.js
 
-    // Send results to Test Analytics
+    // Send results to Test Engine
     reporters: [
       "default",
       [
@@ -122,7 +122,7 @@ Official [Buildkite Test Analytics](https://buildkite.com/test-analytics) collec
     ```js
     // playwright.config.js
 
-    // Send results to Test Analytics
+    // Send results to Test Engine
     reporter: [
       ['line'],
       ['buildkite-test-collector/playwright/reporter']
@@ -134,7 +134,7 @@ Official [Buildkite Test Analytics](https://buildkite.com/test-analytics) collec
     ```js
     // jest.config.js
 
-    // Send results to Test Analytics
+    // Send results to Test Engine
     reporter: [
       ['line'],
       ['buildkite-test-collector/playwright/reporter', { token: process.env.CUSTOM_ENV_VAR },]
@@ -148,7 +148,7 @@ Official [Buildkite Test Analytics](https://buildkite.com/test-analytics) collec
    ```js
     // cypress.config.js
 
-    // Send results to Test Analytics
+    // Send results to Test Engine
    reporter: "buildkite-test-collector/cypress/reporter",
    ```
 
@@ -157,7 +157,7 @@ Official [Buildkite Test Analytics](https://buildkite.com/test-analytics) collec
    ```js
    // cypress.config.js
 
-   // Send results to Test Analytics
+   // Send results to Test Engine
    reporterOptions: {
     token_name: "CUSTOM_ENV_VAR_NAME"
    }
@@ -172,9 +172,9 @@ Official [Buildkite Test Analytics](https://buildkite.com/test-analytics) collec
 5. Add the `BUILDKITE_ANALYTICS_TOKEN` secret to your CI, push your changes to a branch, and open a pull request 🎉
 
     ```bash
-    git checkout -b add-bk-test-analytics
-    git commit -am "Add Buildkite Test Analytics"
-    git push origin add-bk-test-analytics
+    git checkout -b add-bk-test-engine
+    git commit -am "Add Buildkite Test Engine"
+    git push origin add-bk-test-engine
     ```
 
 ## 📓 Notes
@@ -203,7 +203,7 @@ And run the tests:
 npm test
 ```
 
-Useful resources for developing collectors include the [Buildkite Test Analytics docs](https://buildkite.com/docs/test-analytics) and the [RSpec and Minitest collectors](https://github.com/buildkite/rspec-buildkite-analytics).
+Useful resources for developing collectors include the [Buildkite Test Engine docs](https://buildkite.com/docs/test-engine) and the [RSpec and Minitest collectors](https://github.com/buildkite/rspec-buildkite-analytics).
 
 ## 👩‍💻 Contributing
 

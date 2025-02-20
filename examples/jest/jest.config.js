@@ -1,5 +1,5 @@
 const config = {
-  // Send results to Test Analytics
+  // Send results to Test Engine
   reporters: [
     'default',
     ['buildkite-test-collector/jest/reporter', {
@@ -7,7 +7,7 @@ const config = {
     }]
   ],
 
-  // Enable column + line capture for Test Analytics
+  // Enable column + line capture for Test Engine
   testLocationInResults: true
 };
 

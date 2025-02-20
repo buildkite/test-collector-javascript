@@ -3,7 +3,7 @@ const CI = require('../util/ci')
 const uploadTestResults = require('../util/uploadTestResults')
 const Paths = require('../util/paths')
 
-class JestBuildkiteAnalyticsReporter {
+class JestBuildkiteTestEngineReporter {
   constructor(globalConfig, options) {
     this._globalConfig = globalConfig
     this._options = options
@@ -42,9 +42,9 @@ class JestBuildkiteAnalyticsReporter {
         'name': result.title,
         'location': result.location ? `${prefixedTestPath}:${result.location.line}` : null,
         'file_name': prefixedTestPath,
-        'result': this.analyticsResult(result),
-        'failure_reason': this.analyticsFailureReason(result),
-        'failure_expanded': this.analyticsFailureExpanded(result),
+        'result': this.testEngineResult(result),
+        'failure_reason': this.testEngineFailureReason(result),
+        'failure_expanded': this.testEngineFailureExpanded(result),
         'history': {
           'section': 'top',
           'start_at': testResult.perfStats.start,
@@ -57,14 +57,14 @@ class JestBuildkiteAnalyticsReporter {
   }
 
 
-  analyticsResult(testResult) {
+  testEngineResult(testResult) {
     // Jest test statuses:
     // - passed
     // - pending
     // - failed
     // - todo
     //
-    // Buildkite Test Analytics execution results:
+    // Buildkite Test Engine execution results:
     // - passed
     // - failed
     // - pending
@@ -78,24 +78,24 @@ class JestBuildkiteAnalyticsReporter {
     }[testResult.status]
   }
 
-  analyticsFailureMessages(testResult) {
+  testEngineFailureMessages(testResult) {
     if (testResult.status !== 'failed') return []
 
     // Strip ANSI color codes from messages and split each line
     return testResult.failureMessages.join(' ').replace(/\u001b[^m]*?m/g,'').split("\n")
   }
-  
-  analyticsFailureReason(testResult) {
-    return this.analyticsFailureMessages(testResult)[0]
+
+  testEngineFailureReason(testResult) {
+    return this.testEngineFailureMessages(testResult)[0]
   }
 
-  analyticsFailureExpanded(testResult) {
+  testEngineFailureExpanded(testResult) {
     return [
       { 
-        expanded: this.analyticsFailureMessages(testResult).splice(1)
+        expanded: this.testEngineFailureMessages(testResult).splice(1)
       }
     ]
   }
 }
 
-module.exports = JestBuildkiteAnalyticsReporter
+module.exports = JestBuildkiteTestEngineReporter

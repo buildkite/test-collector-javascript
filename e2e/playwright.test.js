@@ -18,7 +18,7 @@ const runPlaywright = (args, env) => {
 }
 
 const expectOutputToHaveToken = (stdout, expectation) => {
-  const jsonMatch = stdout.match(/.*Test Analytics Sending: ({.*})/m)
+  const jsonMatch = stdout.match(/.*Test Engine Sending: ({.*})/m)
   const headers = JSON.parse(jsonMatch[1])["headers"]
 
   expect(headers).toHaveProperty("Authorization", `Token token="${expectation}"`)
@@ -50,7 +50,7 @@ describe('examples/playwright', () => {
   test('it posts the correct JSON', async () => {
     const stdout = await runPlaywright([], env)
 
-    const jsonMatch = stdout.match(/.*Test Analytics Sending: ({.*})/m)
+    const jsonMatch = stdout.match(/.*Test Engine Sending: ({.*})/m)
     const data = JSON.parse(jsonMatch[1])["data"]
 
     expect(data).toHaveProperty("format", "json")
@@ -80,20 +80,20 @@ describe('examples/playwright', () => {
         expanded: expect.arrayContaining(['Expected string: "Hello, World!"', 'Received string: ""'])
       })
     ]))
-    expect(stdout).toMatch(/Test Analytics .* response/m)
+    expect(stdout).toMatch(/Test Engine .* response/m)
   }, TIMEOUT);
 
   describe('when --retries option is used', () => {
     test("it posts all retried executions", async () => {
       const stdout = await runPlaywright(["--retries=1"], env)
 
-      const jsonMatch = stdout.match(/.*Test Analytics Sending: ({.*})/m)
+      const jsonMatch = stdout.match(/.*Test Engine Sending: ({.*})/m)
       const data = JSON.parse(jsonMatch[1])["data"]["data"];
 
       const retriedTest = data.filter(test => test.name === "says hello")
       expect(retriedTest.length).toEqual(2)
       expect(retriedTest.map(test => test.result)).toEqual(["failed", "passed"])
-      expect(stdout).toMatch(/Test Analytics .* response/m)
+      expect(stdout).toMatch(/Test Engine .* response/m)
     }, TIMEOUT)
   })
 
@@ -101,7 +101,7 @@ describe('examples/playwright', () => {
     test("it posts the failures", async () => {
       const stdout = await runPlaywright(["--timeout=1"], env)
 
-      const jsonMatch = stdout.match(/.*Test Analytics Sending: ({.*})/m)
+      const jsonMatch = stdout.match(/.*Test Engine Sending: ({.*})/m)
       const data = JSON.parse(jsonMatch[1])["data"];
 
       expect(data).toHaveProperty("format", "json")
@@ -135,14 +135,14 @@ describe('examples/playwright', () => {
           expanded: expect.arrayContaining(["Test timeout of 1ms exceeded."])
         })
       ]))
-      expect(stdout).toMatch(/Test Analytics .* response/m)
+      expect(stdout).toMatch(/Test Engine .* response/m)
     }, TIMEOUT)
   })
 
   test('it supports test location prefixes for monorepos', async () => {
     const stdout = await runPlaywright([], { ...env, BUILDKITE_ANALYTICS_LOCATION_PREFIX: "some-sub-dir/" })
 
-    const jsonMatch = stdout.match(/.*Test Analytics Sending: ({.*})/m)
+    const jsonMatch = stdout.match(/.*Test Engine Sending: ({.*})/m)
     const data = JSON.parse(jsonMatch[1])["data"]
 
     expect(data).toHaveProperty("run_env.location_prefix", "some-sub-dir/")

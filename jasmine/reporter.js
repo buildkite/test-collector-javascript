@@ -36,7 +36,7 @@ jasmine.getEnv().it = itFactory(jasmine.getEnv().it);
 jasmine.getEnv().xit = itFactory(jasmine.getEnv().xit);
 jasmine.getEnv().fit = itFactory(jasmine.getEnv().fit);
 
-class JasmineBuildkiteAnalyticsReporter {
+class JasmineBuildkiteTestEngineReporter {
   constructor(config = { cwd: process.cwd() }, options) {
     this.config = config
     this._options = options
@@ -69,7 +69,7 @@ class JasmineBuildkiteAnalyticsReporter {
       'name': result.description,
       'location': result.location ? `${prefixedTestPath}:${result.location.line}` : null,
       'file_name': prefixedTestPath,
-      'result': this.analyticsResult(result),
+      'result': this.testEngineResult(result),
       'failure_reason': (result.failedExpectations[0] || {}).message,
       'failure_expanded': failureExpanded(result.failedExpectations),
       'history': result.properties.tracer.history(),
@@ -80,14 +80,14 @@ class JasmineBuildkiteAnalyticsReporter {
     return uploadTestResults(this._testEnv, this._tags, this._testResults, this._options, done)
   }
 
-  analyticsResult(testResult) {
+  testEngineResult(testResult) {
     // Jasmine test statuses:
     // - passed
     // - pending
     // - failed
     // - disabled
     //
-    // Buildkite Test Analytics execution results:
+    // Buildkite Test Engine execution results:
     // - passed
     // - failed
     // - pending
@@ -102,4 +102,4 @@ class JasmineBuildkiteAnalyticsReporter {
   }
 }
 
-module.exports = JasmineBuildkiteAnalyticsReporter
+module.exports = JasmineBuildkiteTestEngineReporter

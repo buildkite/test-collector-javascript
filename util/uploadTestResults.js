@@ -26,13 +26,13 @@ const uploadTestResults = (env, tags, results, options, done) => {
 
   if (Debug.enabled()) {
     axios.interceptors.request.use(function (config) {
-      Debug.log(`Test Analytics Sending: ${JSON.stringify(config)}`);
+      Debug.log(`Test Engine Sending: ${JSON.stringify(config)}`);
       return config;
     }, function (error) {
       if (error.response) {
-        Debug.log(`Test Analytics request error: ${error.response.status} ${error.response.statusText} ${JSON.stringify(error.response.data)}`);
+        Debug.log(`Test Engine request error: ${error.response.status} ${error.response.statusText} ${JSON.stringify(error.response.data)}`);
       } else {
-        Debug.log(`Test Analytics request error: ${error.message}`)
+        Debug.log(`Test Engine request error: ${error.message}`)
       }
       // Do something with request error
       return Promise.reject(error);
@@ -43,13 +43,13 @@ const uploadTestResults = (env, tags, results, options, done) => {
   axios.interceptors.response.use(function (response) {
     // Any status code that lie within the range of 2xx cause this function to trigger
     // Do something with response data
-    Debug.log(`Test Analytics success response ${JSON.stringify(response.data)}`);
+    Debug.log(`Test Engine success response ${JSON.stringify(response.data)}`);
     return response;
   }, function (error) {
     if (error.response) {
-      console.log(`⚠️ Test Analytics error response: ${error.response.status} ${error.response.statusText} ${JSON.stringify(error.response.data)}`);
+      console.log(`⚠️ Test Engine error response: ${error.response.status} ${error.response.statusText} ${JSON.stringify(error.response.data)}`);
     } else {
-      console.log(`⚠️ Test Analytics error: ${error.message}`)
+      console.log(`⚠️ Test Engine error: ${error.message}`)
     }
     return Promise.reject(error);
   });
