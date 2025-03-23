@@ -10,7 +10,7 @@
     "@babel/preset-react": "^7.18.6",
     "babel-loader": "^9.1.0",
     "buildkite-test-collector": "file:../..",
-    "cypress": "^12.2.0",
+    "cypress": "^14.2.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "webpack": "^5.75.0"
