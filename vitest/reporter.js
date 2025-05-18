@@ -110,7 +110,7 @@ class VitestBuildkiteTestEngineReporter extends JsonReporter {
       section: 'top',
       start_at: (assertionResults.startTime - originStart) / 1000,
       end_at: (assertionResults.endTime - originStart) / 1000,
-      duration: assertionResults.duration,
+      duration: assertionResults.duration / 1000,
     };
   }
 }
