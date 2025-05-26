@@ -1,6 +1,6 @@
 const { test, expect } = require('@playwright/test');
 
-test('has title', async ({ page }) => {
+test('has title', { tag: ['@foo:bar'] }, async ({ page }) => {
   await page.goto('/');
 
   await expect(page).toHaveTitle(/Buildkite/);

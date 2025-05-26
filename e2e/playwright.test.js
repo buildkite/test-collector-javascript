@@ -67,17 +67,18 @@ describe('examples/playwright', () => {
     expect(data).toHaveProperty("data[0].name", 'has title')
     expect(data).toHaveProperty("data[0].location", "tests/example.spec.js:3:1")
     expect(data).toHaveProperty("data[0].file_name", "tests/example.spec.js")
-    expect(data).toHaveProperty("data[0].result", 'passed')
+    expect(data).toHaveProperty("data[0].result", "passed")
+    expect(data).toHaveProperty("data[0].tags", { foo: "bar" })
 
     expect(data).toHaveProperty("data[1].scope", " chromium example.spec.js says hello")
     expect(data).toHaveProperty("data[1].name", "says hello")
     expect(data).toHaveProperty("data[1].location", "tests/example.spec.js:9:1")
     expect(data).toHaveProperty("data[1].file_name", "tests/example.spec.js")
     expect(data).toHaveProperty("data[1].result", "failed")
-    expect(data).toHaveProperty("data[1].failure_reason", "Timed out 5000ms waiting for expect(received).toHaveText(expected)")
+    expect(data).toHaveProperty("data[1].failure_reason", "Error: Timed out 5000ms waiting for expect(locator).toHaveText(expected)")
     expect(data).toHaveProperty("data[1].failure_expanded", expect.arrayContaining([
       expect.objectContaining({
-        expanded: expect.arrayContaining(['Expected string: "Hello, World!"', 'Received string: ""'])
+        expanded: expect.arrayContaining(['Expected string: "Hello, World!"', 'Received: <element(s) not found>'])
       })
     ]))
     expect(stdout).toMatch(/Test Engine .* response/m)
@@ -117,10 +118,10 @@ describe('examples/playwright', () => {
       expect(data).toHaveProperty("data[0].location", "tests/example.spec.js:3:1")
       expect(data).toHaveProperty("data[0].file_name", "tests/example.spec.js")
       expect(data).toHaveProperty("data[0].result", 'failed')
-      expect(data).toHaveProperty("data[1].failure_reason", "Test timeout of 1ms exceeded.")
+      expect(data).toHaveProperty("data[1].failure_reason", "Test timeout of 1ms exceeded while setting up \"browserName\".")
       expect(data).toHaveProperty("data[1].failure_expanded", expect.arrayContaining([
         expect.objectContaining({
-          expanded: expect.arrayContaining(["Test timeout of 1ms exceeded."])
+          expanded: expect.arrayContaining(["Test timeout of 1ms exceeded while setting up \"browserName\"."])
         })
       ]))
 
@@ -129,10 +130,10 @@ describe('examples/playwright', () => {
       expect(data).toHaveProperty("data[1].location", "tests/example.spec.js:9:1")
       expect(data).toHaveProperty("data[1].file_name", "tests/example.spec.js")
       expect(data).toHaveProperty("data[1].result", "failed")
-      expect(data).toHaveProperty("data[1].failure_reason", "Test timeout of 1ms exceeded.")
+      expect(data).toHaveProperty("data[1].failure_reason", "Test timeout of 1ms exceeded while setting up \"browserName\".")
       expect(data).toHaveProperty("data[1].failure_expanded", expect.arrayContaining([
         expect.objectContaining({
-          expanded: expect.arrayContaining(["Test timeout of 1ms exceeded."])
+          expanded: expect.arrayContaining(["Test timeout of 1ms exceeded while setting up \"browserName\"."])
         })
       ]))
       expect(stdout).toMatch(/Test Engine .* response/m)

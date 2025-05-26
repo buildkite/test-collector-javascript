@@ -49,6 +49,14 @@ class PlaywrightBuildkiteTestEngineReporter {
     const fileName = this._paths.prefixTestPath(test.location.file);
     const location = [fileName, test.location.line, test.location.column].join(':');
 
+    const tags = (test.tags || []).reduce((acc, test) => {
+      // remove '@' and split
+      const [key, value] = test.slice(1).split(':');
+      acc[key] = value;
+
+      return acc;
+    }, {});
+
     this._testResults.push({
       'id': test.id,
       'name': test.title,
@@ -62,7 +70,8 @@ class PlaywrightBuildkiteTestEngineReporter {
         'section': 'top',
         'start_at': testResult.startTime.getTime(),
         'duration': testResult.duration / 1000,
-      }
+      },
+      'tags': tags
     });
   }
 
