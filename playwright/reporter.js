@@ -27,6 +27,7 @@ class PlaywrightBuildkiteTestEngineReporter {
     this._tags = options?.tags;
     this._options = options;
     this._paths = new Paths({ cwd: process.cwd() }, this._testEnv.location_prefix);
+    this._tagPattern = /^@[^:]+:[^:]+$/;
   }
 
   onBegin() { }
@@ -49,8 +50,8 @@ class PlaywrightBuildkiteTestEngineReporter {
     const fileName = this._paths.prefixTestPath(test.location.file);
     const location = [fileName, test.location.line, test.location.column].join(':');
 
-    const tags = (test.tags || []).reduce((acc, test) => {
-      // remove '@' and split
+    const filteredTags = test.tags.filter(tag => this._tagPattern.test(tag));
+    const tags = filteredTags.reduce((acc, test) => {
       const [key, value] = test.slice(1).split(':');
       acc[key] = value;
 
