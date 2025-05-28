@@ -61,14 +61,11 @@ describe('examples/playwright', () => {
     expect(data).toHaveProperty("run_env.version")
     expect(data).toHaveProperty("run_env.collector", "js-buildkite-test-collector")
 
-    expect(data).toHaveProperty("tags", { "hello": "playwright" }) // examples/playwright/playwright.config.js
-
     expect(data).toHaveProperty("data[0].scope", ' chromium example.spec.js has title')
     expect(data).toHaveProperty("data[0].name", 'has title')
     expect(data).toHaveProperty("data[0].location", "tests/example.spec.js:3:1")
     expect(data).toHaveProperty("data[0].file_name", "tests/example.spec.js")
     expect(data).toHaveProperty("data[0].result", "passed")
-    expect(data).toHaveProperty("data[0].tags", { foo: "bar" })
 
     expect(data).toHaveProperty("data[1].scope", " chromium example.spec.js says hello")
     expect(data).toHaveProperty("data[1].name", "says hello")
@@ -81,6 +78,11 @@ describe('examples/playwright', () => {
         expanded: expect.arrayContaining(['Expected string: "Hello, World!"', 'Received: <element(s) not found>'])
       })
     ]))
+
+    expect(data).toHaveProperty("data[2].tags", { foo: "bar" });
+    expect(data).toHaveProperty("data[3].tags", { foo: "bar", baz: 'qux' });
+    expect(data).toHaveProperty("data[4].tags", {});
+
     expect(stdout).toMatch(/Test Engine .* response/m)
   }, TIMEOUT);
 
