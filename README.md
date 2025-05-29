@@ -141,6 +141,14 @@ Official [Buildkite Test Engine](https://buildkite.com/platform/test-engine) col
     ],
     ```
 
+    If you would like to pass execution tags through to Test Engine, then you can use Playwright's tagging syntax as follows:
+
+    ```
+    test('has tags', { tag: ['@type:feature'] }, ...)
+    ```
+
+    This will be threaded through to Test Engine as an execution tag with key set to `type` and value set to `feature`.
+
    ### Cypress
 
    Update your [Cypress configuration](https://docs.cypress.io/guides/references/configuration):<br>
