@@ -83,6 +83,27 @@ describe('examples/vitest', () => {
 					expanded: expect.arrayContaining([expect.stringContaining("vitest/example.test.js\:11\:20")])
 				})
 			]))
+
+			expect(json).toHaveProperty("data[0].history")
+
+			const firstHistory = json.data[0].history
+			expect(firstHistory).toHaveProperty("section", "top")
+			expect(firstHistory).toHaveProperty("start_at", expect.any(Number))
+			expect(firstHistory.start_at).toBeGreaterThanOrEqual(0)
+			expect(firstHistory).toHaveProperty("end_at", expect.any(Number))
+			expect(firstHistory.end_at).toBeGreaterThan(firstHistory.start_at)
+			expect(firstHistory).toHaveProperty("duration", expect.any(Number))
+			expect(firstHistory.duration).toBeGreaterThan(0)
+
+			const secondHistory = json.data[1].history
+			expect(secondHistory).toHaveProperty("section", "top")
+			expect(secondHistory).toHaveProperty("start_at", expect.any(Number))
+			expect(secondHistory.start_at).toBeGreaterThanOrEqual(0)
+			expect(secondHistory).toHaveProperty("end_at", expect.any(Number))
+			expect(secondHistory.end_at).toBeGreaterThan(secondHistory.start_at)
+			expect(secondHistory).toHaveProperty("duration", expect.any(Number))
+			expect(secondHistory.duration).toBeGreaterThan(0)
+
 			done()
 		})
 	}, 10000) // 10s timeout

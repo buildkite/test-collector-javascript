@@ -46,7 +46,7 @@ class VitestBuildkiteTestEngineReporter extends JsonReporter {
             result: this.testEngineResult(assertionResult),
             failure_reason: this.testEngineFailureReason(assertionResult),
             failure_expanded: this.testEngineFailureExpanded(assertionResult),
-            history: this.testEngineHistory(originStart, assertionResult),
+            history: this.testEngineHistory(originStart, testResult, assertionResult),
           };
         },
       );
@@ -105,11 +105,11 @@ class VitestBuildkiteTestEngineReporter extends JsonReporter {
     ];
   }
 
-  testEngineHistory(originStart, assertionResults) {
+  testEngineHistory(originStart, testResult, assertionResults) {
     return {
       section: 'top',
-      start_at: (assertionResults.startTime - originStart) / 1000,
-      end_at: (assertionResults.endTime - originStart) / 1000,
+      start_at: (testResult.startTime - originStart) / 1000,
+      end_at: (testResult.endTime - originStart) / 1000,
       duration: assertionResults.duration / 1000,
     };
   }
