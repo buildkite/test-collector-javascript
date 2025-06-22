@@ -19,6 +19,7 @@
     "mocha/",
     "playwright/",
     "cypress/",
+    "vitest/",
     "util/"
   ],
   "dependencies": {
@@ -33,14 +34,16 @@
     "jasmine": "^4.2.1",
     "jest": "^29.3.1",
     "mocha": "^10.0.0",
-    "mocha-multi-reporters": "^1.5.1"
+    "mocha-multi-reporters": "^1.5.1",
+    "vitest": "^3.0.0"
   },
   "workspaces": [
     "examples/jest",
     "examples/jasmine",
     "examples/mocha",
     "examples/playwright",
-    "examples/cypress"
+    "examples/cypress",
+    "examples/vitest"
   ],
   "scripts": {
     "test": "jest",

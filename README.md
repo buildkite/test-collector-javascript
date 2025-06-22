@@ -54,6 +54,44 @@ Official [Buildkite Test Engine](https://buildkite.com/platform/test-engine) col
     ];
     ```
 
+    ### Vitest
+
+    Update your [Vitest configuration](https://vitest.dev/config/):<br>
+
+    ```js
+    // vitest.config.js OR vite.config.js
+
+
+    test: {
+    // Send results to Test Engine
+      reporters: [
+        'default',
+        'buildkite-test-collector/vitest/reporter'
+      ],
+
+      // Enable column + line capture for Test Engine
+      includeTaskLocation: true,
+    }
+    ```
+
+    If you would like to pass in the API token using a custom environment variable, you can do so using the report options.
+
+    ```js
+    // vitest.config.js OR vite.config.js
+
+
+    test: {
+    // Send results to Test Engine
+      reporters: [
+        'default',
+        [
+          "buildkite-test-collector/vitest/reporter",
+          { token: process.env.CUSTOM_ENV_VAR },
+        ],
+      ],
+    }
+    ```
+
     ### Jasmine
 
     [Add the Buildkite reporter to Jasmine](https://jasmine.github.io/setup/nodejs.html#reporters):<br>
