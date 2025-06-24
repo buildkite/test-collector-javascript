@@ -2,7 +2,7 @@
 
 Official [Buildkite Test Engine](https://buildkite.com/platform/test-engine) collectors for JavaScript test frameworks ✨
 
-⚒ **Supported test frameworks:** Jest, Jasmine, Mocha, Cypress, Playwright, and [more coming soon](https://github.com/buildkite/test-collector-javascript/issues?q=is%3Aissue+is%3Aopen+label%3A%22test+frameworks%22).
+⚒ **Supported test frameworks:** Jest, Jasmine, Mocha, Cypress, Playwright, Vitest, and [more coming soon](https://github.com/buildkite/test-collector-javascript/issues?q=is%3Aissue+is%3Aopen+label%3A%22test+frameworks%22).
 
 📦 **Supported CI systems:** Buildkite, GitHub Actions, CircleCI, and others via the `BUILDKITE_ANALYTICS_*` environment variables.
 
