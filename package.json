@@ -7,7 +7,7 @@
     "buildkite-test-analytics",
     "buildkite-test-collector"
   ],
-  "version": "1.9.0",
+  "version": "1.9.1",
   "homepage": "https://buildkite.com/platform/test-engine",
   "bugs": "https://github.com/buildkite/test-collector-javascript/issues",
   "license": "MIT",
