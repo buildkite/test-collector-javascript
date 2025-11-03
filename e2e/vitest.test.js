@@ -128,7 +128,7 @@ describe('examples/vitest', () => {
 	}, 10000) // 10s timeout
 
 	test('it handles no location being present', (done) => {
-		exec('npm test -- --config vitest.override.config.js', { cwd, env }, (error, stdout, stderr) => {
+		exec('npm test -- --includeTaskLocation false', { cwd, env }, (error, stdout, stderr) => {
 			expect(stdout).toMatch(/.*Test Engine Sending: ({.*})/m);
 
 			const jsonMatch = stdout.match(/.*Test Engine Sending: ({.*})/m)
