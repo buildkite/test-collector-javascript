@@ -27,7 +27,6 @@ class VitestBuildkiteTestEngineReporter extends JsonReporter {
    * https://github.com/vitest-dev/vitest/blob/33b930a12feb9f8932b10ed9e41e078200f62379/packages/vitest/src/node/reporters/json.ts#L208
    */
   async writeReport(reportString) {
-    console.log(reportString)
     const report = JSON.parse(reportString);
     const originStart = report.startTime;
     const testResults = report.testResults.flatMap((testResult) => {
