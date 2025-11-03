@@ -1,12 +1,10 @@
+import baseConfig from './vitest.config';
+
 const config = {
   // Send results to Test Engine
+  ...baseConfig,
   test: {
-    reporters: [
-      'default',
-      ['buildkite-test-collector/vitest/reporter', {
-        tags: { hello: "vitest" }
-      }]
-    ],
+    ...baseConfig.test,
     includeTaskLocation: false,
   }
 };
