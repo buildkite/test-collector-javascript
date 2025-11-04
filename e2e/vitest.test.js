@@ -127,6 +127,23 @@ describe('examples/vitest', () => {
 		})
 	}, 10000) // 10s timeout
 
+	test('it handles no location being present', (done) => {
+		exec('npm test -- --includeTaskLocation false', { cwd, env }, (error, stdout, stderr) => {
+			expect(stdout).toMatch(/.*Test Engine Sending: ({.*})/m);
+
+			const jsonMatch = stdout.match(/.*Test Engine Sending: ({.*})/m)
+			const json = JSON.parse(jsonMatch[1])["data"]
+
+			// Uncomment to view the JSON
+			// console.log(json)
+
+			expect(json).toHaveProperty("data[0].location", null)
+			expect(json).toHaveProperty("data[1].location", null)
+
+			done()
+		})
+	}, 10000) // 10s timeout
+
 	describe('when test is pass but upload fails', () => {
 		beforeAll(() => {
 			// This will cause the upload to fail

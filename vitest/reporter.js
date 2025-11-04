@@ -39,7 +39,7 @@ class VitestBuildkiteTestEngineReporter extends JsonReporter {
             id: id,
             scope: assertionResult.ancestorTitles.join(' ').trim(),
             name: assertionResult.title,
-            location: prefixedTestPath
+            location: (prefixedTestPath && assertionResult.location)
               ? `${prefixedTestPath}:${assertionResult.location.line}`
               : null,
             file_name: prefixedTestPath,
