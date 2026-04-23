@@ -27,7 +27,7 @@
     "dotenv": "^16.0.2",
     "request-spy": "^0.0.10",
     "strip-ansi": "^6.0.0",
-    "uuid": "^8.3.2"
+    "uuid": "^14.0.0"
   },
   "devDependencies": {
     "@playwright/test": "^1.43.0",
