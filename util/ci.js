@@ -1,4 +1,4 @@
-const { v4: uuidv4 } = require('uuid')
+const { randomUUID } = require('crypto')
 const { name, version } = require('../package.json')
 
 class CI {
@@ -52,7 +52,7 @@ class CI {
   generic() {
     return({
       "ci": "generic",
-      "key": uuidv4(),
+      "key": randomUUID(),
     })
   }
 

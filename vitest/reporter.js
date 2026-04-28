@@ -1,5 +1,5 @@
 import { JsonReporter } from 'vitest/reporters'
-import { v4 as uuidv4 } from 'uuid'
+import { randomUUID } from 'node:crypto'
 import CI from '../util/ci.js'
 import uploadTestResults from '../util/uploadTestResults.js'
 import Paths from '../util/paths'
@@ -33,7 +33,7 @@ class VitestBuildkiteTestEngineReporter extends JsonReporter {
       const prefixedTestPath = this._paths.prefixTestPath(testResult.name);
       const assertionResults = testResult.assertionResults.map(
         (assertionResult) => {
-          const id = uuidv4();
+          const id = randomUUID();
 
           return {
             id: id,

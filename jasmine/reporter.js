@@ -1,4 +1,4 @@
-const { v4: uuidv4 } = require('uuid')
+const { randomUUID } = require('crypto')
 const CI = require('../util/ci')
 const failureExpanded = require('../util/failureExpanded')
 const uploadTestResults = require('../util/uploadTestResults')
@@ -63,7 +63,7 @@ class JasmineBuildkiteTestEngineReporter {
     result.location = testLocations[result.id]
     const prefixedTestPath = this._paths.prefixTestPath(result.location.filename);
 
-    const id = uuidv4()
+    const id = randomUUID()
     this._testResults.push({
       'id': id,
       'name': result.description,
