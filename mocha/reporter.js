@@ -1,4 +1,4 @@
-const { v4: uuidv4 } = require('uuid')
+const { randomUUID } = require('crypto')
 const CI = require('../util/ci')
 const Paths = require('../util/paths')
 const Mocha = require('mocha')
@@ -35,7 +35,7 @@ class MochaBuildkiteTestEngineReporter {
   }
 
   testStarted(test) {
-    test.testEngineId = uuidv4()
+    test.testEngineId = randomUUID()
     test.startAt = performance.now() / 1000
   }
 

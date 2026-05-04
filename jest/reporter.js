@@ -1,4 +1,4 @@
-const { v4: uuidv4 } = require('uuid')
+const { randomUUID } = require('crypto')
 const CI = require('../util/ci')
 const uploadTestResults = require('../util/uploadTestResults')
 const Paths = require('../util/paths')
@@ -35,7 +35,7 @@ class JestBuildkiteTestEngineReporter {
     const prefixedTestPath = this._paths.prefixTestPath(testResult.testFilePath);
 
     testResult.testResults.forEach((result) => {
-      let id = uuidv4()
+      let id = randomUUID()
       this._testResults.push({
         'id': id,
         'scope': result.ancestorTitles.join(' '),
