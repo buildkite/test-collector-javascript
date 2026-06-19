@@ -84,7 +84,7 @@ describe('examples/jasmine', () => {
       expect(json).toHaveProperty("data[2].history.children[0].section", "http")
       expect(json).toHaveProperty("data[2].history.children[0].detail.lib", "http")
       expect(json).toHaveProperty("data[2].history.children[0].detail.method", "GET")
-      expect(json).toHaveProperty("data[2].history.children[0].detail.url", "buildkite.com/")
+      expect(json).toHaveProperty("data[2].history.children[0].detail.url", "127.0.0.1/")
 
       done()
     })
