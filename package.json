@@ -56,6 +56,6 @@
     "url": "https://github.com/buildkite/test-collector-javascript.git"
   },
   "engines": {
-    "npm": ">=7.0.0"
+    "npm": ">=8.3.0"
   }
 }
