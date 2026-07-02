@@ -60,6 +60,7 @@ describe('examples/vitest', () => {
 			expect(json).toHaveProperty("run_env.key")
 			expect(json).toHaveProperty("run_env.version")
 			expect(json).toHaveProperty("run_env.collector", "js-buildkite-test-collector")
+			expect(json).toHaveProperty("run_env.test_runner", "vitest")
 
 			expect(json).toHaveProperty("tags", { "hello": "vitest" }) // examples/vitest/vitest.config.js
 

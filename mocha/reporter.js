@@ -18,10 +18,10 @@ const {
 } = Runnable.constants
 
 class MochaBuildkiteTestEngineReporter {
-  constructor(runner, options) {
+  constructor(runner, options, testRunner = 'mocha') {
     this._options = { token: process.env[`${options.reporterOptions.token_name}`]}
     this._testResults = []
-    this._testEnv = (new CI()).env();
+    this._testEnv = (new CI()).env(testRunner);
     this._tags = options.reporterOptions.tags;
     this._paths = new Paths({ cwd: process.cwd() }, this._testEnv.location_prefix)
 

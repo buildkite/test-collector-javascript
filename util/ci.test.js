@@ -57,6 +57,18 @@ describe('CI.env', () => {
     expect(ci.env().location_prefix).toEqual('true')
   })
 
+  test('sets test_runner when passed to env', () => {
+    ci = new CI()
+
+    expect(ci.env('jest').test_runner).toEqual('jest')
+  })
+
+  test('omits test_runner when not passed to env', () => {
+    ci = new CI()
+
+    expect(ci.env().hasOwnProperty('test_runner')).toBeFalsy()
+  })
+
   test('generic CI env', () => {
     const envKeys = Object.keys(process.env)
     expect(envKeys).not.toContain('BUILDKITE_BUILD_ID')

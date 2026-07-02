@@ -23,7 +23,7 @@ class PlaywrightBuildkiteTestEngineReporter {
 
   constructor(options) {
     this._testResults = [];
-    this._testEnv = (new CI()).env();
+    this._testEnv = (new CI()).env('playwright');
     this._tags = options?.tags;
     this._options = options;
     this._paths = new Paths({ cwd: process.cwd() }, this._testEnv.location_prefix);

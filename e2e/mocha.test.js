@@ -69,6 +69,7 @@ describe('examples/mocha', () => {
       expect(json).toHaveProperty("run_env.key")
       expect(json).toHaveProperty("run_env.version")
       expect(json).toHaveProperty("run_env.collector", "js-buildkite-test-collector")
+      expect(json).toHaveProperty("run_env.test_runner", "mocha")
 
       expect(json).toHaveProperty("tags", {"hello": "mocha"}) // examples/mocha/config.json
 
