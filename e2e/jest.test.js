@@ -69,6 +69,7 @@ describe('examples/jest', () => {
       expect(json).toHaveProperty("run_env.key")
       expect(json).toHaveProperty("run_env.version")
       expect(json).toHaveProperty("run_env.collector", "js-buildkite-test-collector")
+      expect(json).toHaveProperty("run_env.test_runner", "jest")
 
       expect(json).toHaveProperty("tags", { "hello": "jest" }) // examples/jest/jest.config.js
 

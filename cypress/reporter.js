@@ -6,7 +6,7 @@ const failureExpanded = require('../util/failureExpanded')
 // report errors.
 class CypressBuildkiteTestEngineReporter extends MochaBuildkiteTestEngineReporter {
   constructor(runner, options) {
-    super(runner, options)
+    super(runner, options, 'cypress')
   }
 
   testFinished(test) {

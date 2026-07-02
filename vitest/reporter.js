@@ -12,7 +12,7 @@ class VitestBuildkiteTestEngineReporter extends JsonReporter {
   constructor(options) {
     super(options);
     this._options = options;
-    this._testEnv = new CI().env();
+    this._testEnv = new CI().env('vitest');
     this._tags = options?.tags;
   }
 

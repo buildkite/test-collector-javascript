@@ -64,6 +64,7 @@ describe('examples/cypress', () => {
       expect(json).toHaveProperty("run_env.key")
       expect(json).toHaveProperty("run_env.version")
       expect(json).toHaveProperty("run_env.collector", "js-buildkite-test-collector")
+      expect(json).toHaveProperty("run_env.test_runner", "cypress")
 
       expect(json).toHaveProperty("tags", { "hello": "cypress" }) // examples/cypress/cypress.config.js
 

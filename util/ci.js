@@ -4,10 +4,10 @@ const { name, version } = require('../package.json')
 class CI {
   // the analytics env are more specific than the automatic ci platform env.
   // If they've been specified we'll assume the user wants to use that value instead.
-  env() {
+  env(testRunner) {
     return({
       ...this.ci_env(),
-      ...this.analytics_env()
+      ...this.analytics_env(testRunner)
     })
   }
 
@@ -33,7 +33,7 @@ class CI {
     }
   }
 
-  analytics_env() {
+  analytics_env(testRunner) {
     return this._stripUndefinedKeys({
       "key": process.env.BUILDKITE_ANALYTICS_KEY,
       "url": process.env.BUILDKITE_ANALYTICS_URL,
@@ -46,6 +46,7 @@ class CI {
       "location_prefix": process.env.BUILDKITE_ANALYTICS_LOCATION_PREFIX,
       "version": version,
       "collector": `js-${name}`,
+      "test_runner": testRunner,
     })
   }
 
