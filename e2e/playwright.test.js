@@ -48,7 +48,7 @@ describe('examples/playwright', () => {
   });
 
   test('it posts the correct JSON', async () => {
-    const stdout = await runPlaywright([], env)
+    const stdout = await runPlaywright(["tests/example.spec.js"], env)
 
     const jsonMatch = stdout.match(/.*Test Engine Sending: ({.*})/m)
     const data = JSON.parse(jsonMatch[1])["data"]
@@ -106,7 +106,7 @@ describe('examples/playwright', () => {
 
   describe('when --retries option is used', () => {
     test("it posts all retried executions", async () => {
-      const stdout = await runPlaywright(["--retries=1"], env)
+      const stdout = await runPlaywright(["tests/example.spec.js", "--retries=1"], env)
 
       const jsonMatch = stdout.match(/.*Test Engine Sending: ({.*})/m)
       const data = JSON.parse(jsonMatch[1])["data"]["data"];
@@ -120,7 +120,7 @@ describe('examples/playwright', () => {
 
   describe('when --timeout is exceeded', () => {
     test("it posts the failures", async () => {
-      const stdout = await runPlaywright(["--timeout=1"], env)
+      const stdout = await runPlaywright(["tests/example.spec.js","--timeout=1"], env)
 
       const jsonMatch = stdout.match(/.*Test Engine Sending: ({.*})/m)
       const data = JSON.parse(jsonMatch[1])["data"];
@@ -162,7 +162,7 @@ describe('examples/playwright', () => {
   })
 
   test('it supports test location prefixes for monorepos', async () => {
-    const stdout = await runPlaywright([], { ...env, BUILDKITE_ANALYTICS_LOCATION_PREFIX: "some-sub-dir/" })
+    const stdout = await runPlaywright(["tests/example.spec.js"], { ...env, BUILDKITE_ANALYTICS_LOCATION_PREFIX: "some-sub-dir/" })
 
     const jsonMatch = stdout.match(/.*Test Engine Sending: ({.*})/m)
     const data = JSON.parse(jsonMatch[1])["data"]
