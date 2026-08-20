@@ -11,8 +11,8 @@ const runPlaywright = (args, env) => {
 
   return new Promise((resolve) => {
     const command = `npm test -- ${args.join(' ')}`
-    exec(command, { cwd, env: { ...env, JEST_WORKER_ID: undefined } }, (error, stdout) => {
-      resolve(stdout)
+    exec(command, { cwd, env: { ...env, JEST_WORKER_ID: undefined } }, (error, stdout, stderr) => {
+      resolve(stdout + stderr)
     })
   })
 }
@@ -48,7 +48,7 @@ describe('examples/playwright', () => {
   });
 
   test('it posts the correct JSON', async () => {
-    const stdout = await runPlaywright([], env)
+    const stdout = await runPlaywright(["tests/example.spec.js"], env)
 
     const jsonMatch = stdout.match(/.*Test Engine Sending: ({.*})/m)
     const data = JSON.parse(jsonMatch[1])["data"]
@@ -80,16 +80,33 @@ describe('examples/playwright', () => {
       })
     ]))
 
-    expect(data).toHaveProperty("data[2].tags", { foo: "bar" });
-    expect(data).toHaveProperty("data[3].tags", { foo: "bar", baz: 'qux' });
-    expect(data).toHaveProperty("data[4].tags", {});
-
     expect(stdout).toMatch(/Test Engine .* response/m)
   }, TIMEOUT);
 
+  describe('tagging via annotations', () => {
+    const runTaggingTest = () => runPlaywright(["tests/tag.spec.js"], env)
+
+    test('it correctly parses tags and annotations', async () => {
+      const stdout = await runTaggingTest()
+
+      const jsonMatch = stdout.match(/.*Test Engine Sending: ({.*})/m)
+      const data = JSON.parse(jsonMatch[1])["data"]["data"]
+
+      expect(data.length).toEqual(1)
+      expect(data[0]).toHaveProperty("tags", { team: "new-team", priority: "high", type: "e2e" });
+    }, TIMEOUT);
+
+    test('it warns once when the deprecated tag syntax is used', async () => {
+      const stdout = await runTaggingTest()
+
+      const warnings = stdout.match(/Playwright `tag`.*is deprecated/g) || []
+      expect(warnings.length).toEqual(1)
+    }, TIMEOUT);
+  });
+
   describe('when --retries option is used', () => {
     test("it posts all retried executions", async () => {
-      const stdout = await runPlaywright(["--retries=1"], env)
+      const stdout = await runPlaywright(["tests/example.spec.js", "--retries=1"], env)
 
       const jsonMatch = stdout.match(/.*Test Engine Sending: ({.*})/m)
       const data = JSON.parse(jsonMatch[1])["data"]["data"];
@@ -103,7 +120,7 @@ describe('examples/playwright', () => {
 
   describe('when --timeout is exceeded', () => {
     test("it posts the failures", async () => {
-      const stdout = await runPlaywright(["--timeout=1"], env)
+      const stdout = await runPlaywright(["tests/example.spec.js","--timeout=1"], env)
 
       const jsonMatch = stdout.match(/.*Test Engine Sending: ({.*})/m)
       const data = JSON.parse(jsonMatch[1])["data"];
@@ -145,7 +162,7 @@ describe('examples/playwright', () => {
   })
 
   test('it supports test location prefixes for monorepos', async () => {
-    const stdout = await runPlaywright([], { ...env, BUILDKITE_ANALYTICS_LOCATION_PREFIX: "some-sub-dir/" })
+    const stdout = await runPlaywright(["tests/example.spec.js"], { ...env, BUILDKITE_ANALYTICS_LOCATION_PREFIX: "some-sub-dir/" })
 
     const jsonMatch = stdout.match(/.*Test Engine Sending: ({.*})/m)
     const data = JSON.parse(jsonMatch[1])["data"]

@@ -179,13 +179,19 @@ Official [Buildkite Test Engine](https://buildkite.com/platform/test-engine) col
     ],
     ```
 
-    If you would like to pass execution tags through to Test Engine, then you can use Playwright's tagging syntax as follows:
+    If you would like to pass execution tags through to Test Engine, add an annotation with a `buildkite.tag.` prefix:
 
-    ```
-    test('has tags', { tag: ['@type:feature'] }, ...)
+    ```js
+    test('my test', {
+      annotation: { type: 'buildkite.tag.team', description: 'my-team' },
+    }, async ({ page }) => {
+      ...
+    })
     ```
 
-    This will be threaded through to Test Engine as an execution tag with key set to `type` and value set to `feature`.
+    This will be threaded through to Test Engine as an execution tag with key set to `team` and value set to `my-team`.
+
+    > **Deprecated:** passing tags via Playwright's `tag` option (e.g. `test('has tags', { tag: ['@type:feature'] }, ...)`) will be removed in a future release. Please migrate to annotations as shown above.
 
    ### Cypress
 
