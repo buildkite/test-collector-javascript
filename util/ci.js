@@ -71,10 +71,19 @@ class CI {
   }
 
   github_actions() {
+    const repository = process.env.GITHUB_REPOSITORY
+    const runId = process.env.GITHUB_RUN_ID
+    // Only build the URL when both halves are present. Interpolating an
+    // undefined value yields the literal string "undefined", which survives
+    // JSON.stringify and would be sent as a real URL.
+    const url = (repository !== undefined && runId !== undefined)
+      ? `https://github.com/${repository}/actions/runs/${runId}`
+      : undefined
+
     return({
       "ci": "github_actions",
       "key": `${process.env.GITHUB_ACTION}-${process.env.GITHUB_RUN_NUMBER}-${process.env.GITHUB_RUN_ATTEMPT}`,
-      "url": `https://github.com/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID}`,
+      "url": url,
       "branch": process.env.GITHUB_REF,
       "commit_sha": process.env.GITHUB_SHA,
       "number": process.env.GITHUB_RUN_NUMBER,
