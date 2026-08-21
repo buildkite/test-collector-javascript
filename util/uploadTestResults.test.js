@@ -117,6 +117,69 @@ describe('with token "abc"', () => {
     });
   });
 
+  describe('worker id tag', () => {
+    afterEach(() => {
+      delete process.env.BUILDKITE_AGENT_ID
+    })
+
+    it('tags executions with ci.worker.id from BUILDKITE_AGENT_ID', () => {
+      process.env.BUILDKITE_AGENT_ID = 'agent-123'
+      axios.post.mockResolvedValue({ data: "Success" })
+
+      uploadTestResults(new CI().env(), {}, ['result'])
+
+      expect(axios.post.mock.calls[0][1].tags).toEqual({"ci.worker.id": "agent-123"});
+    });
+
+    it('omits the tag when BUILDKITE_AGENT_ID is unset', () => {
+      delete process.env.BUILDKITE_AGENT_ID
+      axios.post.mockResolvedValue({ data: "Success" })
+
+      uploadTestResults(new CI().env(), {}, ['result'])
+
+      expect(axios.post.mock.calls[0][1].tags).toEqual({});
+    });
+
+    it('omits the tag when BUILDKITE_AGENT_ID is empty', () => {
+      process.env.BUILDKITE_AGENT_ID = ''
+      axios.post.mockResolvedValue({ data: "Success" })
+
+      uploadTestResults(new CI().env(), {}, ['result'])
+
+      expect(axios.post.mock.calls[0][1].tags).toEqual({});
+    });
+
+    it('omits the tag when BUILDKITE_AGENT_ID is whitespace-only', () => {
+      process.env.BUILDKITE_AGENT_ID = '   '
+      axios.post.mockResolvedValue({ data: "Success" })
+
+      uploadTestResults(new CI().env(), {}, ['result'])
+
+      expect(axios.post.mock.calls[0][1].tags).toEqual({});
+    });
+
+    it('lets an explicit caller-supplied tag override the automatic one', () => {
+      process.env.BUILDKITE_AGENT_ID = 'agent-123'
+      axios.post.mockResolvedValue({ data: "Success" })
+
+      uploadTestResults(new CI().env(), {"ci.worker.id": "custom"}, ['result'])
+
+      expect(axios.post.mock.calls[0][1].tags).toEqual({"ci.worker.id": "custom"});
+    });
+
+    it('preserves other caller-supplied tags alongside the automatic one', () => {
+      process.env.BUILDKITE_AGENT_ID = 'agent-123'
+      axios.post.mockResolvedValue({ data: "Success" })
+
+      uploadTestResults(new CI().env(), {"team": "test-engine"}, ['result'])
+
+      expect(axios.post.mock.calls[0][1].tags).toEqual({
+        "ci.worker.id": "agent-123",
+        "team": "test-engine",
+      });
+    });
+  });
+
   describe('result chunking', () => {
     it('posts a result', () => {
       axios.post.mockResolvedValue({ data: "Success" })

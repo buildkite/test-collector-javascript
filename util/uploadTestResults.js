@@ -4,6 +4,17 @@ const axios = require('axios')
 const CHUNK_SIZE = 5000
 const DEFAULT_BUILDKITE_ANALYTICS_BASE_URL = 'https://analytics-api.buildkite.com/v1/uploads'
 
+// Tags every execution in the upload with the ID of the agent running it,
+// so failures can be grouped by worker. Omitted when the agent doesn't
+// expose an ID (e.g. outside Buildkite), so callers can still supply their
+// own "ci.worker.id" tag without it being clobbered.
+const workerIdTag = () => {
+  const agentId = process.env.BUILDKITE_AGENT_ID
+  if (!agentId || agentId.trim() === '') return {}
+
+  return { 'ci.worker.id': agentId }
+}
+
 const uploadTestResults = (env, tags, results, options, done) => {
   const buildkiteAnalyticsToken = options?.token || process.env.BUILDKITE_ANALYTICS_TOKEN
   const buildkiteAnalyticsUrl = options?.url || process.env.BUILDKITE_ANALYTICS_BASE_URL || DEFAULT_BUILDKITE_ANALYTICS_BASE_URL
@@ -58,7 +69,7 @@ const uploadTestResults = (env, tags, results, options, done) => {
     const data = {
       'format': 'json',
       'run_env': env,
-      'tags': tags || {},
+      'tags': { ...workerIdTag(), ...(tags || {}) },
       "data": results.slice(i, i + CHUNK_SIZE),
     }
 
