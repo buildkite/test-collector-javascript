@@ -1,8 +1,0 @@
-{
-  "reporterEnabled": "spec, buildkite-test-collector/mocha/reporter",
-  "buildkiteTestCollectorMochaReporterReporterOptions": {
-    "tags": {
-      "hello": "mocha"
-    }
-  }
-}
