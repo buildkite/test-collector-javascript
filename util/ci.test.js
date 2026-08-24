@@ -42,6 +42,15 @@ describe('CI.env', () => {
     expect(ci.env().ci).toEqual('github_actions')
   })
 
+  test('omits the url when GITHUB_REPOSITORY or GITHUB_RUN_ID is missing', () => {
+    process.env.GITHUB_RUN_NUMBER = '43'
+    ci = new CI()
+
+    expect(ci.env().ci).toEqual('github_actions')
+    expect(ci.env().url).toBeUndefined()
+    expect(JSON.parse(JSON.stringify(ci.env())).hasOwnProperty('url')).toBeFalsy()
+  })
+
   test('prefers buildkite environment variables when there are multiple sets', () => {
     process.env.BUILDKITE_BUILD_ID = '42'
     process.env.GITHUB_RUN_NUMBER = '43'
